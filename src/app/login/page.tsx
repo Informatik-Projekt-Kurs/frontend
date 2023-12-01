@@ -1,5 +1,5 @@
 "use client";
-import { loggedIn, login } from "@/services/authService";
+import { loggedIn, login, logout } from "@/services/authService";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,9 +26,14 @@ const LoginForm = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout(dispatch);
+  };
+
   return (
     <div>
       <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

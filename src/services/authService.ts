@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { logIn } from "@/store/features/authSlice";
+import { logIn, logOut } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
 
 interface LoginResponse {
@@ -25,6 +25,16 @@ export const login = async (
     dispatch(logIn(result.token));
   } catch (error) {
     console.error("Login failed", error);
+    throw error;
+  }
+};
+
+export const logout = async (dispatch: AppDispatch) => {
+  try {
+    console.log("Logging out...");
+    dispatch(logOut());
+  } catch (error) {
+    console.error("Logout failed", error);
     throw error;
   }
 };
