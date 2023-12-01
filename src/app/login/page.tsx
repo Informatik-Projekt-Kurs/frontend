@@ -10,7 +10,6 @@ const LoginForm = () => {
     fetchUser();
     function fetchUser() {
       const user = loggedIn(token);
-      console.log(user);
     }
   }, [token]);
 
@@ -32,8 +31,12 @@ const LoginForm = () => {
 
   return (
     <div>
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={handleLogout}>Logout</button>
+      <button className="btn btn-primary" onClick={handleLogin}>
+        Login
+      </button>
+      <button className="btn btn-error" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 };

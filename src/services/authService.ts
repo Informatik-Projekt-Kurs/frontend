@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import jwt from "jsonwebtoken";
 import { logIn, logOut } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
 
@@ -40,12 +40,16 @@ export const logout = async (dispatch: AppDispatch) => {
 };
 
 export const loggedIn = (token: string | null) => {
-  console.log("Fetched Token", token);
-
   let decodedUserInfo = null;
 
   if (token != null) {
-    decodedUserInfo = jwtDecode(token);
+    try {
+      decodedUserInfo = jwt.decode(token);
+      console.log("User Info: ", decodedUserInfo);
+    } catch (error) {
+      console.error("Error decoding token", error);
+      decodedUserInfo = null;
+    }
     return decodedUserInfo;
   } else {
     return false;
