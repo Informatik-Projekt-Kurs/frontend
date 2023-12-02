@@ -2,7 +2,6 @@ module.exports = {
   extends: ["next/core-web-vitals", "eslint:recommended", "prettier"],
   rules: {
     "prefer-const": "error",
-    "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "no-unsafe-optional-chaining": "off",
     "no-useless-escape": "off",
