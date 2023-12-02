@@ -1,15 +1,26 @@
 "use client";
 import { useEffect } from "react";
 import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
-const Protected: React.FC = () => {
-  const { isAuthenticated, redirectToLogin } = useAuth();
+type Props = {
+  /** Redirect URL (f.E. /login) */
+  redirectTo?: string;
+};
+
+function Protected(props: Props) {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirectToLogin();
+      if (props.redirectTo) {
+        router.push(props.redirectTo);
+      } else {
+        router.push("/login");
+      }
     }
-  }, [isAuthenticated, redirectToLogin]);
+  }, [isAuthenticated, props.redirectTo, router]);
 
   return (
     <div>
@@ -22,6 +33,6 @@ const Protected: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
 export default Protected;
