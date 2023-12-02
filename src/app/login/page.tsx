@@ -1,15 +1,19 @@
 "use client";
 import { loggedIn, login, logout } from "@/services/authService";
 import { RootState } from "@/store/store";
-import { useEffect } from "react";
+import { userAgent } from "next/server";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const [user, setUser] = useState<Object | null>();
   const token = useSelector((state: RootState) => state.auth.token);
   useEffect(() => {
     fetchUser();
     function fetchUser() {
-      const user = loggedIn(token);
+      const fetchedUser = loggedIn(token);
+      console.log("fetchedUser", fetchedUser);
+      setUser(fetchedUser);
     }
   }, [token]);
 
@@ -31,12 +35,16 @@ const LoginForm = () => {
 
   return (
     <div>
-      <button className="btn btn-primary" onClick={handleLogin}>
-        Login
-      </button>
-      <button className="btn btn-error" onClick={handleLogout}>
-        Logout
-      </button>
+      {!user && (
+        <button className="btn btn-primary" onClick={handleLogin}>
+          Login
+        </button>
+      )}
+      {user && (
+        <button className="btn btn-error" onClick={handleLogout}>
+          Logout
+        </button>
+      )}
     </div>
   );
 };

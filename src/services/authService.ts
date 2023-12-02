@@ -45,7 +45,6 @@ export const loggedIn = (token: string | null) => {
   if (token != null) {
     try {
       decodedUserInfo = jwt.decode(token);
-      console.log("User Info: ", decodedUserInfo);
     } catch (error) {
       console.error("Error decoding token", error);
       decodedUserInfo = null;
