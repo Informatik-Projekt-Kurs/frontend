@@ -12,6 +12,7 @@ export const login = async (
 ) => {
   try {
     console.log("Logging in...");
+    console.log("credentials", credentials)
     const res = new Promise<LoginResponse>((resolve) => {
       setTimeout(() => {
         resolve({

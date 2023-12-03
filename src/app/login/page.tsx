@@ -1,7 +1,6 @@
 "use client";
 import { loggedIn, login, logout } from "@/services/authService";
 import { RootState } from "@/store/store";
-import { userAgent } from "next/server";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const LoginForm = () => {
@@ -19,7 +18,7 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     try {
-      const token = await login(dispatch, {
+      await login(dispatch, {
         username: "exampleUser",
         password: "examplePassword",
       });
