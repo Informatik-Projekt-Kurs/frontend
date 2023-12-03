@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 const LoginForm = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState<Object | null>();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const token = useSelector((state: RootState) => state.auth.accessToken);
   useEffect(() => {
     fetchUser();
     function fetchUser() {
