@@ -20,7 +20,7 @@ const LoginForm = () => {
     try {
       await login(dispatch, {
         username: "exampleUser",
-        password: "examplePassword",
+        password: "examplePassword"
       });
     } catch (error) {
       console.error(error);
@@ -33,17 +33,16 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      {!user && (
-        <button className="btn btn-primary" onClick={handleLogin}>
-          Login
-        </button>
-      )}
-      {user && (
-        <button className="btn btn-error" onClick={handleLogout}>
-          Logout
-        </button>
-      )}
+    <div className="flex justify-between items-center flex-row">
+      <div className="flex w-[50vw] h-screen bg-base-200">
+        <button>Hello World</button>
+      </div>
+      <div className="flex justify-center items-center w-[50vw] h-screen bg-neutral">
+        <div className="flex justify-center flex-col items-center bg-base-200 w-[35vw] h-[600px] rounded-xl">
+          <h1 className="text-2xl">Login</h1>
+          <p>Already have an account login</p>
+        </div>
+      </div>
     </div>
   );
 };
