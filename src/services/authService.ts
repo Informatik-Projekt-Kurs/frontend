@@ -9,24 +9,25 @@ interface LoginResponse {
 
 export const login = async (
   dispatch: AppDispatch,
-  credentials: { username: string; password: string }
+  credentials: { username: string; password: string },
+  rememberMe: boolean
 ) => {
   try {
     console.log("Logging in...");
-    console.log("credentials", credentials)
+    console.log("credentials", credentials);
     const res = new Promise<LoginResponse>((resolve) => {
       setTimeout(() => {
         resolve({
           accessToken:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-          refreshToken: "your_refresh_token_here",
+          refreshToken: "your_refresh_token_here"
         });
       }, 1000);
     });
 
     const result = await res;
     dispatch(logIn(result.accessToken));
-    dispatch(setRefreshToken(result.refreshToken));
+    if (rememberMe) dispatch(setRefreshToken(result.refreshToken));
   } catch (error) {
     console.error("Login failed", error);
     throw error;
@@ -59,10 +60,7 @@ export const loggedIn = (accessToken: string | null) => {
   }
 };
 
-export const refreshAccessToken = async (
-  dispatch: AppDispatch,
-  refreshToken: string | null
-) => {
+export const refreshAccessToken = async (dispatch: AppDispatch, refreshToken: string | null) => {
   try {
     console.log("Refreshing access token...");
     /* const res = await fetch("your_refresh_token_api_endpoint", {
@@ -81,7 +79,7 @@ export const refreshAccessToken = async (
         resolve({
           accessToken:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-          refreshToken: "your_refresh_token_here",
+          refreshToken: "your_refresh_token_here"
         });
       }, 1000);
     });

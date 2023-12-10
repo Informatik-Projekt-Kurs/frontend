@@ -5,25 +5,23 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "no-unsafe-optional-chaining": "off",
     "no-useless-escape": "off",
+    "no-unused-vars": "off",
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"
   },
   plugins: ["prettier"],
   overrides: [
     {
-      files: [
-        "**/__tests__/*.{j,t}s?(x)",
-        "**/tests/unit/**/*.spec.{j,t}s?(x)",
-      ],
+      files: ["**/__tests__/*.{j,t}s?(x)", "**/tests/unit/**/*.spec.{j,t}s?(x)"],
       env: {
-        jest: true,
-      },
+        jest: true
+      }
     },
     {
       files: ["**/*.ts", "**/*.tsx", "**/*.d.ts", "**/*.vue", "**/*.html"],
       parserOptions: {
-        project: "./tsconfig.json",
-      },
-    },
-  ],
+        project: "./tsconfig.json"
+      }
+    }
+  ]
 };
