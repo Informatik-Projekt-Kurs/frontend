@@ -1,15 +1,47 @@
 "use client";
 import { loggedIn, login, logout } from "@/services/authService";
 import { RootState } from "@/store/store";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion } from "framer-motion";
+import { useForm, SubmitHandler, get } from "react-hook-form";
+
+type loginInputs = {
+  email: string;
+  password: string;
+};
+
+type registerInputs = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState<Object | null>();
   const token = useSelector((state: RootState) => state.auth.accessToken);
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit
+  } = useForm<loginInputs>({
+    mode: "onBlur"
+  });
+
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+    getValues
+  } = useForm<registerInputs>({
+    mode: "onBlur"
+  });
+
+  const onSubmitLogin: SubmitHandler<loginInputs> = (data) => console.log(data);
+
+  const onSubmitRegister: SubmitHandler<registerInputs> = (data) => console.log(data);
 
   useEffect(() => {
     fetchUser();
@@ -63,11 +95,34 @@ const LoginForm = () => {
     <div className="loginContainer bg-base-300 before:bg-primary">
       <div className="forms-container">
         <div className="signin-signup">
-          <form action="#" className="sign-in-form">
-            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Sign in</h2>
-            <input className="input input-primary bg-base-300 mb-4" type="email" placeholder="Email" required />
-            <input className="input input-primary bg-base-300 mb-4" type="password" placeholder="Password" required />
-            <input type="submit" value="Login" className="btn btn-primary px-8" />
+          <form action="#" className="sign-in-form" onSubmit={handleSubmit(onSubmitLogin)}>
+            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Log In</h2>
+            <input
+              className={`input bg-base-300 mb-4 ${errors.email ? "input-error" : "input-primary"}`}
+              placeholder="Email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value:
+                    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                  message: "Invalid email format"
+                }
+              })}
+            />
+            <input
+              className={`input bg-base-300 mb-4 ${errors.password ? "input-error" : "input-primary"}`}
+              placeholder="Password"
+              type="password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long"
+                }
+              })}
+            />
+            {Object.values(errors)[0] && <p className="text-error mb-3">{Object.values(errors)[0].message}</p>}
+            <input type="submit" value="Log In" className="btn btn-primary px-8" />
             <p className="social-text">Or Sign in with social platforms</p>
             <div className="social-media">
               <a href="#" className="social-icon">
@@ -84,21 +139,56 @@ const LoginForm = () => {
               </a>
             </div>
           </form>
-          <form action="#" className="sign-up-form">
-            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Sign up</h2>
-            <div className="input-field">
-              <i className="fas fa-user"></i>
-              <input type="text" placeholder="Username" />
-            </div>
-            <div className="input-field">
-              <i className="fas fa-envelope"></i>
-              <input type="email" placeholder="Email" />
-            </div>
-            <div className="input-field">
-              <i className="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
-            </div>
-            <input type="submit" className="btn" value="Sign up" />
+          <form action="#" className="sign-up-form" onSubmit={handleSubmit2(onSubmitRegister)}>
+            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Sign Up</h2>
+            <input
+              className={`input bg-base-300 mb-4 ${errors2.name ? "input-error" : "input-primary"}`}
+              type="text"
+              placeholder="Name"
+              {...register2("name", {
+                required: "Name is required",
+                maxLength: {
+                  value: 20,
+                  message: "Name must be at most 20 characters long"
+                }
+              })}
+            />
+            <input
+              className={`input bg-base-300 mb-4 ${errors2.email ? "input-error" : "input-primary"}`}
+              type="email"
+              placeholder="Email"
+              {...register2("email", {
+                required: "Email is required",
+                pattern: {
+                  value:
+                    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                  message: "Invalid email format"
+                }
+              })}
+            />
+            <input
+              className={`input bg-base-300 mb-4 ${errors2.password ? "input-error" : "input-primary"}`}
+              type="password"
+              placeholder="Password"
+              {...register2("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long"
+                }
+              })}
+            />
+            <input
+              className={`input bg-base-300 mb-4 ${errors2.password_confirmation ? "input-error" : "input-primary"}`}
+              type="password"
+              placeholder="Repeat Password"
+              {...register2("password_confirmation", {
+                required: "Password confirmation is required",
+                validate: (value) => value === getValues("password") || "Passwords do not match"
+              })}
+            />
+            {Object.values(errors2)[0] && <p className="text-error mb-3">{Object.values(errors2)[0].message}</p>}
+            <input type="submit" value="Sign Up" className="btn btn-primary px-8" />
             <p className="social-text">Or Sign up with social platforms</p>
             <div className="social-media">
               <a href="#" className="social-icon">
@@ -128,7 +218,7 @@ const LoginForm = () => {
               Sign up
             </button>
           </div>
-          <img src="img/log.svg" className="image" alt="" />
+          <img src="" className="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div className="content">

@@ -142,8 +142,8 @@ form.sign-in-form {
 .loginContainer:before {
   content: "";
   position: absolute;
-  height: 200vh;
-  width: 200vh;
+  height: 250vw;
+  width: 200vw;
   top: 0%;
   right: 48%;
   transform: translateY(-50%);
@@ -204,6 +204,24 @@ form.sign-in-form {
 .loginContainer.sign-up-mode:before {
   transform: translate(100%, -50%);
   right: 58%;
+}
+
+.loginContainer .left-panel .content,
+.loginContainer .right-panel .content {
+  transition: opacity 1s ease-in-out;
+  transition-property: opacity, transform;
+}
+
+.loginContainer .right-panel .content {
+  opacity: 0;
+}
+
+.loginContainer .right-panel .content {
+  opacity: 1;
+}
+
+.loginContainer.sign-up-mode .left-panel .content {
+  opacity: 0;
 }
 
 .loginContainer.sign-up-mode .left-panel .image,
@@ -360,12 +378,12 @@ form.sign-in-form {
   }
 
   .loginContainer:before {
-    bottom: 72%;
+    bottom: 64%;
     left: 50%;
   }
 
   .loginContainer.sign-up-mode:before {
-    bottom: 28%;
+    bottom: 38%;
     left: 50%;
   }
 }
