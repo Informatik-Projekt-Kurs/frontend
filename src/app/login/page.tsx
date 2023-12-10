@@ -10,7 +10,6 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState<Object | null>();
   const token = useSelector((state: RootState) => state.auth.accessToken);
-  const [topLogin, setTopLogin] = useState<number>(225 * 1.5);
 
   useEffect(() => {
     fetchUser();
@@ -19,6 +18,25 @@ const LoginForm = () => {
       console.log("fetchedUser", fetchedUser);
       setUser(fetchedUser);
     }
+    const sign_in_btn = document.querySelector("#sign-in-btn");
+    const sign_up_btn = document.querySelector("#sign-up-btn");
+    const container = document.querySelector(".loginContainer");
+
+    sign_up_btn?.addEventListener("click", () => {
+      container?.classList.add("sign-up-mode");
+    });
+
+    sign_in_btn?.addEventListener("click", () => {
+      container?.classList.remove("sign-up-mode");
+    });
+    return () => {
+      sign_in_btn?.removeEventListener("click", () => {
+        container?.classList.remove("sign-up-mode");
+      });
+      sign_up_btn?.removeEventListener("click", () => {
+        container?.classList.add("sign-up-mode");
+      });
+    };
   }, [token]);
 
   const handleLogin = async () => {
@@ -42,93 +60,87 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex justify-between items-center flex-row">
-      <div className="flex w-[50vw] h-screen bg-base-200 max-lg:hidden"></div>
-      <div className="flex justify-center overflow-hidden items-center flex-col w-[50vw] max-lg:w-screen h-screen bg-neutral">
-        <motion.div
-          animate={{ top: topLogin }}
-          transition={{ duration: 1, ease: "backInOut" }}
-          className="flex relative justify-center flex-col items-center bg-base-200 w-[35vw] max-w-[600px] max-lg:w-[80vw] h-[550px] rounded-xl border-[1px] border-primary top-[550px]"
-          style={{ boxShadow: "0px 0px 6px 0px #4586E6" }}>
-          <h1 className="text-2xl font-semibold">Login</h1>
-          <p>
-            Don’t have an account yet?{" "}
-            <Link onClick={() => setTopLogin(-1000 + 225)} href="#" className="btn btn-link px-1 no-underline">
-              Sign Up!
-            </Link>
-          </p>
-          <div className="divider"></div>
-          <div className="flex justify-center items-center flex-col gap-6 mt-4">
-            <input className="input input-primary bg-neutral w-full max-w-[400px]" type="email" placeholder="Email" />
-            <input
-              className="input input-primary bg-neutral w-full max-w-[400px]"
-              type="password"
-              placeholder="Password"
-            />
-            <div className="flex justify-between items-center w-full">
-              <div className="flex justify-center items-center">
-                <input type="checkbox" className="checkbox checkbox-primary" id="rememberCheckbox" />
-                <label
-                  className="btn btn-ghost hover:bg-transparent p-1 bg-transparent no-underline btn-sm"
-                  htmlFor="rememberCheckbox">
-                  Remember Me
-                </label>
-              </div>
-              <Link className="btn btn-link no-underline" href="#">
-                Forgot password?
-              </Link>
+    <div className="loginContainer bg-base-300 before:bg-primary">
+      <div className="forms-container">
+        <div className="signin-signup">
+          <form action="#" className="sign-in-form">
+            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Sign in</h2>
+            <input className="input input-primary bg-base-300 mb-4" type="email" placeholder="Email" required />
+            <input className="input input-primary bg-base-300 mb-4" type="password" placeholder="Password" required />
+            <input type="submit" value="Login" className="btn btn-primary px-8" />
+            <p className="social-text">Or Sign in with social platforms</p>
+            <div className="social-media">
+              <a href="#" className="social-icon">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-google"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
             </div>
-            <button className="btn btn-primary w-full max-w-[400px]" onClick={handleLogin}>
-              Login
-            </button>
-          </div>
-        </motion.div>
+          </form>
+          <form action="#" className="sign-up-form">
+            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Sign up</h2>
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="Username" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-envelope"></i>
+              <input type="email" placeholder="Email" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-lock"></i>
+              <input type="password" placeholder="Password" />
+            </div>
+            <input type="submit" className="btn" value="Sign up" />
+            <p className="social-text">Or Sign up with social platforms</p>
+            <div className="social-media">
+              <a href="#" className="social-icon">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-google"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
 
-        <motion.div
-          animate={{ top: topLogin + 1000 / 2, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "backInOut" }}
-          initial={{ top: 2000, opacity: 0 }}
-          className="flex relative justify-center flex-col items-center bg-base-200 w-[35vw] max-w-[600px] max-lg:w-[80vw] h-[700px] rounded-xl border-[1px] border-primary"
-          style={{ boxShadow: "0px 0px 6px 0px #4586E6" }}>
-          <h1 className="text-2xl font-semibold">Sign Up</h1>
-          <p>
-            Already have an account?{" "}
-            <Link onClick={() => setTopLogin(225 * 1.5)} href="#" className="btn btn-link px-1 no-underline">
-              Login
-            </Link>
-          </p>
-          <div className="divider"></div>
-          <div className="flex justify-center items-center flex-col gap-6 mt-4">
-            <input className="input input-primary bg-neutral w-full max-w-[400px]" type="text" placeholder="Name" />
-            <input className="input input-primary bg-neutral w-full max-w-[400px]" type="email" placeholder="Email" />
-            <input
-              className="input input-primary bg-neutral w-full max-w-[400px]"
-              type="password"
-              placeholder="Password"
-            />
-            <input
-              className="input input-primary bg-neutral w-full max-w-[400px]"
-              type="password"
-              placeholder="Repeat Password"
-            />
-            <div className="flex justify-between items-center w-full">
-              <div className="flex justify-center items-center">
-                <input type="checkbox" className="checkbox checkbox-primary" id="rememberCheckbox" />
-                <label
-                  className="btn btn-ghost hover:bg-transparent p-1 bg-transparent no-underline btn-sm"
-                  htmlFor="rememberCheckbox">
-                  Remember Me
-                </label>
-              </div>
-              <Link className="btn btn-link no-underline" href="#">
-                Forgot password?
-              </Link>
-            </div>
-            <button className="btn btn-primary w-full max-w-[400px]" onClick={handleLogin}>
-              Sign Up
+      <div className="panels-container">
+        <div className="panel left-panel">
+          <div className="content">
+            <h3>New here ?</h3>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis, ex ratione. Aliquid!</p>
+            <button className="btn btn-outline text-primary-content px-8" id="sign-up-btn">
+              {" "}
+              Sign up
             </button>
           </div>
-        </motion.div>
+          <img src="img/log.svg" className="image" alt="" />
+        </div>
+        <div className="panel right-panel">
+          <div className="content">
+            <h3>One of us ?</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum laboriosam ad deleniti.</p>
+            <button className="btn btn-outline text-primary-content px-8" id="sign-in-btn">
+              {" "}
+              Sign in
+            </button>
+          </div>
+          <img src="img/register.svg" className="image" alt="" />
+        </div>
       </div>
     </div>
   );
