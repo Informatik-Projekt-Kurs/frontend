@@ -35,6 +35,7 @@ const config: Config = {
         meetmate: {
           "base-300": "#14151e",
           "base-200": "#191b24",
+          "base-100": "#1d1f2b",
           "base-content": "#d1eaff",
           neutral: "#14151e",
           "neutral-content": "#14151e",
