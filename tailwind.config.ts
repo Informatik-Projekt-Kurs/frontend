@@ -58,3 +58,4 @@ const config: Config = {
   }
 };
 export default config;
+// "base-300": "#14151e",
