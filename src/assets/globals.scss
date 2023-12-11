@@ -2,13 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  z-index: 2;
+* {
+  z-index: 1;
 }
 
 .landingGradient {
@@ -408,7 +403,7 @@
   display: flex;
 }
 
-nav {
+.nav {
   background: rgb(0, 0, 0);
   background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
 }

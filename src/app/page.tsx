@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <main className="flex justify-start items-center bg-base-300 min-h-screen flex-col">
-        <nav className="flex justify-center items-center sticky top-0 left-0 z-10  w-full px-8">
+        <nav className="flex justify-center items-center sticky top-0 left-0 z-10  w-full px-8 nav">
           <div className="flex justify-between items-center sticky top-0 left-0 z-10 max-w-screen-xl w-full px-8 backdrop-blur-[1px]">
             <div className="flex justify-center items-center mt-8">
               <Image src="/landingLogo.png" alt="MeetMate" width={40} height={0}></Image>
@@ -19,7 +19,7 @@ export default function Home() {
               <Link className=" hover:text-white hover:font-semibold navLink" href="about">
                 About Us
               </Link>
-              <Link className=" hover:text-white hover:font-semibold navLink" href="about">
+              <Link className=" hover:text-white hover:font-semibold navLink" href="login">
                 Services
               </Link>
               <Link className=" hover:text-white hover:font-semibold navLink" href="about">
@@ -104,7 +104,7 @@ export default function Home() {
               </h2>
             </div>
             <div className="home_aspects_grid">
-              <a
+              <Link
                 href="/services/web-design"
                 className="home_aspects_card w-inline-block"
                 style={{
@@ -142,8 +142,8 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/services/graphic-design"
                 className="home_aspects_card w-inline-block"
                 style={{
@@ -180,8 +180,8 @@ export default function Home() {
                   with signage, packaging and print design. We’ll support you through the whole journey, from concept to
                   deliverable.
                 </p>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/services/software-development"
                 className="home_aspects_card is-grid max-w-full flex flex-col"
                 style={{
@@ -224,7 +224,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
           <div className="background-blur is-green is-top-left" />
