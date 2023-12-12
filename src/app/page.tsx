@@ -32,9 +32,11 @@ export default function Home() {
             width={100}
             height={100}></Image>
           <div className="home_hero_graphic">
-            <img
+            <Image
               src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/650347cc5ff83f6f05a40af2_Group%2060.svg"
               loading="lazy"
+              width={100}
+              height={100}
               alt=""
               className="home_hero_stars z-[5] relative max-w-full inline-block"
             />
@@ -44,15 +46,19 @@ export default function Home() {
               <div className="graphic_circle_small" />
               <div className="graphic_circle_tiny" />
             </div>
-            <img
+            <Image
               src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65363b2d9ea7b7c5f9c07406_Grid.svg"
               loading="lazy"
+              width={100}
+              height={100}
               alt=""
               className="home_hero_pattern is-left"
             />
-            <img
+            <Image
               src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65363b2d9ea7b7c5f9c07406_Grid.svg"
               loading="lazy"
+              width={100}
+              height={100}
               alt=""
               className="home_hero_pattern"
             />
@@ -97,10 +103,11 @@ export default function Home() {
                   <br />‍
                 </p>
                 <div className="home_aspects_card_image">
-                  <img
+                  <Image
                     src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425ac34ea05fb8d97509ce_Group%20614%20copy.webp"
                     loading="lazy"
-                    width="640.5"
+                    width={640.5}
+                    height={100}
                     alt=""
                     className="image_cover"
                   />
@@ -125,10 +132,11 @@ export default function Home() {
                   opacity: 1
                 }}>
                 <div className="home_aspects_card_image">
-                  <img
+                  <Image
                     src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425ab23e6624e67dd25f6d_Group%20658%20copy.webp"
                     loading="lazy"
-                    width="640.5"
+                    width={640.5}
+                    height={100}
                     alt=""
                     className="image_cover"
                   />

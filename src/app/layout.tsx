@@ -7,7 +7,8 @@ import React from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MeetMate | Welcome"
+  title: "MeetMate | Welcome",
+  icons: []
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
