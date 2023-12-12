@@ -29,14 +29,16 @@ function Navbar() {
           <Link className=" hover:text-white hover:font-semibold navLink" href="about">
             About Us
           </Link>
-          <Link className=" hover:text-white hover:font-semibold navLink" href="login">
+          <Link className=" hover:text-white hover:font-semibold navLink" href="services">
             Services
           </Link>
-          <Link className=" hover:text-white hover:font-semibold navLink" href="about">
-            Portfolio
-          </Link>
-          <Link className=" hover:text-white hover:font-semibold navLink" href="about">
-            News
+          <div className="tooltip tooltip-bottom tooltip-primary" data-tip="Not available yet">
+            <Link className="navLink opacity-80 cursor-default" href="#">
+              Pricing
+            </Link>
+          </div>
+          <Link className=" hover:text-white hover:font-semibold navLink" href="account">
+            Account
           </Link>
         </li>
 
