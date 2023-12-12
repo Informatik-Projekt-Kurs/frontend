@@ -1,41 +1,13 @@
+import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
   return (
     <>
       <main className="flex justify-start items-center bg-base-300 min-h-screen flex-col">
-        <nav className="flex justify-center items-center sticky top-0 left-0 z-10  w-full px-8 nav">
-          <div className="flex justify-between items-center sticky top-0 left-0 z-10 max-w-screen-xl w-full px-8 backdrop-blur-[1px]">
-            <div className="flex justify-center items-center mt-8">
-              <Image src="/landingLogo.png" alt="MeetMate" width={40} height={0}></Image>
-              <h2 className="text-2xl font-bold ml-2">MeetMate</h2>
-            </div>
-
-            <li className="list-none flex justify-between items-center gap-6 border-[1px] px-6 py-3 rounded-full border-gray-500 ml-[-4vw] max-lg:hidden mt-8">
-              <Link className="hover:text-white hover:font-semibold navLink" href="/">
-                Home
-              </Link>
-              <Link className=" hover:text-white hover:font-semibold navLink" href="about">
-                About Us
-              </Link>
-              <Link className=" hover:text-white hover:font-semibold navLink" href="login">
-                Services
-              </Link>
-              <Link className=" hover:text-white hover:font-semibold navLink" href="about">
-                Portfolio
-              </Link>
-              <Link className=" hover:text-white hover:font-semibold navLink" href="about">
-                News
-              </Link>
-            </li>
-
-            <button className="btn btn-primary rounded-full px-8 max-lg:hidden mt-8">
-              <Link href="#">Talk To Us</Link>
-            </button>
-            <button className="hidden max-lg:block btn btn-outline btn-primary rounded-full px-6 mt-8">Menu</button>
-          </div>
-        </nav>
+        <Navbar />
         <div className="flex justify-center items-center flex-col gap-6">
           <div className="landingGradient relative"></div>
           <div className=" introducingMeetMate mt-[-36rem]">
