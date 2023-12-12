@@ -37,7 +37,7 @@ function Navbar() {
               Pricing
             </Link>
           </div>
-          <Link className=" hover:text-white hover:font-semibold navLink" href="account">
+          <Link className=" hover:text-primary hover:font-semibold navLink" href="account">
             Account
           </Link>
         </li>
