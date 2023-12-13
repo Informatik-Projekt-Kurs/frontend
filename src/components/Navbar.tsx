@@ -15,7 +15,7 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="flex justify-center items-center sticky top-0 left-0 z-10  w-full px-8 nav ">
+    <nav className="flex justify-center items-center sticky top-0 left-0 z-10  w-full px-8 nav max-sm:px-0 ">
       <div className="flex justify-between items-center sticky top-0 left-0 z-10 max-w-screen-xl w-full px-8 backdrop-blur-[1px]">
         <div className="flex justify-center items-center mt-8 navLeft">
           <Image src="/landingLogo.png" alt="MeetMate" width={40} height={0}></Image>

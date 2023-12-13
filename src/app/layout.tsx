@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className + " overflow-x-hidden"}>
+    <html lang="en" className="overflow-x-hidden">
+      <body className={inter.className + "overflow-x-hidden"}>
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
