@@ -39,7 +39,10 @@ const LoginForm = () => {
     mode: "onBlur"
   });
 
-  const onSubmitLogin: SubmitHandler<loginInputs> = (data) => console.log(data);
+  const onSubmitLogin: SubmitHandler<loginInputs> = (data) => {
+    console.log(data);
+    handleLogin();
+  };
 
   const onSubmitRegister: SubmitHandler<registerInputs> = (data) => console.log(data);
 
