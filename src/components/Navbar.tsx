@@ -23,7 +23,7 @@ function Navbar() {
           <h2 className="text-2xl font-bold ml-2">MeetMate</h2>
         </div>
 
-        <li className="list-none flex justify-between items-center border-[1px] pl-6 h-14 rounded-full border-primary ml-[-2vw] max-lg:hidden mt-8">
+        <li className="list-none flex justify-between items-center border-[1px] pl-6 h-12 rounded-full border-primary ml-[-2vw] max-lg:hidden mt-8">
           <div className="flex justify-between items-ceter gap-6">
             <Link className="hover:text-white hover:font-semibold navLink" href="/">
               Home
@@ -42,7 +42,7 @@ function Navbar() {
           </div>
 
           <Link
-            className="bg-primary text-lg  rounded-full w-14 h-14 flex justify-center items-center ml-6 text-primary-content"
+            className="bg-primary text-lg  rounded-full w-12 h-12 flex justify-center items-center ml-6 text-primary-content"
             href="account">
             <div className="hover:scale-110 transition-transform">
               <FaUser />
