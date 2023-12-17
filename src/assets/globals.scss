@@ -30,8 +30,8 @@ section {
   width: 70vh;
   height: 70vh;
   background: rgb(69, 134, 230);
-  background: radial-gradient(circle, rgba(69, 134, 230, 1) 0%, rgba(#000, 1) 60%);
-  background: -webkit-radial-gradient(circle, rgba(69, 134, 230, 1) 0%, rgba(#000, 1) 60%);
+  background: radial-gradient(circle, rgba(69, 134, 230, 1) 0%, oklch(var(--b3)) 60%);
+  background: -webkit-radial-gradient(circle, rgba(69, 134, 230, 1) 0%, oklch(var(--b3)) 60%);
   filter: blur(100px);
   z-index: 1;
 }
