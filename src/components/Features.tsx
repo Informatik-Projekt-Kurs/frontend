@@ -37,7 +37,7 @@ export const Features = () => {
             opacity: text1Opacity,
             "--y": text1Y
           })}
-          className="translate-y-centered-offset absolute top-1/2 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
+          className="translate-y-centered-offset absolute top-1/2 2xl:left-2/4 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
           <span
             className="text-primary font-bold text-3xl"
             style={{
@@ -53,7 +53,7 @@ export const Features = () => {
             opacity: text2Opacity,
             "--y": text2Y
           })}
-          className="translate-y-centered-offset absolute top-1/2 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
+          className="translate-y-centered-offset absolute top-1/2 2xl:left-2/4 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
           <span
             className="text-primary font-bold text-3xl"
             style={{
@@ -69,7 +69,7 @@ export const Features = () => {
             opacity: text3Opacity,
             "--y": text3Y
           })}
-          className="translate-y-centered-offset absolute top-1/2 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
+          className="translate-y-centered-offset absolute top-1/2 2xl:left-2/4 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
           <span
             className="text-primary font-bold text-3xl"
             style={{
