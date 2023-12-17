@@ -4,15 +4,17 @@ import Link from "next/link";
 import React from "react";
 import { Features } from "@/components/Features";
 import Hero from "@/components/Hero";
+import { Experience } from "@/components/Experience";
 
 export default function Home() {
   return (
     <>
-      <main className={`flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip`}>
+      <main
+        className={`flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip w-full relative`}>
         <Navbar />
         <Hero />
         {/* Gallery */}
-        <section className="home_aspects mt-[50vh] px-8 max-w-screen-xl">
+        <section className="home_aspects px-8 max-w-screen-xl">
           <div className="container-medium">
             <div className="home_aspects_heading">
               <h2
@@ -157,9 +159,9 @@ export default function Home() {
         </section>
 
         <Features />
-        <section className="max-w-screen-xl h-screen"></section>
+        <Experience />
         <section className="max-w-screen-xl h-screen">
-          <h1 className="text-5xl">Hello World</h1>
+          <h1 className="text-5xl">End of page</h1>
         </section>
       </main>
     </>

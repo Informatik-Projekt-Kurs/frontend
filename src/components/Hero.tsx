@@ -6,7 +6,7 @@ import Image from "next/image";
 function Hero() {
   const pulseVariants = {
     animate: {
-      scale: [1, 1.03, 1],
+      scale: [1, 1.03],
       transition: {
         duration: 2,
         ease: "easeInOut",
@@ -15,7 +15,7 @@ function Hero() {
     }
   };
   return (
-    <>
+    <div className="flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip w-full relative">
       <div className="flex justify-center items-center flex-col gap-6">
         <div className="landingGradient relative"></div>
         <motion.div
@@ -47,7 +47,7 @@ function Hero() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="home_hero_graphic-wrapper pointer-events-none w-full pb-12 px-10 absolute top-auto bottom-0 left-0 right-0 text-center overflow-visible">
+        className="home_hero_graphic-wrapper pointer-events-none w-full px-10 absolute top-auto bottom-16 left-0 right-0 text-center overflow-visible">
         <motion.img
           variants={pulseVariants}
           animate="animate"
@@ -57,7 +57,7 @@ function Hero() {
           alt={""}
           width={100}
           height={100}></motion.img>
-        <div className="home_hero_graphic">
+        <div className="home_hero_graphic relative bottom-12">
           <Image
             src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/650347cc5ff83f6f05a40af2_Group%2060.svg"
             loading="lazy"
@@ -91,7 +91,7 @@ function Hero() {
           <div className="home_hero_gradient" />
         </div>
       </motion.div>
-    </>
+    </div>
   );
 }
 
