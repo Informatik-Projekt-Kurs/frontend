@@ -25,7 +25,7 @@ export const Features = () => {
   const text3Y = useTransform(scrollYProgress, [0.7, 0.8, 0.9], ["30px", "0px", "-30px"]);
 
   return (
-    <section ref={targetRef} className="flex h-[500vh] flex-col items-center justify-start">
+    <section ref={targetRef} className="flex h-[300vh] flex-col items-center justify-start">
       <div className="sticky top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
         <motion.div style={{ x }} className="relative h-screen w-screen">
           <Suspense fallback={<div>Loading...</div>}>
