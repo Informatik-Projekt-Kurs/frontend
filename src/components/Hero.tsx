@@ -37,8 +37,8 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           className="text-primary-content max-w-[600px] text-center text-base font-light leading-6 max-md:max-w-[80vw]">
-          We transform your brand vision into tangible web, graphic and video experiences that stop prospective clients
-          in their tracks.
+          Crafting Your Brand's Story into Unforgettable Web, Graphic, and Video Masterpieces that Captivate and
+          Convert.
         </motion.p>
         <button className="btn btn-primary rounded-full px-6">Launch a project</button>
       </div>
