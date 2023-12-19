@@ -1,27 +1,31 @@
 "use client";
 import { logout } from "@/services/authService";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-function page() {
+function Logout() {
   const dispatch = useDispatch();
-  const [status, setStatus] = useState("Loading...");
-  useEffect(() => {
-    logoutUser();
-    async function logoutUser() {
-      try {
-        await logout(dispatch).then((res) => {
-          console.log(res);
-          setStatus("Logged out");
-        });
-      } catch (error) {
-        console.error(error);
-        setStatus("Error logging out");
-        throw error;
-      }
+  const [status, setStatus] = useState("Press logout below...");
+  const handleLogout = async () => {
+    try {
+      await logout(dispatch).then((res) => {
+        console.log(res);
+        setStatus("Logged out");
+      });
+    } catch (error) {
+      console.error(error);
+      setStatus("Error logging out");
+      throw error;
     }
-  }, []);
-  return <div>Current logout status: {status}</div>;
+  };
+  return (
+    <div>
+      {status}{" "}
+      <button onClick={handleLogout} className="btn btn-primary">
+        Logout
+      </button>
+    </div>
+  );
 }
 
-export default page;
+export default Logout;

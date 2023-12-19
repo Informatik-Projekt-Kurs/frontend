@@ -46,7 +46,7 @@ export const Features = () => {
             Preconfigured environments
           </span>
           <br />
-          We detect your environment so you don't need to fiddle with configuration files.
+          We detect your environment so you don&apos;t need to fiddle with configuration files.
         </motion.p>
         <motion.p
           style={stylesWithCssVar({
@@ -78,7 +78,7 @@ export const Features = () => {
             Devtools
           </span>
           <br />
-          We've bundled useful tools to help you get your work done faster and more efficiently.
+          We&apos;ve bundled useful tools to help you get your work done faster and more efficiently.
         </motion.p>
       </div>
     </section>

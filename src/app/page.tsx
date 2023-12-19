@@ -49,7 +49,7 @@ export default function Home() {
                     platform. Search engine optimisation and cutting-edge user experience design come as standard, along
                     with exceptional reliability, scalability and performance. Plus, friendly support — whenever you
                     need us.
-                    <br />‍
+                    <br />
                   </p>
                   <div className="home_aspects_card_image">
                     <Image
@@ -106,9 +106,9 @@ export default function Home() {
                     <span className="span_gradient">Graphic Design</span>
                   </h3>
                   <p className="text-color-grey">
-                    Whether you’re building a brand from scratch, or developing new assets for your next campaign, we
-                    have a wealth of experience in developing appointment management systems, logos and brand
-                    identities. We’ll support you through the whole journey, from concept to deliverable.
+                    Whether you&apos;re building a brand from scratch, or developing new assets for your next campaign,
+                    we have a wealth of experience in developing appointment management systems, logos and brand
+                    identities. We&apos;ll support you through the whole journey, from concept to deliverable.
                   </p>
                 </Link>
                 <Link
@@ -136,10 +136,11 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="home_aspects_card_image is-large">
-                    <img
+                    <Image
                       src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425d03ac2dd88a7a91bbc6_Group%20656%20copy.webp"
                       loading="lazy"
                       width={854}
+                      height={100}
                       alt=""
                       className="image_cover"
                     />
