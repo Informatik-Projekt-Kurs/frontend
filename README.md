@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MeetMate Frontend
+
+## Overview
+
+MeetMate is an innovative platform dedicated to small brands wanting to improve their content and appointment management. Our frontend repository focuses on delivering stunning, engaging, and high-conversion websites with a keen emphasis on search engine optimization, user experience design, and performance.
+
+## Technologies
+
+- **HTML/CSS**: For structuring and styling webpages.
+- **REACT**: A JavaScript library for building user interfaces.
+- **NextJS**: A React framework for production.
+- **Tailwind**: A utility-first CSS framework.
+- **DaisyUI**: An extension for tailwind providing finished components.
+- **Redux**: A react state management library
+- **Spline**: A library to create and display 3d art and scenes
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js
+- NPM/Yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```
+   git clone https://github.com/MeetMate/frontend.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd frontend
+   ```
+3. Install dependencies:
+   ```
+   npm install
+   ```
+   or
+   ```
+   yarn install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Running the Application
 
-## Learn More
+- To run the application in development mode:
+  ```
+  npm start
+  ```
+  or
+  ```
+  yarn start
+  ```
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See `LICENSE` for more information.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Contact
 
-## Deploy on Vercel
+- Project Link: [https://github.com/MeetMate/frontend](https://github.com/MeetMate/frontend)
+- Company Website: [MeetMate](https://www.meetmate.com)
+- Contact Us: [contact@meetmate.com](mailto:contact@meetmate.com)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+MeetMate © 2023 - All Rights Reserved
