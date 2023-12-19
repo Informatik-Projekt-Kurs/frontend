@@ -27,7 +27,7 @@ export default function Home() {
                     opacity: 1
                   }}
                   className="heading_standard text-3xl font-semibold">
-                  <span className="span_gradient">Laser-focused</span> on 3 key aspects of design.
+                  <span className="span_gradient">Laser-focused</span> on 3 key aspects.
                 </h2>
               </div>
               <div className="home_aspects_grid">
@@ -45,15 +45,16 @@ export default function Home() {
                     <span className="span_gradient">Web Design</span>
                   </h3>
                   <p className="text-color-grey">
-                    We create stunning, engaging and high-conversion websites based on the versatile and future-proof
-                    Webflow platform. Search engine optimisation and cutting-edge user experience design come as
-                    standard, along with exceptional reliability, scalability and performance. Plus, friendly support —
-                    whenever you need us.
+                    We create stunning, engaging and high-conversion websites based on a versatile and future-proof
+                    platform. Search engine optimisation and cutting-edge user experience design come as standard, along
+                    with exceptional reliability, scalability and performance. Plus, friendly support — whenever you
+                    need us.
                     <br />‍
                   </p>
                   <div className="home_aspects_card_image">
                     <Image
-                      src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425ac34ea05fb8d97509ce_Group%20614%20copy.webp"
+                      src="/webdesign2.jpg"
+                      style={{ filter: "hue-rotate(30deg)" }}
                       loading="lazy"
                       width={640.5}
                       height={100}
@@ -82,12 +83,13 @@ export default function Home() {
                   }}>
                   <div className="home_aspects_card_image">
                     <Image
-                      src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425ab23e6624e67dd25f6d_Group%20658%20copy.webp"
+                      src="/design2.jpg"
                       loading="lazy"
                       width={640.5}
                       height={100}
                       alt=""
                       className="image_cover"
+                      style={{ filter: "hue-rotate(270deg)" }}
                     />
                     <div className="home_aspects_card_arrow-icon w-embed">
                       <svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -105,9 +107,8 @@ export default function Home() {
                   </h3>
                   <p className="text-color-grey">
                     Whether you’re building a brand from scratch, or developing new assets for your next campaign, we
-                    have a wealth of experience in logo design, brand identity development, and social media presence,
-                    along with signage, packaging and print design. We’ll support you through the whole journey, from
-                    concept to deliverable.
+                    have a wealth of experience in developing appointment management systems, logos and brand
+                    identities. We’ll support you through the whole journey, from concept to deliverable.
                   </p>
                 </Link>
                 <Link
@@ -129,10 +130,9 @@ export default function Home() {
                       <span className="span_gradient">Development</span>
                     </h3>
                     <p className="text-color-grey">
-                      Finding an off-the-shelf app that fits your business model can be tricky. At Phunk we create
-                      custom systems to meet specific needs — from customer portals to dashboards, quoting tools, mobile
-                      apps, SaaS solutions and more. We have specific experience in HTML, CSS, REACT, NextJS, Laravel,
-                      JQuery, Bootstrap, PHP, and MySQL.
+                      Finding an off-the-shelf app that fits your business model can be tricky. At MeetMate we create
+                      custom systems to meet specific needs. We have specific experience in HTML, CSS, REACT, NextJS,
+                      Spring, JQuery, Tailwind, and PostgreSQL.
                     </p>
                   </div>
                   <div className="home_aspects_card_image is-large">
