@@ -162,9 +162,55 @@ export default function Home() {
 
           <Features />
           <Experience />
-          <section className="max-w-screen-xl h-screen">
-            <h1 className="text-5xl">End of page</h1>
-          </section>
+          <footer className="footer p-10 bg-base-100 text-base-content">
+            <aside>
+              <Image alt="" src={"/landingLogo.png"} width={50} height={50} />
+              <p>
+                MeetMate &copy;
+                <br />
+                Enterprise appointment management system
+              </p>
+            </aside>
+            <nav>
+              <header className="footer-title">Services</header>
+              <Link href={"#"} className="link link-hover">
+                Branding
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Design
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Marketing
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Advertisement
+              </Link>
+            </nav>
+            <nav>
+              <header className="footer-title">Company</header>
+              <Link href={"#"} className="link link-hover">
+                About us
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Why MeetMate
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Contact
+              </Link>
+            </nav>
+            <nav>
+              <header className="footer-title">Legal</header>
+              <Link href={"#"} className="link link-hover">
+                Terms of use
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Privacy policy
+              </Link>
+              <Link href={"#"} className="link link-hover">
+                Cookie policy
+              </Link>
+            </nav>
+          </footer>
         </main>
       </SmoothScrollProvider>
     </>

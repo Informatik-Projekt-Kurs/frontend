@@ -9,8 +9,8 @@ function Hero() {
       scale: [1, 1.03],
       transition: {
         duration: 2,
-        ease: "easeInOut",
-        repeat: Infinity
+        repeat: Infinity,
+        ease: "easeInOut"
       }
     }
   };
