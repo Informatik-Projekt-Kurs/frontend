@@ -26,9 +26,9 @@ export const Features = () => {
   return (
     <section ref={targetRef} className="flex h-[300vh] flex-col items-center justify-start">
       <div className="sticky top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
-        {/* <motion.div style={{ x }} className="relative h-screen w-screen">
-          <Spline scene="https://prod.spline.design/TwBXCflNDhiLkDMk/scene.splinecode" />
-        </motion.div> */}
+        <motion.div style={{ x }} className="relative h-screen w-screen">
+          {/* <Spline scene="https://prod.spline.design/TwBXCflNDhiLkDMk/scene.splinecode" /> */}
+        </motion.div>
         <motion.p
           style={stylesWithCssVar({
             opacity: text1Opacity,
