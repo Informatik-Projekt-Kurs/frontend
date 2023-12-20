@@ -162,7 +162,7 @@ export default function Home() {
           </section>
 
           <Features />
-          <Experience />
+          {/* <Experience /> */}
           <footer className="footer p-10 bg-base-100 text-base-content">
             <aside>
               <Image alt="" src={"/landingLogo.png"} width={50} height={50} />
