@@ -159,7 +159,7 @@ export default function Home() {
           <div className="background-blur is-bottom-left" />
         </section>
 
-        {/* <Features /> */}
+        <Features />
         <Experience />
         <footer className="footer p-10 bg-base-100 text-base-content">
           <aside>

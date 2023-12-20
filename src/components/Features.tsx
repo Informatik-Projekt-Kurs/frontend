@@ -13,7 +13,6 @@ export const Features = () => {
   });
 
   const x = useTransform(scrollYProgress, [0.5, 1], ["0%", "-100%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 0.6, 0.85, 0.9], [1, 1, 0.4, 0.4, 1]);
 
   const text1Opacity = useTransform(scrollYProgress, [0.3, 0.4, 0.5], [0, 1, 0]);
   const text1Y = useTransform(scrollYProgress, [0.3, 0.4, 0.5], ["30px", "0px", "-30px"]);
@@ -27,9 +26,9 @@ export const Features = () => {
   return (
     <section ref={targetRef} className="flex h-[300vh] flex-col items-center justify-start">
       <div className="sticky top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
-        <motion.div style={{ x }} className="relative h-screen w-screen">
+        {/* <motion.div style={{ x }} className="relative h-screen w-screen">
           <Spline scene="https://prod.spline.design/TwBXCflNDhiLkDMk/scene.splinecode" />
-        </motion.div>
+        </motion.div> */}
         <motion.p
           style={stylesWithCssVar({
             opacity: text1Opacity,
