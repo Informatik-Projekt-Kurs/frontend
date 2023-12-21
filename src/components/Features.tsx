@@ -3,7 +3,6 @@ import { stylesWithCssVar } from "@/utils/motion";
 import { useScroll, useTransform, motion } from "framer-motion";
 import React from "react";
 import { Suspense, useRef } from "react";
-import DisplacementSphere from "./DisplacementSphere";
 const Spline = React.lazy(() => import("@splinetool/react-spline"));
 
 export const Features = () => {
