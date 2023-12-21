@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { FaUser } from "react-icons/fa6";
 
 function Navbar() {
   useEffect(() => {
@@ -22,23 +23,30 @@ function Navbar() {
           <h2 className="text-2xl font-bold ml-2">MeetMate</h2>
         </div>
 
-        <li className="list-none flex justify-between items-center gap-6 border-[1px] px-6 py-3 rounded-full border-gray-500 ml-[-2vw] max-lg:hidden mt-8">
-          <Link className="hover:text-white hover:font-semibold navLink" href="/">
-            Home
-          </Link>
-          <Link className=" hover:text-white hover:font-semibold navLink" href="about">
-            About Us
-          </Link>
-          <Link className=" hover:text-white hover:font-semibold navLink" href="services">
-            Services
-          </Link>
-          <div className="tooltip tooltip-bottom tooltip-primary" data-tip="Not available yet">
-            <Link className="navLink opacity-80 cursor-default" href="#">
-              Pricing
+        <li className="list-none flex justify-between items-center border-[1px] pl-6 h-12 rounded-full border-primary ml-[-2vw] max-lg:hidden mt-8">
+          <div className="flex justify-between items-ceter gap-6">
+            <Link className="hover:text-white hover:font-semibold navLink" href="/">
+              Home
             </Link>
+            <Link className=" hover:text-white hover:font-semibold navLink" href="about">
+              About Us
+            </Link>
+            <Link className=" hover:text-white hover:font-semibold navLink" href="services">
+              Services
+            </Link>
+            <div className="tooltip tooltip-bottom tooltip-primary" data-tip="Not available yet">
+              <Link className="navLink opacity-80 cursor-default" href="#">
+                Pricing
+              </Link>
+            </div>
           </div>
-          <Link className=" hover:text-primary hover:font-semibold navLink" href="account">
-            Account
+
+          <Link
+            className="bg-primary text-lg  rounded-full w-12 h-12 flex justify-center items-center ml-6 text-primary-content"
+            href="account">
+            <div className="hover:scale-110 transition-transform">
+              <FaUser />
+            </div>
           </Link>
         </li>
 

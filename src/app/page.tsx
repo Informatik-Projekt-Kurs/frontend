@@ -1,102 +1,20 @@
-"use client";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import React from "react";
+import { Features } from "@/components/Features";
+import Hero from "@/components/Hero";
+import { Experience } from "@/components/Experience";
 
 export default function Home() {
-  const pulseVariants = {
-    animate: {
-      scale: [1, 1.03, 1],
-      transition: {
-        duration: 2,
-        ease: "easeInOut",
-        repeat: Infinity
-      }
-    }
-  };
   return (
     <>
-      <main className="flex justify-start items-center bg-base-300 min-h-screen flex-col">
+      <main
+        className={`flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip w-full relative`}>
         <Navbar />
-        <div className="flex justify-center items-center flex-col gap-6">
-          <div className="landingGradient relative"></div>
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className=" introducingMeetMate mt-[-36rem]">
-            <div className="bg-base-300">Introducing MeetMate</div>
-          </motion.div>
-          <motion.h1
-            className="text-5xl font-semibold landingHeading text-center max-sm:text-4xl"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}>
-            Your brand, <br className="max-sm:block hidden" /> built <span>better</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="text-primary-content max-w-[600px] text-center text-base font-light leading-6 max-md:max-w-[80vw]">
-            We transform your brand vision into tangible web, graphic and video experiences that stop prospective
-            clients in their tracks.
-          </motion.p>
-          <button className="btn btn-primary rounded-full px-6">Launch a project</button>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="home_hero_graphic-wrapper pointer-events-none w-full pb-12 px-10 absolute top-auto bottom-0 left-0 right-0 text-center">
-          <motion.img
-            variants={pulseVariants}
-            animate="animate"
-            src={"/landingLogoNoBg.png"}
-            loading="lazy"
-            className="graphic_brand-logo w-[4.75rem] h-[4.75rem] mx-auto absolute top-auto bottom-5 left-0 right-0 max-w-full inline-block"
-            alt={""}
-            width={100}
-            height={100}></motion.img>
-          <div className="home_hero_graphic">
-            <Image
-              src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/650347cc5ff83f6f05a40af2_Group%2060.svg"
-              loading="lazy"
-              width={100}
-              height={100}
-              alt=""
-              className="home_hero_stars z-[5] relative w-auto inline-block"
-            />
-            <div className="home_hero_circles">
-              <div className="graphic_circle_large" />
-              <div className="graphic_circle_medium" />
-              <div className="graphic_circle_small" />
-              <div className="graphic_circle_tiny" />
-            </div>
-            <Image
-              src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65363b2d9ea7b7c5f9c07406_Grid.svg"
-              loading="lazy"
-              width={100}
-              height={100}
-              alt=""
-              className="home_hero_pattern is-left"
-            />
-            <Image
-              src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65363b2d9ea7b7c5f9c07406_Grid.svg"
-              loading="lazy"
-              width={100}
-              height={100}
-              alt=""
-              className="home_hero_pattern"
-            />
-            <div className="home_hero_gradient" />
-          </div>
-        </motion.div>
-
+        <Hero />
         {/* Gallery */}
-        <section className="home_aspects mt-[50vh] px-8 max-w-screen-xl">
+        <section className="home_aspects px-8 max-w-screen-xl">
           <div className="container-medium">
             <div className="home_aspects_heading">
               <h2
@@ -107,7 +25,7 @@ export default function Home() {
                   opacity: 1
                 }}
                 className="heading_standard text-3xl font-semibold">
-                <span className="span_gradient">Laser-focused</span> on 3 key aspects of design.
+                <span className="span_gradient">Laser-focused</span> on 3 key aspects.
               </h2>
             </div>
             <div className="home_aspects_grid">
@@ -125,15 +43,16 @@ export default function Home() {
                   <span className="span_gradient">Web Design</span>
                 </h3>
                 <p className="text-color-grey">
-                  We create stunning, engaging and high-conversion websites based on the versatile and future-proof
-                  Webflow platform. Search engine optimisation and cutting-edge user experience design come as standard,
-                  along with exceptional reliability, scalability and performance. Plus, friendly support — whenever you
-                  need us.
-                  <br />‍
+                  We create stunning, engaging and high-conversion websites based on a versatile and future-proof
+                  platform. Search engine optimisation and cutting-edge user experience design come as standard, along
+                  with exceptional reliability, scalability and performance. Plus, friendly support — whenever you need
+                  us.
+                  <br />
                 </p>
                 <div className="home_aspects_card_image">
                   <Image
-                    src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425ac34ea05fb8d97509ce_Group%20614%20copy.webp"
+                    src="/webdesign2.jpg"
+                    style={{ filter: "hue-rotate(30deg)" }}
                     loading="lazy"
                     width={640.5}
                     height={100}
@@ -162,12 +81,13 @@ export default function Home() {
                 }}>
                 <div className="home_aspects_card_image">
                   <Image
-                    src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425ab23e6624e67dd25f6d_Group%20658%20copy.webp"
+                    src="/design2.jpg"
                     loading="lazy"
                     width={640.5}
                     height={100}
                     alt=""
                     className="image_cover"
+                    style={{ filter: "hue-rotate(270deg)" }}
                   />
                   <div className="home_aspects_card_arrow-icon w-embed">
                     <svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -184,10 +104,9 @@ export default function Home() {
                   <span className="span_gradient">Graphic Design</span>
                 </h3>
                 <p className="text-color-grey">
-                  Whether you’re building a brand from scratch, or developing new assets for your next campaign, we have
-                  a wealth of experience in logo design, brand identity development, and social media presence, along
-                  with signage, packaging and print design. We’ll support you through the whole journey, from concept to
-                  deliverable.
+                  Whether you&apos;re building a brand from scratch, or developing new assets for your next campaign, we
+                  have a wealth of experience in developing appointment management systems, logos and brand identities.
+                  We&apos;ll support you through the whole journey, from concept to deliverable.
                 </p>
               </Link>
               <Link
@@ -209,17 +128,17 @@ export default function Home() {
                     <span className="span_gradient">Development</span>
                   </h3>
                   <p className="text-color-grey">
-                    Finding an off-the-shelf app that fits your business model can be tricky. At Phunk we create custom
-                    systems to meet specific needs — from customer portals to dashboards, quoting tools, mobile apps,
-                    SaaS solutions and more. We have specific experience in HTML, CSS, REACT, NextJS, Laravel, JQuery,
-                    Bootstrap, PHP, and MySQL.
+                    Finding an off-the-shelf app that fits your business model can be tricky. At MeetMate we create
+                    custom systems to meet specific needs. We have specific experience in HTML, CSS, REACT, NextJS,
+                    Spring, JQuery, Tailwind, and PostgreSQL.
                   </p>
                 </div>
                 <div className="home_aspects_card_image is-large">
-                  <img
+                  <Image
                     src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425d03ac2dd88a7a91bbc6_Group%20656%20copy.webp"
                     loading="lazy"
                     width={854}
+                    height={100}
                     alt=""
                     className="image_cover"
                   />
@@ -239,6 +158,58 @@ export default function Home() {
           <div className="background-blur is-green is-top-left" />
           <div className="background-blur is-bottom-left" />
         </section>
+
+        <Features />
+        <Experience />
+        <footer className="footer p-10 bg-base-100 text-base-content">
+          <aside>
+            <Image alt="" src={"/landingLogo.png"} width={50} height={50} />
+            <p>
+              MeetMate &copy;
+              <br />
+              Enterprise appointment management system
+            </p>
+          </aside>
+          <nav>
+            <header className="footer-title">Services</header>
+            <Link href={"#"} className="link link-hover">
+              Branding
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Design
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Marketing
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Advertisement
+            </Link>
+          </nav>
+          <nav>
+            <header className="footer-title">Company</header>
+            <Link href={"#"} className="link link-hover">
+              About us
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Why MeetMate
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Contact
+            </Link>
+          </nav>
+          <nav>
+            <header className="footer-title">Legal</header>
+            <Link href={"#"} className="link link-hover">
+              Terms of use
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Privacy policy
+            </Link>
+            <Link href={"#"} className="link link-hover">
+              Cookie policy
+            </Link>
+          </nav>
+        </footer>
       </main>
     </>
   );

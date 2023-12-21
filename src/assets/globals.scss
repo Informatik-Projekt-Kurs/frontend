@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "node_modules/locomotive-scroll/dist/locomotive-scroll";
+
+@layer utilities {
+  /* This two helpers apply a -50% to the translate x/y, and add
+   * a --y/--x css variable to it. This util is only here to make writing this class
+   * a bit easier to read in the HTML :)   */
+  .translate-y-centered-offset {
+    @apply translate-y-[calc(-50%_+_var(--y))];
+  }
+  .translate-x-centered-offset {
+    @apply translate-x-[calc(-50%_+_var(--x))];
+  }
+}
+
 * {
   z-index: 1;
 }
@@ -10,15 +24,14 @@ body,
 html,
 section {
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 .landingGradient {
   width: 70vh;
   height: 70vh;
   background: rgb(69, 134, 230);
-  background: radial-gradient(circle, rgba(69, 134, 230, 1) 0%, rgba(#000, 1) 60%);
-  background: -webkit-radial-gradient(circle, rgba(69, 134, 230, 1) 0%, rgba(#000, 1) 60%);
+  background: radial-gradient(circle, rgba(69, 134, 230, 1) 0%, oklch(var(--b3)) 60%);
+  background: -webkit-radial-gradient(circle, rgba(69, 134, 230, 1) 0%, oklch(var(--b3)) 60%);
   filter: blur(100px);
   z-index: 1;
 }

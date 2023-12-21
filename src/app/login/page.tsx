@@ -1,9 +1,10 @@
 "use client";
 import { loggedIn, login, logout } from "@/services/authService";
 import { RootState } from "@/store/store";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm, SubmitHandler, get } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 type loginInputs = {
   email: string;
@@ -221,7 +222,6 @@ const LoginForm = () => {
               Sign up
             </button>
           </div>
-          <img src="" className="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div className="content">
@@ -232,7 +232,7 @@ const LoginForm = () => {
               Sign in
             </button>
           </div>
-          <img src="img/register.svg" className="image" alt="" />
+          <Image src="img/register.svg" className="image" alt="" width={100} height={100} />
         </div>
       </div>
     </div>
