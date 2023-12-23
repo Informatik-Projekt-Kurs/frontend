@@ -8,7 +8,7 @@ import { vertexShader } from "./vertexShader";
 import * as TWEEN from "@tweenjs/tween.js";
 
 function Sphere() {
-  const meshRef = React.useRef<THREE.Mesh>();
+  const meshRef = React.useRef<any>();
   const start = React.useRef(Date.now());
   const uniforms = React.useRef(
     THREE.UniformsUtils.merge([THREE.UniformsLib["lights"], THREE.ShaderLib.phong.uniforms, { time: { value: 0 } }])
