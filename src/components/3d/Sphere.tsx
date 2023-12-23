@@ -4,7 +4,8 @@ import React, { useEffect } from "react";
 import * as THREE from "three";
 import { fragmentShader } from "./fragmentShader";
 import { vertexShader } from "./vertexShader";
-import TWEEN from "@tweenjs/tween.js";
+// @ts-ignore
+import * as TWEEN from "@tweenjs/tween.js";
 
 function Sphere() {
   const meshRef = React.useRef<THREE.Mesh>();
