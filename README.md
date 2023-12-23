@@ -25,7 +25,7 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/MeetMate/frontend.git
+   git clone https://github.com/Informatik-Projekt-Kurs/frontend.git
    ```
 2. Navigate to the project directory:
    ```
@@ -57,7 +57,7 @@ See `LICENSE` for more information.
 
 ## Contact
 
-- Project Link: [https://github.com/MeetMate/frontend](https://github.com/MeetMate/frontend)
+- Project Link: [https://github.com/Informatik-Projekt-Kurs/frontend](https://github.com/Informatik-Projekt-Kurs/frontend)
 - Company Website: [MeetMate](https://www.meetmate.com)
 - Contact Us: [contact@meetmate.com](mailto:contact@meetmate.com)
 
