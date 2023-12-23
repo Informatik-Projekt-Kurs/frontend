@@ -12,7 +12,7 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
 - **Tailwind**: A utility-first CSS framework.
 - **DaisyUI**: An extension for tailwind providing finished components.
 - **Redux**: A react state management library
-- **Spline**: A library to create and display 3d art and scenes
+- **ThreeJS**: A library to create and display 3d art and scenes
 
 ## Getting Started
 
