@@ -1,17 +1,17 @@
-import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Features } from "@/components/Features";
-import Hero from "@/components/Hero";
-import { Experience } from "@/components/Experience";
+import { Features } from "@/components/landing-page/Features";
+import Hero from "@/components/landing-page/Hero";
+import { Experience } from "@/components/landing-page/Experience";
+import LandingNavbar from "@/components/layout/LandingNavbar";
 
 export default function Home() {
   return (
     <>
       <main
         className={`flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip w-full relative`}>
-        <Navbar />
+        <LandingNavbar />
         <Hero />
         {/* Gallery */}
         <section className="home_aspects px-8 max-w-screen-xl">

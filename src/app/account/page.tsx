@@ -1,5 +1,5 @@
-import Protected from "@/components/Protected";
-import TokenRefresh from "@/components/TokenRefresh";
+import Protected from "@/components/auth/Protected";
+import TokenRefresh from "@/components/auth/TokenRefresh";
 import React from "react";
 
 function Account() {

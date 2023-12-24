@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { FaUser } from "react-icons/fa6";
 
-function Navbar() {
+function LandingNavbar() {
   useEffect(() => {
     window.addEventListener("scroll", () => {
       const navLeft = document.querySelector(".navLeft");
@@ -59,4 +59,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default LandingNavbar;
