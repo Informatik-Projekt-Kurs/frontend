@@ -3,7 +3,8 @@ import { stylesWithCssVar } from "@/utils/motion";
 import { useScroll, useTransform, motion } from "framer-motion";
 import React from "react";
 import { Suspense, useRef } from "react";
-const Spline = React.lazy(() => import("@splinetool/react-spline"));
+import Scene from "./3d/Scene";
+/* const Spline = React.lazy(() => import("@splinetool/react-spline")); */
 
 export const Features = () => {
   const targetRef = useRef<HTMLDivElement | null>(null);
@@ -27,7 +28,8 @@ export const Features = () => {
     <section ref={targetRef} className="flex h-[300vh] flex-col items-center justify-start">
       <div className="sticky top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
         <motion.div style={{ x }} className="relative h-screen w-screen">
-          <Spline scene="https://prod.spline.design/TwBXCflNDhiLkDMk/scene.splinecode" />
+          {/* <Spline scene="https://prod.spline.design/TwBXCflNDhiLkDMk/scene.splinecode" /> */}
+          <Scene />
         </motion.div>
         <motion.p
           style={stylesWithCssVar({

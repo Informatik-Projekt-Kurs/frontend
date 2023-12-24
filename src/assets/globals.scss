@@ -26,6 +26,10 @@ section {
   max-width: 100%;
 }
 
+canvas {
+  min-height: 100vh;
+}
+
 .landingGradient {
   width: 70vh;
   height: 70vh;
