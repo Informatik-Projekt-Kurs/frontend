@@ -19,7 +19,7 @@ export const login = async (
       setTimeout(() => {
         resolve({
           accessToken:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCIsImV4cCI6MTcwMzM2Nzc0OX0.lmaY1Abrvb9Gde3S5F1xIhOvMWFPjq_eDZQM9w0CqWg",
           refreshToken: "your_refresh_token_here"
         });
       }, 1000);
@@ -49,6 +49,8 @@ export const loggedIn = (accessToken: string | null) => {
 
   if (accessToken != null) {
     try {
+      const { exp } = jwt.decode(accessToken) as { exp: number };
+      console.log(exp);
       decodedUserInfo = jwt.decode(accessToken);
     } catch (error) {
       console.error("Error decoding token", error);
@@ -78,7 +80,7 @@ export const refreshAccessToken = async (dispatch: AppDispatch, refreshToken: st
       setTimeout(() => {
         resolve({
           accessToken:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTcwMzM2NjIzMCwiZXhwIjoxNzAzMzY2NTAwfQ.iTf0c_JHqXeBwW2WyHgE8OaXKaa1n2Ccv_i6s6ZMg3Y",
           refreshToken: "your_refresh_token_here"
         });
       }, 1000);
