@@ -170,7 +170,7 @@ export default function Home() {
             </div>
           </aside>
 
-          <div className="grid grid-cols-3 gap-4 mt-4 max-md:grid-cols-1">
+          <div className="grid grid-cols-3 gap-4 mt-4 max-md:grid-cols-1 max-w-screen-2xl">
             <nav className="mt-6">
               <header className="footer-title text-lg font-semibold mb-2">Services</header>
               <a href="#" className="link link-hover block mb-1">
