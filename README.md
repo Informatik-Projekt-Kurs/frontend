@@ -10,7 +10,7 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
 - **REACT**: A JavaScript library for building user interfaces.
 - **NextJS**: A React framework for production.
 - **Tailwind**: A utility-first CSS framework.
-- **DaisyUI**: An extension for tailwind providing finished components.
+- **ShadCN**: A Component library for react
 - **Redux**: A react state management library
 - **ThreeJS**: A library to create and display 3d art and scenes
 
