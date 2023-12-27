@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import "../assets/globals.scss";
 import { ReduxProvider } from "@/components/redux/ReduxProvider";
 import React from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+import { cn } from "@/lib/utils";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans"
+});
 
 export const metadata: Metadata = {
   title: "MeetMate | Welcome"
@@ -13,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="overflow-x-hidden">
-      <body className={inter.className + "overflow-x-hidden"}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,56 +9,70 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px"
+      }
+    },
     extend: {
-      fontSize: {
-        sm: "0.750rem",
-        base: "1rem",
-        xl: "1.333rem",
-        "2xl": "1.777rem",
-        "3xl": "2.369rem",
-        "4xl": "3.158rem",
-        "5xl": "4.210rem"
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))"
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))"
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))"
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))"
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))"
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))"
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))"
+        }
       },
-      fontFamily: {
-        heading: "undefined",
-        body: "Poppins"
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)"
       },
-      fontWeight: {
-        normal: "400",
-        bold: "700"
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" }
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" }
+        }
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out"
       }
     }
   },
-
-  plugins: [require("daisyui")],
-  daisyui: {
-    themes: [
-      {
-        meetmate: {
-          "base-300": "#14151e",
-          "base-200": "#191b24",
-          "base-100": "#1d1f2b",
-          "base-content": "#d1eaff",
-          neutral: "#14151e",
-          "neutral-content": "#14151e",
-          accent: "#4f37c8",
-          "accent-content": "#d1eaff",
-          primary: "#4586e6",
-          "primary-content": "#d1eaff",
-          secondary: "#1d3b86",
-          "secondary-content": "#d1eaff",
-          error: "#f97272",
-          "error-content": "#470000",
-          info: "#3abef7",
-          "info-content": "#012a3e",
-          success: "#37d39a",
-          "success-content": "#013321",
-          warning: "#fabe22",
-          "warning-content": "#382900"
-        }
-      }
-    ]
-  }
+  plugins: [require("tailwindcss-animate")]
 };
 export default config;
-// "base-300": "#14151e",

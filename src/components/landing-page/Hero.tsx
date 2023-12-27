@@ -2,11 +2,12 @@
 import { motion } from "framer-motion";
 import React from "react";
 import Image from "next/image";
+import { Button } from "../ui/button";
 
 function Hero() {
   const pulseVariants = {
     animate: {
-      scale: [1, 1.03],
+      scale: [1, 1.05, 1],
       transition: {
         duration: 2,
         repeat: Infinity,
@@ -15,7 +16,7 @@ function Hero() {
     }
   };
   return (
-    <div className="flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip w-full relative">
+    <div className="flex justify-start items-center bg-background min-h-screen flex-col overflow-x-clip w-full relative">
       <div className="flex justify-center items-center flex-col gap-6">
         <div className="landingGradient relative"></div>
         <motion.div
@@ -23,7 +24,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           className=" introducingMeetMate mt-[-36rem]">
-          <div className="bg-base-300">Introducing MeetMate</div>
+          <div className="bg-background">Introducing MeetMate</div>
         </motion.div>
         <motion.h1
           className="text-5xl font-semibold landingHeading text-center max-sm:text-4xl"
@@ -36,10 +37,12 @@ function Hero() {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-primary-content max-w-[600px] text-center text-base font-light leading-6 max-md:max-w-[80vw]">
+          className="text-foreground max-w-[600px] text-center text-base font-light leading-6 max-md:max-w-[80vw]">
           Crafting Your Brands Story into Unforgettable Web, Graphic, and Video Masterpieces that Captivate and Convert.
         </motion.p>
-        <button className="btn btn-primary rounded-full px-6">Launch a project</button>
+        <Button className="rounded-full text-foreground px-6" size={"lg"}>
+          Launch a project
+        </Button>
       </div>
 
       <motion.div
