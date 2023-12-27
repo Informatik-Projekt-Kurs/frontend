@@ -1,13 +1,11 @@
 "use client";
-import { stylesWithCssVar } from "@/utils/motion";
+import { stylesWithCssVar } from "@/lib/motion";
 import { useScroll, useTransform, motion } from "framer-motion";
 import React from "react";
-import { Suspense, useRef } from "react";
 import Scene from "./3d/Scene";
-/* const Spline = React.lazy(() => import("@splinetool/react-spline")); */
 
 export const Features = () => {
-  const targetRef = useRef<HTMLDivElement | null>(null);
+  const targetRef = React.useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start end", "end end"]
@@ -26,9 +24,8 @@ export const Features = () => {
 
   return (
     <section ref={targetRef} className="flex h-[300vh] flex-col items-center justify-start">
-      <div className="sticky top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
+      <div className="sticky left-0 top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
         <motion.div style={{ x }} className="relative h-screen w-screen">
-          {/* <Spline scene="https://prod.spline.design/TwBXCflNDhiLkDMk/scene.splinecode" /> */}
           <Scene />
         </motion.div>
         <motion.p
@@ -40,7 +37,7 @@ export const Features = () => {
           <span
             className="text-primary font-bold text-3xl"
             style={{
-              textShadow: "3px 2px 2px oklch(var(--s))"
+              textShadow: "3px 2px 2px darkslategray"
             }}>
             Preconfigured environments
           </span>
@@ -56,7 +53,7 @@ export const Features = () => {
           <span
             className="text-primary font-bold text-3xl"
             style={{
-              textShadow: "3px 2px 2px oklch(var(--s))"
+              textShadow: "3px 2px 2px darkslategray"
             }}>
             Command Pallete
           </span>
@@ -72,7 +69,7 @@ export const Features = () => {
           <span
             className="text-primary font-bold text-3xl"
             style={{
-              textShadow: "3px 2px 2px oklch(var(--s))"
+              textShadow: "3px 2px 2px darkslategray"
             }}>
             Devtools
           </span>

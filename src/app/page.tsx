@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <main
-        className={`flex justify-start items-center bg-base-300 min-h-screen flex-col overflow-x-clip w-full relative`}>
+        className={`flex justify-start items-center bg-background min-h-screen flex-col overflow-x-clip w-full relative`}>
         <LandingNavbar />
         <Hero />
         {/* Gallery */}
@@ -161,54 +161,58 @@ export default function Home() {
 
         <Features />
         <Experience />
-        <footer className="footer p-10 bg-base-100 text-base-content">
-          <aside>
-            <Image alt="" src={"/landingLogo.png"} width={50} height={50} />
-            <p>
-              MeetMate &copy;
-              <br />
-              Enterprise appointment management system
-            </p>
+        <footer className="footer p-10 bg-base-200 w-screen bg-primary-foreground">
+          <aside className="flex items-center">
+            <Image alt="MeetMate Logo" src="/landingLogo.png" width={50} height={50} className="mr-2" />
+            <div>
+              <p className="font-bold">MeetMate &copy;</p>
+              <p className="text-sm">Enterprise appointment management system</p>
+            </div>
           </aside>
-          <nav>
-            <header className="footer-title">Services</header>
-            <Link href={"#"} className="link link-hover">
-              Branding
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Design
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Marketing
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Advertisement
-            </Link>
-          </nav>
-          <nav>
-            <header className="footer-title">Company</header>
-            <Link href={"#"} className="link link-hover">
-              About us
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Why MeetMate
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Contact
-            </Link>
-          </nav>
-          <nav>
-            <header className="footer-title">Legal</header>
-            <Link href={"#"} className="link link-hover">
-              Terms of use
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Privacy policy
-            </Link>
-            <Link href={"#"} className="link link-hover">
-              Cookie policy
-            </Link>
-          </nav>
+
+          <div className="grid grid-cols-3 gap-4 mt-4 max-md:grid-cols-1">
+            <nav className="mt-6">
+              <header className="footer-title text-lg font-semibold mb-2">Services</header>
+              <a href="#" className="link link-hover block mb-1">
+                Branding
+              </a>
+              <a href="#" className="link link-hover block mb-1">
+                Design
+              </a>
+              <a href="#" className="link link-hover block mb-1">
+                Marketing
+              </a>
+              <a href="#" className="link link-hover">
+                Advertisement
+              </a>
+            </nav>
+
+            <nav className="mt-6">
+              <header className="footer-title text-lg font-semibold mb-2">Company</header>
+              <a href="#" className="link link-hover block mb-1">
+                About us
+              </a>
+              <a href="#" className="link link-hover block mb-1">
+                Why MeetMate
+              </a>
+              <a href="#" className="link link-hover">
+                Contact
+              </a>
+            </nav>
+
+            <nav className="mt-6">
+              <header className="footer-title text-lg font-semibold mb-2">Legal</header>
+              <a href="#" className="link link-hover block mb-1">
+                Terms of use
+              </a>
+              <a href="#" className="link link-hover block mb-1">
+                Privacy policy
+              </a>
+              <a href="#" className="link link-hover">
+                Cookie policy
+              </a>
+            </nav>
+          </div>
         </footer>
       </main>
     </>
