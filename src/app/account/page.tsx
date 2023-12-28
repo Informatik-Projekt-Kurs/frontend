@@ -5,7 +5,6 @@ function Account() {
   return (
     <div>
       <h1>Private Page</h1>
-      {/* <TokenRefresh /> */}
     </div>
   );
 }

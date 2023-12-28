@@ -1,6 +1,5 @@
 "use server";
 
-import { CompanyAuthObject } from "@/types";
 import { cookies } from "next/headers";
 
 interface StoreTokenRequest {
@@ -32,39 +31,40 @@ export async function deleteToken() {
 }
 
 export async function refreshAccessToken() {
-  if(!cookies().get("accessToken")) {
+  if (!cookies().get("accessToken")) {
     return { status: 401, message: "No access token" };
   }
-  const res = await fetch("http://localhost:8080/api/auth/refresh", {
+  const res = await fetch("http://localhost:8080/api/test/refresh", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + cookies().get("accessToken")
-    },
-    body: JSON.stringify({ refreshToken: cookies().get("refreshToken") })
+      "Content-Type": "application/json"
+      /* Authorization: cookies().get("accessToken")?.value */
+    }
+    /* body: JSON.stringify({ refreshToken: cookies().get("refreshToken") }) */
   });
-
   const result = await res.json();
 
   if (result.accessToken) {
     storeToken({ token: result.accessToken, refresh_token: result.refreshToken });
   }
-  return result;
 }
 
 export async function getUser() {
-  if(!cookies().get("accessToken")) {
+  if (!cookies().get("accessToken")) {
     return { status: 401, message: "No access token" };
   }
   const res = await fetch("http://localhost:8080/api/test/user", {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + cookies().get("accessToken")?.value
+      "Content-Type": "application/json"
     }
   });
 
   const result = await res.json();
 
   return result;
+}
+
+export async function getAccessToken() {
+  return cookies().get("accessToken")?.value;
 }

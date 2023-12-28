@@ -1,32 +1,37 @@
-// components/TokenRefresh.js or components/TokenRefresh.tsx
 "use client";
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 import { refresh } from "@/services/authService";
-import { RootState } from "@/store/store";
 import jwt from "jsonwebtoken";
+import { getAccessToken } from "@/lib/actions";
 
 const TokenRefresh = () => {
-  const dispatch = useDispatch();
-  const accessToken = useSelector((state: RootState) => state.auth.user?.token);
-
   useEffect(() => {
-    if (accessToken) {
-      const { exp } = jwt.decode(accessToken) as { exp: number };
-      const currentTime = Math.floor(Date.now() / 1000);
+    const checkTokenExpiration = async () => {
+      const token = await getAccessToken();
+      if (!token) return;
 
-      const timeUntilExpiration = exp - currentTime;
-      const refreshTime = Math.max(0, timeUntilExpiration - 60); // Refresh 1 minute before expiration
+      try {
+        const decodedToken = jwt.decode(token);
+        if (!decodedToken || !decodedToken.exp) return;
+        const exp = decodedToken.exp;
 
-      const refreshTimer = setTimeout(() => {
-        refresh();
-      }, refreshTime * 1000);
+        const currentTime = Math.floor(Date.now() / 1000);
+        const timeUntilExpiration = exp - currentTime;
+        console.log("Time until token expiration:", timeUntilExpiration);
+        if (timeUntilExpiration < 120) {
+          // Refresh if less than 2 minutes left
+          await refresh();
+        }
+      } catch (error) {
+        console.error("Error refreshing token:", error);
+      }
+    };
 
-      return () => {
-        clearTimeout(refreshTimer);
-      };
-    }
-  }, [dispatch, accessToken]);
+    checkTokenExpiration();
+    const interval = setInterval(checkTokenExpiration, 10 * 1000); // Check every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return null; // This component does not render anything
 };
