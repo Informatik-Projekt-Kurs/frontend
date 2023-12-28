@@ -2,13 +2,13 @@
 "use client";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { refreshAccessToken } from "@/services/authService";
+import { refresh } from "@/services/authService";
 import { RootState } from "@/store/store";
 import jwt from "jsonwebtoken";
 
 const TokenRefresh = () => {
   const dispatch = useDispatch();
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const accessToken = useSelector((state: RootState) => state.auth.user?.token);
 
   useEffect(() => {
     if (accessToken) {
@@ -19,7 +19,7 @@ const TokenRefresh = () => {
       const refreshTime = Math.max(0, timeUntilExpiration - 60); // Refresh 1 minute before expiration
 
       const refreshTimer = setTimeout(() => {
-        refreshAccessToken(dispatch, accessToken);
+        refresh();
       }, refreshTime * 1000);
 
       return () => {

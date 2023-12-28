@@ -10,9 +10,9 @@ declare global {
   }
 }
 
-type User = {
-  id: string;
+type CompanyAuthObject = {
+  id: number;
   name: string;
   email: string;
-  admin: boolean;
-};
+  role: string;
+} | null;

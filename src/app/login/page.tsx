@@ -1,9 +1,8 @@
 "use client";
-import { loggedIn, login, logout } from "@/services/authService";
-import { RootState } from "@/store/store";
+import { login, logout } from "@/services/authService";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type loginInputs = {
@@ -20,8 +19,6 @@ type registerInputs = {
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const [user, setUser] = useState<Object | null>();
-  const token = useSelector((state: RootState) => state.auth.accessToken);
 
   const {
     register,
@@ -48,12 +45,6 @@ const LoginForm = () => {
   const onSubmitRegister: SubmitHandler<registerInputs> = (data) => console.log(data);
 
   useEffect(() => {
-    fetchUser();
-    function fetchUser() {
-      const fetchedUser = loggedIn(token);
-      console.log("fetchedUser", fetchedUser);
-      setUser(fetchedUser);
-    }
     const sign_in_btn = document.querySelector("#sign-in-btn");
     const sign_up_btn = document.querySelector("#sign-up-btn");
     const container = document.querySelector(".loginContainer");
@@ -73,18 +64,11 @@ const LoginForm = () => {
         container?.classList.add("sign-up-mode");
       });
     };
-  }, [token]);
+  }, []);
 
   const handleLogin = async () => {
     try {
-      await login(
-        dispatch,
-        {
-          username: "exampleUser",
-          password: "examplePassword"
-        },
-        true
-      );
+      await login(dispatch, { email: "" } as unknown as FormData); // TODO
     } catch (error) {
       console.error(error);
       throw error;

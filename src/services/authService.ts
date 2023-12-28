@@ -1,36 +1,37 @@
-import { logIn, logOut, setRefreshToken } from "@/store/features/authSlice";
+import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
+import { setUser } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
-import { SignJWT } from "jose";
 
 interface LoginResponse {
-  accessToken: string;
+  token: string;
+  type: string;
   refreshToken: string;
+  id: number;
+  name: string;
+  email: string;
+  role: string;
 }
 
-export const login = async (
-  dispatch: AppDispatch,
-  credentials: { email: string; password: string },
-  rememberMe: boolean
-) => {
+export const login = async (dispatch: AppDispatch, credentials: FormData) => {
   try {
     const res = new Promise<LoginResponse>((resolve) => {
       setTimeout(async () => {
         resolve({
-          accessToken: await new SignJWT({ id: 123, email: credentials.email, name: "Johnny", admin: false })
-            .setProtectedHeader({ alg: "HS256" })
-            .setIssuedAt()
-            .setIssuer("urn:example:issuer")
-            .setAudience("urn:example:audience")
-            .setExpirationTime("2h")
-            .sign(new TextEncoder().encode(process.env.JWT_SECRET)),
-          refreshToken: "your_refresh_token_here"
+          token:
+            "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJCZW4iLCJpYXQiOjE3MDM3Nzc5NzksImV4cCI6MTcwMzg2NDM3OX0.0Pa5Tayj9bA0rulxan3lDKHFtJkxTRMjVIExLfdM2mSuZMa_MV1k8DvVEDZ5eaLC6X8IZDzh3godcBrCKlx91Q",
+          type: "Bearer",
+          refreshToken: "refreshToken",
+          id: 2,
+          name: "Ben",
+          email: "boeckmannben@gmail.com",
+          role: "USER"
         });
       }, 1000);
     });
 
     const result = await res;
-    dispatch(logIn(result.accessToken));
-    if (rememberMe) dispatch(setRefreshToken(result.refreshToken));
+    storeToken({ token: result.token, refresh_token: result.refreshToken });
+    dispatch(setUser({ id: result.id, name: result.name, email: result.email, role: result.role }));
   } catch (error) {
     console.error("Login failed", error);
     throw error;
@@ -40,57 +41,17 @@ export const login = async (
 export const logout = async (dispatch: AppDispatch) => {
   try {
     console.log("Logging out...");
-    dispatch(logOut());
+    deleteToken();
+    dispatch(setUser(null));
   } catch (error) {
     console.error("Logout failed", error);
     throw error;
   }
 };
 
-export const loggedIn = (accessToken: string | null) => {
-  const decodedUserInfo = { email: "awiodnaowidn" };
-
-  if (accessToken != null) {
-    /* try {
-      const { exp } = jwt.decode(accessToken) as { exp: number };
-      console.log(exp);
-      decodedUserInfo = jwt.decode(accessToken);
-    } catch (error) {
-      console.error("Error decoding token", error);
-      decodedUserInfo = null;
-    } */
-    return decodedUserInfo;
-  } else {
-    return false;
-  }
-};
-
-export const refreshAccessToken = async (dispatch: AppDispatch, refreshToken: string | null) => {
+export const refresh = async () => {
   try {
-    console.log("Refreshing access token...");
-    /* const res = await fetch("your_refresh_token_api_endpoint", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken }),
-    }); 
-    if (!res.ok) {
-      throw new Error("Token refresh failed");
-    }
-    */
-    const res = new Promise<LoginResponse>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          accessToken:
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTcwMzM2NjIzMCwiZXhwIjoxNzAzMzY2NTAwfQ.iTf0c_JHqXeBwW2WyHgE8OaXKaa1n2Ccv_i6s6ZMg3Y",
-          refreshToken: "your_refresh_token_here"
-        });
-      }, 1000);
-    });
-
-    const result: { accessToken: string } = await res;
-    dispatch(logIn(result.accessToken));
+    await refreshAccessToken();
   } catch (error) {
     console.error("Token refresh failed", error);
     throw error;
