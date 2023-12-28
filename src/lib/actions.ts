@@ -32,6 +32,9 @@ export async function deleteToken() {
 }
 
 export async function refreshAccessToken() {
+  if(!cookies().get("accessToken")) {
+    return { status: 401, message: "No access token" };
+  }
   const res = await fetch("http://localhost:8080/api/auth/refresh", {
     method: "POST",
     headers: {
