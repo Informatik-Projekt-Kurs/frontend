@@ -7,26 +7,22 @@ interface LoginResponse {
   refreshToken: string;
 }
 
-const secret = new TextEncoder().encode("cc7e0d44fd473002f1c42167459001140ec6389b7353f8088f4d9a95f2f596f2");
-
 export const login = async (
   dispatch: AppDispatch,
-  credentials: { username: string; password: string },
+  credentials: { email: string; password: string },
   rememberMe: boolean
 ) => {
   try {
-    console.log("Logging in...");
-    console.log("credentials", credentials);
     const res = new Promise<LoginResponse>((resolve) => {
       setTimeout(async () => {
         resolve({
-          accessToken: await new SignJWT({ id: 123, email: "boeckmanawd@gmial.com", name: "Johnny", admin: false })
+          accessToken: await new SignJWT({ id: 123, email: credentials.email, name: "Johnny", admin: false })
             .setProtectedHeader({ alg: "HS256" })
             .setIssuedAt()
             .setIssuer("urn:example:issuer")
             .setAudience("urn:example:audience")
             .setExpirationTime("2h")
-            .sign(secret),
+            .sign(new TextEncoder().encode(process.env.JWT_SECRET)),
           refreshToken: "your_refresh_token_here"
         });
       }, 1000);

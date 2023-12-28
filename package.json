@@ -20,6 +20,7 @@
     "@tweenjs/tween.js": "^21.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "cookie": "^0.6.0",
     "cookies-next": "^4.1.0",
     "framer-motion": "^10.16.16",
     "jose": "^5.2.0",

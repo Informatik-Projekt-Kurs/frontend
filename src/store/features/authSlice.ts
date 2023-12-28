@@ -11,29 +11,16 @@ const initialState: AuthState = {
   refreshToken: null
 };
 
-const setAuthCookie = (token: string, name: string) => {
-  const toBase64 = Buffer.from(token).toString("base64");
-
-  setCookie(name, toBase64, {
-    maxAge: 30 * 24 * 60 * 60,
-    path: "/",
-    // more security options here
-    // sameSite: 'strict',
-    // httpOnly: true,
-    secure: process.env.NODE_ENV === "production"
-  });
-};
-
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logOut: () => {
-      setCookie("auth_token", "");
+      setCookie("auth_token", "", { maxAge: 60 * 60 * 24 });
       return initialState;
     },
     logIn: (state, action: PayloadAction<string>) => {
-      setCookie("auth_token", action.payload);
+      setCookie("auth_token", action.payload, { maxAge: 60 * 60 * 24 });
       state.accessToken = action.payload;
     },
     setRefreshToken: (state, action: PayloadAction<string>) => {
