@@ -1,11 +1,13 @@
-import jwt from "jsonwebtoken";
 import { logIn, logOut, setRefreshToken } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
+import { SignJWT } from "jose";
 
 interface LoginResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+const secret = new TextEncoder().encode("cc7e0d44fd473002f1c42167459001140ec6389b7353f8088f4d9a95f2f596f2");
 
 export const login = async (
   dispatch: AppDispatch,
@@ -16,10 +18,15 @@ export const login = async (
     console.log("Logging in...");
     console.log("credentials", credentials);
     const res = new Promise<LoginResponse>((resolve) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         resolve({
-          accessToken:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCIsImV4cCI6MTcwMzM2Nzc0OX0.lmaY1Abrvb9Gde3S5F1xIhOvMWFPjq_eDZQM9w0CqWg",
+          accessToken: await new SignJWT({ id: 123, email: "boeckmanawd@gmial.com", name: "Johnny", admin: false })
+            .setProtectedHeader({ alg: "HS256" })
+            .setIssuedAt()
+            .setIssuer("urn:example:issuer")
+            .setAudience("urn:example:audience")
+            .setExpirationTime("2h")
+            .sign(secret),
           refreshToken: "your_refresh_token_here"
         });
       }, 1000);
@@ -45,17 +52,17 @@ export const logout = async (dispatch: AppDispatch) => {
 };
 
 export const loggedIn = (accessToken: string | null) => {
-  let decodedUserInfo = null;
+  const decodedUserInfo = { email: "awiodnaowidn" };
 
   if (accessToken != null) {
-    try {
+    /* try {
       const { exp } = jwt.decode(accessToken) as { exp: number };
       console.log(exp);
       decodedUserInfo = jwt.decode(accessToken);
     } catch (error) {
       console.error("Error decoding token", error);
       decodedUserInfo = null;
-    }
+    } */
     return decodedUserInfo;
   } else {
     return false;
