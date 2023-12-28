@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { refresh } from "@/services/authService";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { getAccessToken } from "@/lib/actions";
 
 const TokenRefresh = () => {
@@ -11,13 +11,12 @@ const TokenRefresh = () => {
       if (!token) return;
 
       try {
-        const decodedToken = jwt.decode(token);
+        const decodedToken = jwt.decode(token) as JwtPayload;
         if (!decodedToken || !decodedToken.exp) return;
         const exp = decodedToken.exp;
 
         const currentTime = Math.floor(Date.now() / 1000);
         const timeUntilExpiration = exp - currentTime;
-        console.log("Time until token expiration:", timeUntilExpiration);
         if (timeUntilExpiration < 120) {
           // Refresh if less than 2 minutes left
           await refresh();
