@@ -14,20 +14,32 @@ interface LoginResponse {
 
 export const login = async (dispatch: AppDispatch, credentials: FormData) => {
   try {
-    const res = await fetch("http://localhost:8080/api/auth/signin", {
+    await fetch("http://localhost:8080/api/auth/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ username: "Ben", password: "helloworld123" })
-    });
-
-    const result = await res.json();
-    storeToken({ token: result.token, refresh_token: result.refreshToken });
-    dispatch(setUser({ id: result.id, name: result.name, email: result.email, role: result.role }));
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network error");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.token) {
+          storeToken({ token: data.token, refresh_token: data.refreshToken });
+          dispatch(setUser({ id: data.id, name: data.name, email: data.email, role: data.role }));
+          return data;
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the Fetch operation:", error);
+      });
   } catch (error) {
     console.error("Login failed", error);
-    throw error;
+    return error;
   }
 };
 

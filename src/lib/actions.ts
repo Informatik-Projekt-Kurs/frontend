@@ -34,35 +34,53 @@ export async function refreshAccessToken() {
   if (!cookies().get("accessToken")) {
     return { status: 401, message: "No access token" };
   }
-  const res = await fetch("http://localhost:8080/api/test/refresh", {
+  await fetch("http://localhost:8080/api/test/refresh", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
       /* Authorization: cookies().get("accessToken")?.value */
     }
     /* body: JSON.stringify({ refreshToken: cookies().get("refreshToken") }) */
-  });
-  const result = await res.json();
-
-  if (result.accessToken) {
-    storeToken({ token: result.accessToken, refresh_token: result.refreshToken });
-  }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.accessToken) {
+        storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
+        return data;
+      }
+    })
+    .catch((error) => {
+      console.error("There was a problem with the Fetch operation:", error);
+    });
 }
 
 export async function getUser() {
   if (!cookies().get("accessToken")) {
     return { status: 401, message: "No access token" };
   }
-  const res = await fetch("http://localhost:8080/api/test/user", {
+  await fetch("http://localhost:8080/api/test/user", {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
     }
-  });
-
-  const result = await res.json();
-
-  return result;
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("There was a problem with the Fetch operation:", error);
+    });
 }
 
 export async function getAccessToken() {
