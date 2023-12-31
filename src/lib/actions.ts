@@ -13,7 +13,8 @@ export async function storeToken(request: StoreTokenRequest) {
     value: request.token,
     httpOnly: true,
     sameSite: "strict",
-    secure: true
+    secure: true,
+    expires: new Date(Date.now() + Number(process.env.JWT_EXPIRATION_MS ?? 0))
   });
 
   cookies().set({
@@ -21,7 +22,9 @@ export async function storeToken(request: StoreTokenRequest) {
     value: request.refresh_token,
     httpOnly: true,
     sameSite: "strict",
-    secure: true
+    secure: true,
+    expires: new Date(Date.now() + Number(process.env.JWT_REFRESH_EXPIRATION_MS ?? 0)),
+    path: "/api/test/refresh"
   });
 }
 
@@ -31,6 +34,7 @@ export async function deleteToken() {
 }
 
 export async function refreshAccessToken() {
+  console.log("refreshing access token");
   if (!cookies().get("accessToken")) {
     return { status: 401, message: "No access token" };
   }
