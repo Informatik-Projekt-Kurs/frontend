@@ -2,16 +2,6 @@ import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
 import { setUser } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
 
-interface LoginResponse {
-  token: string;
-  type: string;
-  refreshToken: string;
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
-
 export const login = async (dispatch: AppDispatch, credentials: FormData) => {
   try {
     await fetch("http://localhost:8080/api/auth/signin", {
@@ -19,7 +9,10 @@ export const login = async (dispatch: AppDispatch, credentials: FormData) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ username: "Ben", password: "helloworld123" })
+      body: JSON.stringify({
+        username: credentials.get("email"),
+        password: credentials.get("password")
+      })
     })
       .then((response) => {
         if (!response.ok) {
@@ -45,12 +38,72 @@ export const login = async (dispatch: AppDispatch, credentials: FormData) => {
 
 export const logout = async (dispatch: AppDispatch) => {
   try {
-    console.log("Logging out...");
-    deleteToken();
-    dispatch(setUser(null));
+    deleteToken().then(() => {
+      dispatch(setUser(null));
+      return "Logged out";
+    });
   } catch (error) {
     console.error("Logout failed", error);
     throw error;
+  }
+};
+
+export const signup = async (credentials: FormData) => {
+  try {
+    await fetch("http://localhost:8080/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: credentials.get("name"),
+        email: credentials.get("email"),
+        password: credentials.get("password")
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network error");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Success
+        return "Account created! Please check your email for a confirmation link.";
+      })
+      .catch((error) => {
+        console.error("There was a problem with the Fetch operation:", error);
+      });
+  } catch (error) {
+    console.error("Signup failed", error);
+    return error;
+  }
+};
+
+export const verify = async (id: string) => {
+  try {
+    await fetch(`http://localhost:8080/api/auth/verify/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network error");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Success
+        return "Account verified! Please login.";
+      })
+      .catch((error) => {
+        console.error("There was a problem with the Fetch operation:", error);
+      });
+  } catch (error) {
+    console.error("Verification failed", error);
+    return error;
   }
 };
 
