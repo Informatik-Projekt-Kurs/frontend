@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
   try {
-    if (req.nextUrl.pathname.startsWith("/admin") && user?.role !== "ADMIN") {
+    if (req.nextUrl.pathname.startsWith("/admin") && user && "role" in user && user?.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
 
