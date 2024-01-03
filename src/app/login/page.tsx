@@ -1,33 +1,18 @@
 "use client";
-import { loggedIn, login, logout } from "@/services/authService";
-import { RootState } from "@/store/store";
+import { login, signup } from "@/services/authService";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-type loginInputs = {
-  email: string;
-  password: string;
-};
-
-type registerInputs = {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-};
+import { LoginInputs, RegisterInputs } from "@/types";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const [user, setUser] = useState<Object | null>();
-  const token = useSelector((state: RootState) => state.auth.accessToken);
 
   const {
     register,
     formState: { errors },
     handleSubmit
-  } = useForm<loginInputs>({
+  } = useForm<LoginInputs>({
     mode: "onBlur"
   });
 
@@ -36,63 +21,27 @@ const LoginForm = () => {
     formState: { errors: errors2 },
     handleSubmit: handleSubmit2,
     getValues
-  } = useForm<registerInputs>({
+  } = useForm<RegisterInputs>({
     mode: "onBlur"
   });
 
-  const onSubmitLogin: SubmitHandler<loginInputs> = (data) => {
-    console.log(data);
-    handleLogin();
-  };
-
-  const onSubmitRegister: SubmitHandler<registerInputs> = (data) => console.log(data);
-
-  useEffect(() => {
-    fetchUser();
-    function fetchUser() {
-      const fetchedUser = loggedIn(token);
-      console.log("fetchedUser", fetchedUser);
-      setUser(fetchedUser);
-    }
-    const sign_in_btn = document.querySelector("#sign-in-btn");
-    const sign_up_btn = document.querySelector("#sign-up-btn");
-    const container = document.querySelector(".loginContainer");
-
-    sign_up_btn?.addEventListener("click", () => {
-      container?.classList.add("sign-up-mode");
-    });
-
-    sign_in_btn?.addEventListener("click", () => {
-      container?.classList.remove("sign-up-mode");
-    });
-    return () => {
-      sign_in_btn?.removeEventListener("click", () => {
-        container?.classList.remove("sign-up-mode");
-      });
-      sign_up_btn?.removeEventListener("click", () => {
-        container?.classList.add("sign-up-mode");
-      });
-    };
-  }, [token]);
-
-  const handleLogin = async () => {
+  const onSubmitLogin: SubmitHandler<LoginInputs> = async (data) => {
     try {
-      await login(
-        dispatch,
-        {
-          username: "exampleUser",
-          password: "examplePassword"
-        },
-        true
-      );
+      const result = await login(dispatch, data);
+      console.log(result);
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
 
-  const handleLogout = () => {
-    logout(dispatch);
+  const onSubmitRegister: SubmitHandler<RegisterInputs> = async (data) => {
+    try {
+      await signup(data).then(() => console.log("success"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   return (

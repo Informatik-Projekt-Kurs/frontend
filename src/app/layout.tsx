@@ -5,6 +5,7 @@ import { ReduxProvider } from "@/components/redux/ReduxProvider";
 import React from "react";
 
 import { cn } from "@/lib/utils";
+import TokenRefresh from "@/components/auth/TokenRefresh";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+        <TokenRefresh />
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>

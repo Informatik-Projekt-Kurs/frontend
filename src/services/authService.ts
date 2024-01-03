@@ -1,93 +1,113 @@
-import jwt from "jsonwebtoken";
-import { logIn, logOut, setRefreshToken } from "@/store/features/authSlice";
+import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
+import { setUser } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
+import { LoginInputs, RegisterInputs } from "@/types";
 
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export const login = async (
-  dispatch: AppDispatch,
-  credentials: { username: string; password: string },
-  rememberMe: boolean
-) => {
+export const login = async (dispatch: AppDispatch, credentials: LoginInputs) => {
   try {
-    console.log("Logging in...");
-    console.log("credentials", credentials);
-    const res = new Promise<LoginResponse>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          accessToken:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCIsImV4cCI6MTcwMzM2Nzc0OX0.lmaY1Abrvb9Gde3S5F1xIhOvMWFPjq_eDZQM9w0CqWg",
-          refreshToken: "your_refresh_token_here"
-        });
-      }, 1000);
-    });
-
-    const result = await res;
-    dispatch(logIn(result.accessToken));
-    if (rememberMe) dispatch(setRefreshToken(result.refreshToken));
+    await fetch("http://localhost:8080/api/auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network error");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.token) {
+          storeToken({ token: data.token, refresh_token: data.refreshToken });
+          dispatch(setUser({ id: data.id, name: data.name, email: data.email, role: data.role }));
+          return data;
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the Fetch operation:", error);
+      });
   } catch (error) {
     console.error("Login failed", error);
-    throw error;
+    return error;
   }
 };
 
 export const logout = async (dispatch: AppDispatch) => {
   try {
-    console.log("Logging out...");
-    dispatch(logOut());
+    deleteToken().then(() => {
+      dispatch(setUser(null));
+      return "Logged out";
+    });
   } catch (error) {
     console.error("Logout failed", error);
     throw error;
   }
 };
 
-export const loggedIn = (accessToken: string | null) => {
-  let decodedUserInfo = null;
-
-  if (accessToken != null) {
-    try {
-      const { exp } = jwt.decode(accessToken) as { exp: number };
-      console.log(exp);
-      decodedUserInfo = jwt.decode(accessToken);
-    } catch (error) {
-      console.error("Error decoding token", error);
-      decodedUserInfo = null;
-    }
-    return decodedUserInfo;
-  } else {
-    return false;
+export const signup = async (credentials: RegisterInputs) => {
+  try {
+    await fetch("http://localhost:8080/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: credentials.name,
+        email: credentials.email,
+        password: credentials.password
+      })
+    })
+      .then((data) => {
+        // Success
+        if (!data.ok) {
+          throw new Error("Network error");
+        }
+        return data.text();
+      })
+      .catch((error) => {
+        console.error("There was a problem with the Fetch operation:", error);
+      });
+  } catch (error) {
+    console.error("Signup failed", error);
+    return error;
   }
 };
 
-export const refreshAccessToken = async (dispatch: AppDispatch, refreshToken: string | null) => {
+export const verify = async (id: string) => {
   try {
-    console.log("Refreshing access token...");
-    /* const res = await fetch("your_refresh_token_api_endpoint", {
-      method: "POST",
+    await fetch(`http://localhost:8080/api/auth/verify/${id}`, {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken }),
-    }); 
-    if (!res.ok) {
-      throw new Error("Token refresh failed");
-    }
-    */
-    const res = new Promise<LoginResponse>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          accessToken:
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTcwMzM2NjIzMCwiZXhwIjoxNzAzMzY2NTAwfQ.iTf0c_JHqXeBwW2WyHgE8OaXKaa1n2Ccv_i6s6ZMg3Y",
-          refreshToken: "your_refresh_token_here"
-        });
-      }, 1000);
-    });
+        "Content-Type": "application/json"
+      }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network error");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Success
+        return "Account verified! Please login.";
+      })
+      .catch((error) => {
+        console.error("There was a problem with the Fetch operation:", error);
+      });
+  } catch (error) {
+    console.error("Verification failed", error);
+    return error;
+  }
+};
 
-    const result: { accessToken: string } = await res;
-    dispatch(logIn(result.accessToken));
+export const refresh = async () => {
+  try {
+    await refreshAccessToken();
   } catch (error) {
     console.error("Token refresh failed", error);
     throw error;

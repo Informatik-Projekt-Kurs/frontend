@@ -2,9 +2,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 const useAuth = () => {
-  const isAuthenticated = useSelector((state: RootState) => state.auth.accessToken);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  return { isAuthenticated };
+  return { user };
 };
 
 export default useAuth;

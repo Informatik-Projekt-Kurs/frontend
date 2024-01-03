@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { logout } from "@/services/authService";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -8,10 +9,7 @@ function Logout() {
   const [status, setStatus] = useState("Press logout below...");
   const handleLogout = async () => {
     try {
-      await logout(dispatch).then((res) => {
-        console.log(res);
-        setStatus("Logged out");
-      });
+      await logout(dispatch);
     } catch (error) {
       console.error(error);
       setStatus("Error logging out");
@@ -21,9 +19,9 @@ function Logout() {
   return (
     <div>
       {status}{" "}
-      <button onClick={handleLogout} className="btn btn-primary">
+      <Button onClick={handleLogout} className="btn btn-primary">
         Logout
-      </button>
+      </Button>
     </div>
   );
 }

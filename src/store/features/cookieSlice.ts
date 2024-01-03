@@ -1,24 +1,26 @@
-import { CompanyAuthObject } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
-  user: CompanyAuthObject | null;
+  consent: boolean;
 };
 
 const initialState: AuthState = {
-  user: null
+  consent: false
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<CompanyAuthObject>) {
-      state.user = action.payload;
+    accept(state, action?) {
+      state.consent = true;
+    },
+    decline(state, action?) {
+      state.consent = false;
     }
   }
 });
 
-export const { setUser } = authSlice.actions;
+export const { accept, decline } = authSlice.actions;
 
 export default authSlice.reducer;
