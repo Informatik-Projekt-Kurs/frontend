@@ -1,8 +1,9 @@
 import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
 import { setUser } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
+import { LoginInputs, RegisterInputs } from "@/types";
 
-export const login = async (dispatch: AppDispatch, credentials: FormData) => {
+export const login = async (dispatch: AppDispatch, credentials: LoginInputs) => {
   try {
     await fetch("http://localhost:8080/api/auth/signin", {
       method: "POST",
@@ -10,8 +11,8 @@ export const login = async (dispatch: AppDispatch, credentials: FormData) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username: credentials.get("email"),
-        password: credentials.get("password")
+        email: credentials.email,
+        password: credentials.password
       })
     })
       .then((response) => {
@@ -48,7 +49,7 @@ export const logout = async (dispatch: AppDispatch) => {
   }
 };
 
-export const signup = async (credentials: FormData) => {
+export const signup = async (credentials: RegisterInputs) => {
   try {
     await fetch("http://localhost:8080/api/auth/signup", {
       method: "POST",
@@ -56,20 +57,17 @@ export const signup = async (credentials: FormData) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name: credentials.get("name"),
-        email: credentials.get("email"),
-        password: credentials.get("password")
+        name: credentials.name,
+        email: credentials.email,
+        password: credentials.password
       })
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network error");
-        }
-        return response.json();
-      })
       .then((data) => {
         // Success
-        return "Account created! Please check your email for a confirmation link.";
+        if (!data.ok) {
+          throw new Error("Network error");
+        }
+        return data.text();
       })
       .catch((error) => {
         console.error("There was a problem with the Fetch operation:", error);
