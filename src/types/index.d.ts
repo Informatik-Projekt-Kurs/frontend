@@ -16,3 +16,15 @@ type CompanyAuthObject = {
   email: string;
   role: string;
 } | null;
+
+type LoginInputs = {
+  email: string;
+  password: string;
+};
+
+type RegisterInputs = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
