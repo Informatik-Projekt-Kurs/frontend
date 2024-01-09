@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
   user: CompanyAuthObject | null;
+  isAuthenticated: boolean;
 };
 
 const initialState: AuthState = {
-  user: null
+  user: null,
+  isAuthenticated: false
 };
 
 export const authSlice = createSlice({
@@ -15,10 +17,13 @@ export const authSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<CompanyAuthObject>) {
       state.user = action.payload;
+    },
+    setIsAuthenticated(state, action: PayloadAction<boolean>) {
+      state.isAuthenticated = action.payload;
     }
   }
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, setIsAuthenticated } = authSlice.actions;
 
 export default authSlice.reducer;
