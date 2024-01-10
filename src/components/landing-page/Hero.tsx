@@ -1,10 +1,17 @@
 "use client";
 import { motion } from "framer-motion";
-import React from "react";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
+import useAuth from "@/hooks/useAuth";
 
 function Hero() {
+  const { user } = useAuth();
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(user);
+    }, 3000);
+  });
   const pulseVariants = {
     animate: {
       scale: [1, 1.05, 1],
