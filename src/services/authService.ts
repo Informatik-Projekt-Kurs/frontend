@@ -1,5 +1,5 @@
 import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
-import { setUser } from "@/store/features/authSlice";
+import { setIsAuthenticated, setUser } from "@/store/features/authSlice";
 import { AppDispatch } from "@/store/store";
 import { LoginInputs, RegisterInputs } from "@/types";
 
@@ -25,6 +25,7 @@ export const login = async (dispatch: AppDispatch, credentials: LoginInputs) => 
         if (data.token) {
           storeToken({ token: data.token, refresh_token: data.refreshToken });
           dispatch(setUser({ id: data.id, name: data.name, email: data.email, role: data.role }));
+          dispatch(setIsAuthenticated(true));
           return data;
         }
       })
@@ -41,6 +42,7 @@ export const logout = async (dispatch: AppDispatch) => {
   try {
     deleteToken().then(() => {
       dispatch(setUser(null));
+      dispatch(setIsAuthenticated(false));
       return "Logged out";
     });
   } catch (error) {
