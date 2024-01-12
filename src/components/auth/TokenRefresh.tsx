@@ -31,8 +31,6 @@ const TokenRefresh = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  return null; // This component does not render anything
 };
 
 export default TokenRefresh;
