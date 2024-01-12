@@ -1,5 +1,6 @@
 # MeetMate Frontend
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cacc80b9-c575-409d-a6a2-a8422deb2304/deploy-status)](https://app.netlify.com/sites/ipk-frontend/deploys)
 ## Overview
 
 MeetMate is an innovative platform dedicated to small brands wanting to improve their content and appointment management. Our frontend repository focuses on delivering stunning, engaging, and high-conversion websites with a keen emphasis on search engine optimization, user experience design, and performance.
