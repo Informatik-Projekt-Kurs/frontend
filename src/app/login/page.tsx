@@ -1,7 +1,6 @@
 "use client";
-import { login, signup } from "@/services/authService";
+import { login } from "@/services/authService";
 import { useDispatch } from "react-redux";
-import { LoginInputs, RegisterInputs } from "@/types";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -13,7 +12,7 @@ import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useState } from "react";
 import { FetchEventResult } from "next/dist/server/web/types";
 
@@ -117,7 +116,7 @@ const LoginForm = () => {
                   </FormItem>
                 )}
               />
-              <p className="text-red-800">{error}</p>
+              {error && <p className="text-red-800">{error}</p>}
               <div className="w-full flex justify-between items-center">
                 <div className="flex justify-start items-center text-foreground gap-x-2">
                   <Checkbox defaultChecked id="remember" />
