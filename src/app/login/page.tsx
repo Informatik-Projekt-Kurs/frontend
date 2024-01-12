@@ -1,7 +1,6 @@
 "use client";
 import { login, signup } from "@/services/authService";
 import { useDispatch } from "react-redux";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { LoginInputs, RegisterInputs } from "@/types";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
@@ -11,45 +10,44 @@ import { Button } from "@/components/ui/button";
 import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useState } from "react";
+import { FetchEventResult } from "next/dist/server/web/types";
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }).min(5),
+  password: z.string().min(8, { message: "Password must be at least 8 characters long" })
+});
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit
-  } = useForm<LoginInputs>({
-    mode: "onBlur"
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: ""
+    }
   });
 
-  const {
-    register: register2,
-    formState: { errors: errors2 },
-    handleSubmit: handleSubmit2,
-    getValues
-  } = useForm<RegisterInputs>({
-    mode: "onBlur"
-  });
-
-  const onSubmitLogin: SubmitHandler<LoginInputs> = async (data) => {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     try {
-      const result = await login(dispatch, data);
-      console.log(result);
+      const result = (await login(dispatch, values)) as PromiseFulfilledResult<FetchEventResult>;
+      setError(result?.status === undefined ? "Invalid email or password" : "");
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setError("Invalid email or password");
+      setLoading(false);
       throw error;
     }
-  };
-
-  const onSubmitRegister: SubmitHandler<RegisterInputs> = async (data) => {
-    try {
-      await signup(data).then(() => console.log("success"));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  }
 
   return (
     <div className="w-screen h-screen flex justify-center items-center flex-col loginBg">
@@ -82,30 +80,65 @@ const LoginForm = () => {
             <Separator className="w-[45%] bg-foreground" />
           </div>
 
-          <Input placeholder="Email" className="border-primary text-foreground" />
-          <Input placeholder="Password" type="password" className="border-primary text-foreground" />
-
-          <div className="w-full flex justify-between items-center">
-            {
-              <div className="flex justify-start items-center text-foreground gap-x-2">
-                <Checkbox defaultChecked id="remember" />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="remember"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Remember me
-                  </label>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-full flex justify-center flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Email"
+                        className="border-primary text-foreground"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        type="password"
+                        className="border-primary text-foreground"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <p className="text-red-800">{error}</p>
+              <div className="w-full flex justify-between items-center">
+                <div className="flex justify-start items-center text-foreground gap-x-2">
+                  <Checkbox defaultChecked id="remember" />
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor="remember"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Remember me
+                    </label>
+                  </div>
                 </div>
+                <Link className="text-primary hover:underline text-sm" href="/forgot-password">
+                  Forgot password?
+                </Link>
               </div>
-            }
-            <Link className="text-primary hover:underline text-sm" href="/forgot-password">
-              Forgot password?
-            </Link>
-          </div>
-          <Button className="w-full gap-2 text-foreground" onClick={() => console.log("clicked")}>
-            <IoLogInOutline className="font-bold text-lg " />
-            Log In
-          </Button>
+              <Button type="submit" className="w-full gap-2 text-foreground" disabled={loading}>
+                <IoLogInOutline className="font-bold text-lg" />
+                Log In
+              </Button>
+            </form>
+          </Form>
         </div>
       </div>
       <div className="flex justify-center items-center flex-col mt-8">
