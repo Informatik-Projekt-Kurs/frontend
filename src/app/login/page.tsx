@@ -1,9 +1,16 @@
 "use client";
 import { login, signup } from "@/services/authService";
-import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LoginInputs, RegisterInputs } from "@/types";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { FaGithub, FaGoogle } from "react-icons/fa6";
+import { IoLogInOutline } from "react-icons/io5";
+import Image from "next/image";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -45,144 +52,65 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="loginContainer bg-base-300 before:bg-primary">
-      <div className="forms-container">
-        <div className="signin-signup">
-          <form action="#" className="sign-in-form" onSubmit={handleSubmit(onSubmitLogin)}>
-            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Log In</h2>
-            <input
-              className={`input bg-base-300 mb-4 ${errors.email ? "input-error" : "input-primary"}`}
-              placeholder="Email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value:
-                    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                  message: "Invalid email format"
-                }
-              })}
-            />
-            <input
-              className={`input bg-base-300 mb-4 ${errors.password ? "input-error" : "input-primary"}`}
-              placeholder="Password"
-              type="password"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters long"
-                }
-              })}
-            />
-            {Object.values(errors)[0] && <p className="text-error mb-3">{Object.values(errors)[0].message}</p>}
-            <input type="submit" value="Log In" className="btn btn-primary px-8" />
-            <p className="social-text">Or Sign in with social platforms</p>
-            <div className="social-media">
-              <a href="#" className="social-icon">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#" className="social-icon">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="#" className="social-icon">
-                <i className="fab fa-google"></i>
-              </a>
-              <a href="#" className="social-icon">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-            </div>
-          </form>
-          <form action="#" className="sign-up-form" onSubmit={handleSubmit2(onSubmitRegister)}>
-            <h2 className="text-3xl font-semibold text-primary-content mb-2.5">Sign Up</h2>
-            <input
-              className={`input bg-base-300 mb-4 ${errors2.name ? "input-error" : "input-primary"}`}
-              type="text"
-              placeholder="Name"
-              {...register2("name", {
-                required: "Name is required",
-                maxLength: {
-                  value: 20,
-                  message: "Name must be at most 20 characters long"
-                }
-              })}
-            />
-            <input
-              className={`input bg-base-300 mb-4 ${errors2.email ? "input-error" : "input-primary"}`}
-              type="email"
-              placeholder="Email"
-              {...register2("email", {
-                required: "Email is required",
-                pattern: {
-                  value:
-                    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                  message: "Invalid email format"
-                }
-              })}
-            />
-            <input
-              className={`input bg-base-300 mb-4 ${errors2.password ? "input-error" : "input-primary"}`}
-              type="password"
-              placeholder="Password"
-              {...register2("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters long"
-                }
-              })}
-            />
-            <input
-              className={`input bg-base-300 mb-4 ${errors2.password_confirmation ? "input-error" : "input-primary"}`}
-              type="password"
-              placeholder="Repeat Password"
-              {...register2("password_confirmation", {
-                required: "Password confirmation is required",
-                validate: (value) => value === getValues("password") || "Passwords do not match"
-              })}
-            />
-            {Object.values(errors2)[0] && <p className="text-error mb-3">{Object.values(errors2)[0].message}</p>}
-            <input type="submit" value="Sign Up" className="btn btn-primary px-8" />
-            <p className="social-text">Or Sign up with social platforms</p>
-            <div className="social-media">
-              <a href="#" className="social-icon">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#" className="social-icon">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="#" className="social-icon">
-                <i className="fab fa-google"></i>
-              </a>
-              <a href="#" className="social-icon">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-            </div>
-          </form>
+    <div className="w-screen h-screen flex justify-center items-center flex-col loginBg">
+      <div className="flex justify-center items-center gap-x-2 mb-8">
+        <Image width={100} height={100} alt="" src="/landingLogo.png" className="w-16 h-16 select-none"></Image>
+        <h1 className="text-foreground text-3xl font-bold">Meetmate</h1>
+      </div>
+      <div className="max-w-screen-sm w-[70%] max-sm:w-[90%] py-12 border-primary border-2 rounded-lg shadow-md shadow-primary flex justify-center items-center flex-col">
+        <div className="flex justify-center items-center flex-col w-[60%] max-sm:w-[85%] h-[60%] gap-4 max-w-[350px]">
+          <h2 className="text-3xl font-semibold">Log In</h2>
+          <p className="text-sm">
+            Don&apos;t have an account yet?{" "}
+            <Link className="text-primary hover:underline" href="/signup">
+              Signup
+            </Link>
+          </p>
+          <Separator className="w-full my-2 bg-foreground" />
+          <div className="flex justify-center items-center gap-x-16">
+            <Link href="#">
+              <FaGoogle className="text-foreground text-4xl hover:text-primary transition-colors" />
+            </Link>
+            <Link href="#">
+              <FaGithub className="text-foreground text-4xl hover:text-primary transition-colors" />
+            </Link>
+          </div>
+
+          <div className="flex justify-between items-center flex-row w-full text-foreground">
+            <Separator className="w-[45%] bg-foreground" />
+            <p className="w-[10%] flex justify-center items-center">or</p>
+            <Separator className="w-[45%] bg-foreground" />
+          </div>
+
+          <Input placeholder="Email" className="border-primary text-foreground" />
+          <Input placeholder="Password" type="password" className="border-primary text-foreground" />
+
+          <div className="w-full flex justify-between items-center">
+            {
+              <div className="flex justify-start items-center text-foreground gap-x-2">
+                <Checkbox defaultChecked id="remember" />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Remember me
+                  </label>
+                </div>
+              </div>
+            }
+            <Link className="text-primary hover:underline text-sm" href="/forgot-password">
+              Forgot password?
+            </Link>
+          </div>
+          <Button className="w-full gap-2 text-foreground" onClick={() => console.log("clicked")}>
+            <IoLogInOutline className="font-bold text-lg " />
+            Log In
+          </Button>
         </div>
       </div>
-
-      <div className="panels-container">
-        <div className="panel left-panel">
-          <div className="content">
-            <h3>New here ?</h3>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis, ex ratione. Aliquid!</p>
-            <button className="btn btn-outline text-primary-content px-8" id="sign-up-btn">
-              {" "}
-              Sign up
-            </button>
-          </div>
-        </div>
-        <div className="panel right-panel">
-          <div className="content">
-            <h3>One of us ?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum laboriosam ad deleniti.</p>
-            <button className="btn btn-outline text-primary-content px-8" id="sign-in-btn">
-              {" "}
-              Sign in
-            </button>
-          </div>
-          <Image src="img/register.svg" className="image" alt="" width={100} height={100} />
-        </div>
+      <div className="flex justify-center items-center flex-col mt-8">
+        <h1 className="text-2xl font-semibold text-center">Welcome back</h1>
+        <h3 className="text-center mx-10">To keep connected with us please login with your info </h3>
       </div>
     </div>
   );
