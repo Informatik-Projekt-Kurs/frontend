@@ -517,5 +517,5 @@ canvas {
 }
 
 .authBg {
-  background: linear-gradient(213deg, #09090b 29%, rgb(38, 38, 41, 0.8) 113%);
+  background: linear-gradient(213deg, $background 50%, $secondary 200%);
 }

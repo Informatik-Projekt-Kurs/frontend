@@ -56,7 +56,7 @@ const SignupForm = () => {
         <Image width={100} height={100} alt="" src="/landingLogo.png" className="w-16 h-16 select-none"></Image>
         <h1 className="text-foreground text-3xl font-bold">Meetmate</h1>
       </div>
-      <div className="max-w-screen-sm w-[70%] max-sm:w-[90%] py-11 border-primary border-2 rounded-lg shadow-md shadow-primary flex justify-center items-center flex-col bg-subtle">
+      <div className="max-w-screen-sm w-[70%] max-sm:w-[90%] py-11 border-primary border-2 rounded-lg shadow-md shadow-primary flex justify-center items-center flex-col bg-background">
         <div className="flex justify-center items-center flex-col w-[70%] max-sm:w-[85%] h-[60%] gap-y-4 max-w-[650px]">
           <h2 className="text-3xl font-semibold">Sign Up</h2>
           <p className="text-base">
@@ -96,7 +96,7 @@ const SignupForm = () => {
                       <Input
                         placeholder="Name"
                         type="text"
-                        className="border-primary text-foreground"
+                        className="border-primary text-background"
                         {...field}
                         disabled={loading}
                       />
@@ -113,7 +113,7 @@ const SignupForm = () => {
                     <FormControl>
                       <Input
                         placeholder="Email"
-                        className="border-primary text-foreground"
+                        className="border-primary text-background"
                         {...field}
                         disabled={loading}
                       />
