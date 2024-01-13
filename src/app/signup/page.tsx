@@ -51,38 +51,42 @@ const SignupForm = () => {
   }
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center flex-col loginBg">
+    <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
       <div className="flex justify-center items-center gap-x-2 mb-8">
         <Image width={100} height={100} alt="" src="/landingLogo.png" className="w-16 h-16 select-none"></Image>
         <h1 className="text-foreground text-3xl font-bold">Meetmate</h1>
       </div>
-      <div className="max-w-screen-sm w-[70%] max-sm:w-[90%] py-12 border-primary border-2 rounded-lg shadow-md shadow-primary flex justify-center items-center flex-col">
-        <div className="flex justify-center items-center flex-col w-[60%] max-sm:w-[85%] h-[60%] gap-4 max-w-[350px]">
+      <div className="max-w-screen-sm w-[70%] max-sm:w-[90%] py-9 border-primary border-2 rounded-lg shadow-md shadow-primary flex justify-center items-center flex-col bg-background">
+        <div className="flex justify-center items-center flex-col w-[70%] max-sm:w-[85%] h-[60%] gap-y-4 max-w-[650px]">
           <h2 className="text-3xl font-semibold">Sign Up</h2>
-          <p className="text-sm">
+          <p className="text-base">
             Already have an account?{" "}
             <Link className="text-primary hover:underline" href="/login">
               Login
             </Link>
           </p>
           <Separator className="w-full my-2 bg-foreground" />
-          <div className="flex justify-center items-center gap-x-16">
-            <Link href="#">
-              <FaGoogle className="text-foreground text-4xl hover:text-primary transition-colors" />
+          <div className="flex justify-center items-center gap-x-4">
+            <Link href="#" className="group">
+              <Button variant="ghost" className="px-20" size={"sm"}>
+                <FaGoogle className="text-foreground text-3xl group-hover:text-primary transition-colors" />
+              </Button>
             </Link>
-            <Link href="#">
-              <FaGithub className="text-foreground text-4xl hover:text-primary transition-colors" />
+            <Link href="#" className="group">
+              <Button variant="ghost" className="px-20" size={"sm"}>
+                <FaGithub className="text-foreground text-3xl group-hover:text-primary transition-colors" />
+              </Button>
             </Link>
           </div>
 
-          <div className="flex justify-between items-center flex-row w-full text-foreground">
+          <div className="flex justify-between items-center flex-row w-full text-foreground h-1 mb-4">
             <Separator className="w-[45%] bg-foreground" />
             <p className="w-[10%] flex justify-center items-center">or</p>
             <Separator className="w-[45%] bg-foreground" />
           </div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-full flex justify-center flex-col gap-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-full flex justify-center flex-col gap-y-6">
               <FormField
                 control={form.control}
                 name="name"
@@ -126,6 +130,24 @@ const SignupForm = () => {
                     <FormControl>
                       <Input
                         placeholder="Password"
+                        type="password"
+                        className="border-primary text-foreground"
+                        {...field}
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Repeat Password"
                         type="password"
                         className="border-primary text-foreground"
                         {...field}
