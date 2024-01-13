@@ -93,7 +93,7 @@ const LoginForm = () => {
                     <FormControl>
                       <Input
                         placeholder="Email"
-                        className="border-primary text-foreground"
+                        className="border-primary text-foreground bg-subtle"
                         {...field}
                         disabled={loading}
                       />
@@ -111,7 +111,7 @@ const LoginForm = () => {
                       <Input
                         placeholder="Password"
                         type="password"
-                        className="border-primary text-foreground"
+                        className="border-primary text-foreground bg-subtle"
                         {...field}
                         disabled={loading}
                       />
