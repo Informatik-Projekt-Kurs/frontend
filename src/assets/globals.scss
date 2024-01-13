@@ -8,6 +8,8 @@
   :root {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
+    --elevated: 240 4% 16%;
+    --subtle: 240 4% 10%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
@@ -31,6 +33,8 @@
 
 $background: hsl(222.2 84% 4.9%);
 $foreground: hsl(210 40% 98%);
+$elevated: hsl(240 4% 169%);
+$subtle: hsl(240 4% 10%);
 $card: hsl(222.2 84% 4.9%);
 $card-foreground: hsl(210 40% 98%);
 $popover: hsl(222.2 84% 4.9%);
@@ -510,4 +514,8 @@ canvas {
     flex-direction: column;
     display: flex;
   }
+}
+
+.authBg {
+  background: linear-gradient(213deg, #09090b 29%, rgb(38, 38, 41, 0.8) 113%);
 }
