@@ -52,7 +52,7 @@ const SignupForm = () => {
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
-      <div className="flex justify-center items-center gap-x-2 mb-8">
+      <div className="flex justify-center items-center gap-x-2 my-8">
         <Image width={100} height={100} alt="" src="/landingLogo.png" className="w-16 h-16 select-none"></Image>
         <h1 className="text-foreground text-3xl font-bold">Meetmate</h1>
       </div>
@@ -68,12 +68,12 @@ const SignupForm = () => {
           <Separator className="w-full my-2 bg-foreground" />
           <div className="flex justify-center items-center gap-x-4">
             <Link href="#" className="group">
-              <Button variant="ghost" className="px-20" size={"sm"}>
+              <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                 <FaGoogle className="text-foreground text-3xl group-hover:text-primary transition-colors" />
               </Button>
             </Link>
             <Link href="#" className="group">
-              <Button variant="ghost" className="px-20" size={"sm"}>
+              <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                 <FaGithub className="text-foreground text-3xl group-hover:text-primary transition-colors" />
               </Button>
             </Link>
@@ -186,7 +186,7 @@ const SignupForm = () => {
           </Form>
         </div>
       </div>
-      <div className="flex justify-center items-center flex-col mt-8">
+      <div className="flex justify-center items-center flex-col my-8">
         <h1 className="text-2xl font-semibold text-center">Hello, friend!</h1>
         <h3 className="text-center mx-10">Enter your personal details and start journey with us</h3>
       </div>
