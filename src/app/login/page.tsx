@@ -1,5 +1,5 @@
 "use client";
-import { login } from "@/services/authService";
+import { loginUser } from "@/lib/actions";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
@@ -13,28 +13,54 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useState } from "react";
-import { FetchEventResult } from "next/dist/server/web/types";
+import { useEffect, useState } from "react";
+import { useFormStatus, useFormState } from "react-dom";
 
-const formSchema = z.object({
+export const LoginFormSchema = z.object({
   email: z.string().email({ message: "Invalid email" }).min(5),
   password: z.string().min(8, { message: "Password must be at least 8 characters long" })
 });
 
-const LoginForm = () => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
+export function SubmitButton() {
+  const { pending } = useFormStatus();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  return (
+    <Button type="submit" className="w-full gap-2 text-foreground" disabled={pending}>
+      <IoLogInOutline className="font-bold text-lg" />
+      Log In
+    </Button>
+  );
+}
+
+const LoginForm = () => {
+  const form = useForm<z.infer<typeof LoginFormSchema>>({
+    resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       email: "",
       password: ""
     }
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const [formState, formAction] = useFormState(loginUser, {
+    message: "",
+    errors: undefined,
+    fieldValues: {
+      email: "",
+      password: ""
+    }
+  });
+
+  useEffect(() => {
+    if (formState.message === "success") {
+      setLoading(false);
+      setError("");
+    }
+  }, [formState]);
+
+  /* 
+  async function onSubmit(values: z.infer<typeof LoginFormSchema>) {
     setLoading(true);
     try {
       const result = (await login(dispatch, values)) as PromiseFulfilledResult<FetchEventResult>;
@@ -46,7 +72,7 @@ const LoginForm = () => {
       setLoading(false);
       throw error;
     }
-  }
+  } */
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
@@ -83,65 +109,43 @@ const LoginForm = () => {
             <Separator className="w-[45%] bg-foreground" />
           </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-full flex justify-center flex-col gap-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Email"
-                        className="border-primary text-foreground bg-background"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Password"
-                        type="password"
-                        className="border-primary text-foreground bg-background"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {error && <p className="text-red-800">{error}</p>}
-              <div className="w-full flex justify-between items-center">
-                <div className="flex justify-start items-center text-foreground gap-x-2">
-                  <Checkbox defaultChecked id="remember" />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="remember"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Remember me
-                    </label>
-                  </div>
+          <form action={formAction} className="w-full h-full flex justify-center flex-col gap-y-6">
+            <Input
+              placeholder="Email"
+              name="email"
+              className="border-primary text-foreground bg-background"
+              disabled={loading}
+            />
+
+            <Input
+              placeholder="Password"
+              name="password"
+              type="password"
+              className="border-primary text-foreground bg-background"
+              disabled={loading}
+            />
+
+            {error && <p className="text-red-800">{error}</p>}
+            <div className="w-full flex justify-between items-center">
+              <div className="flex justify-start items-center text-foreground gap-x-2">
+                <Checkbox defaultChecked id="remember" />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Remember me
+                  </label>
                 </div>
-                <Link className="text-primary hover:underline text-sm" href="/forgot-password">
-                  Forgot password?
-                </Link>
               </div>
-              <Button type="submit" className="w-full gap-2 text-foreground" disabled={loading}>
-                <IoLogInOutline className="font-bold text-lg" />
-                Log In
-              </Button>
-            </form>
-          </Form>
+              <Link className="text-primary hover:underline text-sm" href="/forgot-password">
+                Forgot password?
+              </Link>
+            </div>
+            <SubmitButton />
+          </form>
+          <p className="text-foreground">{formState?.message}</p>
+          <p className="text-foreground">{formState?.errors?.email}</p>
+          <p className="text-foreground">{formState?.errors?.password}</p>
         </div>
       </div>
       <div className="flex justify-center items-center flex-col my-8">
