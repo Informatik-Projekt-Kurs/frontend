@@ -13,7 +13,7 @@ import cx from "classnames";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
-export function SubmitButton() {
+const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
@@ -22,7 +22,7 @@ export function SubmitButton() {
       Log In
     </Button>
   );
-}
+};
 
 const LoginForm = () => {
   const { toast } = useToast();

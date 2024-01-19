@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { registerUser } from "@/lib/actions";
 
-export function SubmitButton() {
+const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
@@ -20,7 +20,7 @@ export function SubmitButton() {
       Create Account
     </Button>
   );
-}
+};
 
 const SignupForm = () => {
   const [loading, setLoading] = useState(false);
@@ -120,6 +120,7 @@ const SignupForm = () => {
               <IoLogInOutline className="font-bold text-lg" />
               Create Account
             </Button>
+            <SubmitButton />
           </form>
         </div>
       </div>
