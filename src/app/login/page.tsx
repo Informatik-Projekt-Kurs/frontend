@@ -1,6 +1,4 @@
 "use client";
-import { loginUser } from "@/lib/actions";
-import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -9,17 +7,11 @@ import { Button } from "@/components/ui/button";
 import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useEffect, useState } from "react";
 import { useFormStatus, useFormState } from "react-dom";
-
-export const LoginFormSchema = z.object({
-  email: z.string().email({ message: "Invalid email" }).min(5),
-  password: z.string().min(8, { message: "Password must be at least 8 characters long" })
-});
+import { loginUser } from "@/lib/actions";
+import cx from "classnames";
+import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export function SubmitButton() {
   const { pending } = useFormStatus();
@@ -33,16 +25,7 @@ export function SubmitButton() {
 }
 
 const LoginForm = () => {
-  const form = useForm<z.infer<typeof LoginFormSchema>>({
-    resolver: zodResolver(LoginFormSchema),
-    defaultValues: {
-      email: "",
-      password: ""
-    }
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
-
+  const { toast } = useToast();
   const [formState, formAction] = useFormState(loginUser, {
     message: "",
     errors: undefined,
@@ -54,25 +37,14 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (formState.message === "success") {
-      setLoading(false);
-      setError("");
+      toast({
+        title: "Logged In!",
+        description: "Welcome back! You will be redirected any moment",
+        variant: "default",
+        className: "border-emerald-300"
+      });
     }
-  }, [formState]);
-
-  /* 
-  async function onSubmit(values: z.infer<typeof LoginFormSchema>) {
-    setLoading(true);
-    try {
-      const result = (await login(dispatch, values)) as PromiseFulfilledResult<FetchEventResult>;
-      setError(result?.status === undefined ? "Invalid email or password" : "");
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setError("Invalid email or password");
-      setLoading(false);
-      throw error;
-    }
-  } */
+  }, [formState, toast]);
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
@@ -112,20 +84,33 @@ const LoginForm = () => {
           <form action={formAction} className="w-full h-full flex justify-center flex-col gap-y-6">
             <Input
               placeholder="Email"
+              required
               name="email"
-              className="border-primary text-foreground bg-background"
-              disabled={loading}
+              className={cx(
+                "text-foreground bg-background border-primary",
+                formState.errors?.email && "border-red-700"
+              )}
             />
 
             <Input
               placeholder="Password"
+              required
               name="password"
               type="password"
-              className="border-primary text-foreground bg-background"
-              disabled={loading}
+              className={cx(
+                "text-foreground bg-background border-primary",
+                formState.errors?.password && "border-red-700"
+              )}
             />
 
-            {error && <p className="text-red-800">{error}</p>}
+            {formState?.message === "error" ? (
+              <div className="flex justify-start items-start mt-[-10px] mb-[-10px] flex-col">
+                <p className="text-red-700 text-sm empty:hidden">{formState?.errors?.email}</p>
+                <p className="text-red-700 text-sm empty:hidden">{formState?.errors?.password}</p>
+              </div>
+            ) : (
+              ""
+            )}
             <div className="w-full flex justify-between items-center">
               <div className="flex justify-start items-center text-foreground gap-x-2">
                 <Checkbox defaultChecked id="remember" />
@@ -143,9 +128,6 @@ const LoginForm = () => {
             </div>
             <SubmitButton />
           </form>
-          <p className="text-foreground">{formState?.message}</p>
-          <p className="text-foreground">{formState?.errors?.email}</p>
-          <p className="text-foreground">{formState?.errors?.password}</p>
         </div>
       </div>
       <div className="flex justify-center items-center flex-col my-8">

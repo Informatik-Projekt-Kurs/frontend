@@ -1,6 +1,4 @@
 "use client";
-import { signup } from "@/services/authService";
-import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -9,46 +7,35 @@ import { Button } from "@/components/ui/button";
 import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useState } from "react";
-import { FetchEventResult } from "next/dist/server/web/types";
-import { RegisterInputs } from "@/types";
+import { useFormState, useFormStatus } from "react-dom";
+import { registerUser } from "@/lib/actions";
 
-const formSchema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
-  email: z.string().email({ message: "Invalid email" }).min(5),
-  password: z.string().min(8, { message: "Password must be at least 8 characters long" })
-});
+export function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-full gap-2 text-foreground" disabled={pending}>
+      <IoLogInOutline className="font-bold text-lg" />
+      Create Account
+    </Button>
+  );
+}
 
 const SignupForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
+  const [formState, formAction] = useFormState(registerUser, {
+    message: "",
+    errors: undefined,
+    fieldValues: {
       name: "",
       email: "",
-      password: ""
+      password: "",
+      confirmPassword: ""
     }
   });
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    try {
-      const result = (await signup(values as RegisterInputs)) as PromiseFulfilledResult<FetchEventResult>;
-      setError(result?.status === undefined ? "Invalid email or password" : "");
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setError("Invalid email or password");
-      setLoading(false);
-      throw error;
-    }
-  }
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
@@ -85,105 +72,55 @@ const SignupForm = () => {
             <Separator className="w-[45%] bg-foreground" />
           </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-full flex justify-center flex-col gap-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Name"
-                        type="text"
-                        className="border-primary text-background"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Email"
-                        className="border-primary text-background"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Password"
-                        type="password"
-                        className="border-primary text-foreground"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Repeat Password"
-                        type="password"
-                        className="border-primary text-foreground"
-                        {...field}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {error && <p className="text-red-800">{error}</p>}
-              <div className="w-full flex justify-between items-center">
-                <div className="flex justify-start items-center text-foreground gap-x-1">
-                  <Checkbox defaultChecked id="terms" />
-                  <div className="grid leading-none">
-                    <label
-                      htmlFor="terms"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      I agree to the{" "}
-                      <Link href="#" className="text-primary hover:underline text-sm">
-                        Terms of Service
-                      </Link>{" "}
-                      and{" "}
-                      <Link href="#" className="text-primary hover:underline text-sm">
-                        Privacy Policy
-                      </Link>
-                    </label>
-                  </div>
+          <form action={formAction} className="w-full h-full flex justify-center flex-col gap-y-6">
+            <Input
+              name="name"
+              placeholder="Name"
+              type="text"
+              className="border-primary text-background"
+              disabled={loading}
+            />
+            <Input name="email" placeholder="Email" className="border-primary text-background" disabled={loading} />
+            <Input
+              placeholder="Password"
+              name="password"
+              type="password"
+              className="border-primary text-foreground"
+              disabled={loading}
+            />
+
+            <Input
+              placeholder="Repeat Password"
+              name="confirmPasword"
+              type="password"
+              className="border-primary text-foreground"
+              disabled={loading}
+            />
+            {error && <p className="text-red-800">{error}</p>}
+            <div className="w-full flex justify-between items-center">
+              <div className="flex justify-start items-center text-foreground gap-x-1">
+                <Checkbox defaultChecked id="terms" />
+                <div className="grid leading-none">
+                  <label
+                    htmlFor="terms"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    I agree to the{" "}
+                    <Link href="#" className="text-primary hover:underline text-sm">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="#" className="text-primary hover:underline text-sm">
+                      Privacy Policy
+                    </Link>
+                  </label>
                 </div>
               </div>
-              <Button type="submit" className="w-full gap-2 text-foreground" disabled={loading}>
-                <IoLogInOutline className="font-bold text-lg" />
-                Create Account
-              </Button>
-            </form>
-          </Form>
+            </div>
+            <Button type="submit" className="w-full gap-2 text-foreground" disabled={loading}>
+              <IoLogInOutline className="font-bold text-lg" />
+              Create Account
+            </Button>
+          </form>
         </div>
       </div>
       <div className="flex justify-center items-center flex-col my-8">

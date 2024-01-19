@@ -1,6 +1,5 @@
 "use server";
 
-import { LoginFormSchema } from "@/app/login/page";
 import { cookies } from "next/headers";
 import { ZodError, z } from "zod";
 
@@ -94,23 +93,18 @@ export async function getAccessToken() {
   return cookies().get("accessToken")?.value;
 }
 
-export type Fields = {
-  email: string;
-  password: string;
-};
-
-export type FormState = {
+type LoginFormState = {
   message: string;
-  errors: Record<keyof Fields, string> | undefined;
-  fieldValues: Fields;
+  errors: Record<keyof { email: string; password: string }, string> | undefined;
+  fieldValues: { email: string; password: string };
 };
 
-export async function loginUser(prevState: FormState, formData: FormData): Promise<FormState> {
+export async function loginUser(prevState: LoginFormState, formData: FormData): Promise<LoginFormState> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const schema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8)
+    email: z.string().email({ message: "Please enter your email in format: yourname@example.com" }).min(5),
+    password: z.string().min(8, { message: "Your Password must be at least 8 characters long" })
   });
   const parse = schema.safeParse({
     email: formData.get("email"),
@@ -129,9 +123,10 @@ export async function loginUser(prevState: FormState, formData: FormData): Promi
   }
   const data = parse.data;
 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   try {
     return {
-      message: "Success",
+      message: "success",
       errors: undefined,
       fieldValues: {
         email: "",
@@ -148,14 +143,6 @@ export async function loginUser(prevState: FormState, formData: FormData): Promi
     };
   }
   /* try {
-    return {
-      message: "Success",
-      errors: undefined,
-      fieldValues: {
-        email: "",
-        password: ""
-      }
-    };
     await fetch("http://localhost:8080/api/auth/signin", {
       method: "POST",
       headers: {
@@ -180,4 +167,75 @@ export async function loginUser(prevState: FormState, formData: FormData): Promi
       fieldValues: { email, password }
     };
   } */
+}
+
+export type SignupFormState = {
+  message: string;
+  errors: Record<keyof { name: string; email: string; password: string; confirmPassword: string }, string> | undefined;
+  fieldValues: { name: string; email: string; password: string; confirmPassword: string };
+};
+
+export async function registerUser(prevState: SignupFormState, formData: FormData): Promise<SignupFormState> {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+  const schema = z
+    .object({
+      name: z.string().min(3),
+      email: z.string().email(),
+      password: z.string().min(8),
+      confirmPassword: z.string().min(8)
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"]
+    });
+  const parse = schema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword")
+  });
+
+  if (!parse.success) {
+    return {
+      message: "error",
+      errors: {
+        name: parse.error.flatten().fieldErrors["name"]?.[0] ?? "",
+        email: parse.error.flatten().fieldErrors["email"]?.[0] ?? "",
+        password: parse.error.flatten().fieldErrors["password"]?.[0] ?? "",
+        confirmPassword: parse.error.flatten().fieldErrors["confirmPassword"]?.[0] ?? ""
+      },
+      fieldValues: { name, email, password, confirmPassword }
+    };
+  }
+  const data = parse.data;
+  console.log(data);
+
+  try {
+    return {
+      message: "Success",
+      errors: undefined,
+      fieldValues: {
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+      }
+    };
+  } catch (error) {
+    const zodError = error as ZodError;
+    const errorMap = zodError.flatten().fieldErrors;
+    return {
+      message: "error",
+      errors: {
+        name: errorMap["name"]?.[0] ?? "",
+        email: errorMap["email"]?.[0] ?? "",
+        password: errorMap["password"]?.[0] ?? "",
+        confirmPassword: errorMap["confirmPassword"]?.[0] ?? ""
+      },
+      fieldValues: { name, email, password, confirmPassword }
+    };
+  }
 }
