@@ -10,7 +10,9 @@ export default function Home() {
   return (
     <>
       <main
-        className={`flex justify-start items-center bg-background min-h-screen flex-col overflow-x-clip w-full relative`}>
+        className={
+          "flex justify-start items-center bg-background min-h-screen flex-col overflow-x-clip w-full relative"
+        }>
         <LandingNavbar />
         <Hero />
         {/* Gallery */}
