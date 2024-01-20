@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import * as THREE from "three";
 import { fragmentShader } from "./fragmentShader";
 import { vertexShader } from "./vertexShader";
-// @ts-ignore
+// @ts-expect-error
 import * as TWEEN from "@tweenjs/tween.js";
 
 function Sphere() {
