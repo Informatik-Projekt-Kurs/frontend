@@ -96,7 +96,7 @@ const SignupForm = () => {
                       <Input
                         placeholder="Name"
                         type="text"
-                        className="border-primary text-background"
+                        className="border-primary text-foreground"
                         {...field}
                         disabled={loading}
                       />
@@ -113,7 +113,7 @@ const SignupForm = () => {
                     <FormControl>
                       <Input
                         placeholder="Email"
-                        className="border-primary text-background"
+                        className="border-primary text-foreground"
                         {...field}
                         disabled={loading}
                       />
