@@ -1,5 +1,6 @@
 "use server";
 
+import { User } from "@/types";
 import { cookies } from "next/headers";
 import { ZodError, z } from "zod";
 
@@ -37,18 +38,21 @@ export async function deleteToken() {
 export async function refreshAccessToken() {
   try {
     if (!cookies().get("accessToken")) {
-      return { status: 401, message: "No access token" };
+      return;
     }
     await fetch("http://localhost:8080/api/test/refresh", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
-        /* Authorization: cookies().get("accessToken")?.value */
-      }
-      /* body: JSON.stringify({ refreshToken: cookies().get("refreshToken") }) */
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + cookies().get("accessToken")?.value
+      },
+      body: JSON.stringify({ refreshToken: cookies().get("refreshToken") })
     })
       .then((response) => {
-        if (!response.ok) {
+        if (response.status === 401) {
+          deleteToken();
+          throw new Error("Unauthorized");
+        } else if (!response.ok) {
           throw new Error("Network error");
         }
         return response.json();
@@ -64,28 +68,30 @@ export async function refreshAccessToken() {
   }
 }
 
-export async function getUser() {
+export async function getUser(): Promise<User | null> {
   try {
     if (!cookies().get("accessToken")) {
-      return { status: 401, message: "No access token" };
+      throw new Error("Unauthorized");
     }
-    await fetch("http://localhost:8080/api/test/user", {
+    await fetch("http://localhost:8080/api/user/get", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + cookies().get("accessToken")?.value
       }
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network error");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    }).then((response) => {
+      if (response.status === 401) {
+        deleteToken();
+        throw new Error("Unauthorized");
+      } else if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json() as Promise<User>;
+    });
+    return null;
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
+    return null;
   }
 }
 
@@ -122,17 +128,36 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     };
   }
   const data = parse.data;
+  const encodedData = Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key as keyof typeof data]))
+    .join("&");
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   try {
-    return {
-      message: "success",
-      errors: undefined,
-      fieldValues: {
-        email: "",
-        password: ""
-      }
-    };
+    const response = await fetch("http://localhost:8080/api/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: encodedData
+    });
+    if (response.ok) {
+      const data = await response.json();
+      storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
+      return {
+        message: "success",
+        errors: undefined,
+        fieldValues: {
+          email: "",
+          password: ""
+        }
+      };
+    } else {
+      return {
+        message: "error",
+        errors: { email: "Invalid email or password", password: "Invalid email or password" },
+        fieldValues: { email, password }
+      };
+    }
   } catch (error) {
     const zodError = error as ZodError;
     const errorMap = zodError.flatten().fieldErrors;
@@ -142,31 +167,6 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
       fieldValues: { email, password }
     };
   }
-  /* try {
-    await fetch("http://localhost:8080/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: formData.get("email"),
-        password: formData.get("password")
-      })
-    }).then((response) => {
-      if (!response.ok) {
-        return { status: response.status, message: response.statusText };
-      }
-      return response.json();
-    });
-  } catch (error) {
-    const zodError = error as ZodError;
-    const errorMap = zodError.flatten().fieldErrors;
-    return {
-      message: "error",
-      errors: { email: errorMap["email"]?.[0] ?? "", password: errorMap["password"]?.[0] ?? "" },
-      fieldValues: { email, password }
-    };
-  } */
 }
 
 export type SignupFormState = {
@@ -211,19 +211,41 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
     };
   }
   const data = parse.data;
-  console.log(data);
+  const encodedData = Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key as keyof typeof data]))
+    .join("&");
 
   try {
-    return {
-      message: "Success",
-      errors: undefined,
-      fieldValues: {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
-      }
-    };
+    const response = await fetch("http://localhost:8080/api/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: encodedData
+    });
+    if (response.ok) {
+      return {
+        message: "success",
+        errors: undefined,
+        fieldValues: {
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: ""
+        }
+      };
+    } else {
+      return {
+        message: "error",
+        errors: {
+          name: "Something went wrong",
+          email: "Something went wrong",
+          password: "Something went wrong",
+          confirmPassword: "Something went wrong"
+        },
+        fieldValues: { name, email, password, confirmPassword }
+      };
+    }
   } catch (error) {
     const zodError = error as ZodError;
     const errorMap = zodError.flatten().fieldErrors;
