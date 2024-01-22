@@ -40,18 +40,16 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (formState.message === "success") {
-      setNewUser();
+      getUser().then((user) => {
+        dispatch(setUser(user));
+        dispatch(setIsAuthenticated(true));
+      });
       toast({
         title: "Logged In!",
         description: "Welcome back! You will be redirected any moment",
         variant: "default",
         className: "border-emerald-300"
       });
-    }
-    async function setNewUser() {
-      const user = await getUser();
-      dispatch(setUser(user));
-      dispatch(setIsAuthenticated(true));
     }
   }, [formState, toast, dispatch]);
 
