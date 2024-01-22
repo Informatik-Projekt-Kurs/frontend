@@ -6,6 +6,7 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 import TokenRefresh from "@/components/auth/TokenRefresh";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         {/* <TokenRefresh /> */}
         <ReduxProvider>{children}</ReduxProvider>
+        <Toaster />
       </body>
     </html>
   );
