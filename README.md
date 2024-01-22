@@ -1,6 +1,9 @@
 # MeetMate Frontend
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/cacc80b9-c575-409d-a6a2-a8422deb2304/deploy-status)](https://app.netlify.com/sites/ipk-frontend/deploys)
+[![DeepSource](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend.svg/?label=code+coverage&show_trend=true&token=Ezt4_99HdoFs6gqs6Hhm6G_4)](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend/)
+[![DeepSource](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend.svg/?label=active+issues&show_trend=true&token=Ezt4_99HdoFs6gqs6Hhm6G_4)](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend/)
+
 ## Overview
 
 MeetMate is an innovative platform dedicated to small brands wanting to improve their content and appointment management. Our frontend repository focuses on delivering stunning, engaging, and high-conversion websites with a keen emphasis on search engine optimization, user experience design, and performance.
