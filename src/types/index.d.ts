@@ -28,3 +28,10 @@ type RegisterInputs = {
   password: string;
   password_confirmation: string;
 };
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};

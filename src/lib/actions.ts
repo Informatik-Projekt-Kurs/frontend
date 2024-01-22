@@ -1,5 +1,6 @@
 "use server";
 
+import { User } from "@/types";
 import { cookies } from "next/headers";
 import { ZodError, z } from "zod";
 
@@ -67,7 +68,7 @@ export async function refreshAccessToken() {
   }
 }
 
-export async function getUser() {
+export async function getUser(): Promise<User | null> {
   try {
     if (!cookies().get("accessToken")) {
       throw new Error("Unauthorized");
@@ -85,10 +86,12 @@ export async function getUser() {
       } else if (!response.ok) {
         throw new Error("Network error");
       }
-      return response.json();
+      return response.json() as Promise<User>;
     });
+    return null;
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
+    return null;
   }
 }
 
