@@ -60,7 +60,7 @@ const config = {
         ],
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "no-unused-vars": "off",
+        "no-unused-vars": "warn",
         "no-dupe-else-if": "error",
         "no-dupe-keys": "error",
         "no-duplicate-imports": "error",
