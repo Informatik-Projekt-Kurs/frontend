@@ -40,7 +40,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (formState.message === "success") {
-      getUser().then((user) => {
+      void getUser().then((user) => {
         dispatch(setUser(user));
         dispatch(setIsAuthenticated(true));
       });
