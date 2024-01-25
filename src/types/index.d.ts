@@ -10,9 +10,28 @@ declare global {
   }
 }
 
-type CompanyAuthObject = {
+export type CompanyAuthObject = {
   id: number;
   name: string;
   email: string;
   role: string;
 } | null;
+
+export type LoginInputs = {
+  email: string;
+  password: string;
+};
+
+export type RegisterInputs = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
