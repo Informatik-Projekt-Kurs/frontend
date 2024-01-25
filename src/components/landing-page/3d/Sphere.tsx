@@ -22,7 +22,7 @@ function Sphere() {
   useFrame(() => {
     const elapsed = Date.now() - start.current;
     uniforms.current.time.value = 0.00005 * elapsed;
-    meshRef.current.rotation.z += 0.001;
+    (meshRef.current as any).rotation.z += 0.001;
     TWEEN.update();
   });
 
@@ -32,11 +32,11 @@ function Sphere() {
       camera.updateProjectionMatrix();
 
       if (windowWidth <= 696) {
-        meshRef.current?.position.set(14, 10, 0);
+        (meshRef.current as any).position.set(14, 10, 0);
       } else if (windowWidth <= 1024) {
-        meshRef.current?.position.set(18, 14, 0);
+        (meshRef.current as any).position.set(18, 14, 0);
       } else {
-        meshRef.current?.position.set(22, 16, 0);
+        (meshRef.current as any).position.set(22, 16, 0);
       }
     };
 
@@ -64,7 +64,7 @@ function Sphere() {
       // Tween update for smooth transition
       if (meshRef.current) {
         TWEEN.removeAll();
-        new TWEEN.Tween(meshRef.current.rotation)
+        new TWEEN.Tween((meshRef.current as any).rotation)
           .to({ x: targetRotation.x, y: targetRotation.y }, 2000)
           .easing(TWEEN.Easing.Quartic.Out)
           .start();
@@ -78,7 +78,7 @@ function Sphere() {
     };
   }, [size]);
 
-  const CustomShaderMaterial = shaderMaterial(uniforms.current, vertexShader, fragmentShader);
+  const CustomShaderMaterial = shaderMaterial(uniforms.current as any, vertexShader, fragmentShader);
 
   extend({ CustomShaderMaterial });
   return (
