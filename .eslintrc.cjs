@@ -14,7 +14,7 @@ const config = {
       }
     },
     {
-      files: ["*.ts", "*.tsx"],
+      files: ["*.ts", "*.tsx", "*.jsx"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         project: path.join(__dirname, "./tsconfig.json")
