@@ -1,4 +1,4 @@
-import { deleteToken, refreshAccessToken } from "@/lib/actions";
+import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
 import { setIsAuthenticated, setUser } from "@/store/features/authSlice";
 import { type AppDispatch } from "@/store/store";
 import { type LoginInputs, type RegisterInputs } from "@/types";
