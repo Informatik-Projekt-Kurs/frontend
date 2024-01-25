@@ -8,10 +8,12 @@ import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
 import { useFormStatus, useFormState } from "react-dom";
-import { loginUser } from "@/lib/actions";
+import { getUser, loginUser } from "@/lib/actions";
 import cx from "classnames";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { setIsAuthenticated, setUser } from "@/store/features/authSlice";
+import { useDispatch } from "react-redux";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -34,9 +36,14 @@ const LoginForm = () => {
       password: ""
     }
   });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (formState.message === "success") {
+      getUser().then((user) => {
+        dispatch(setUser(user));
+        dispatch(setIsAuthenticated(true));
+      });
       toast({
         title: "Logged In!",
         description: "Welcome back! You will be redirected any moment",
@@ -44,7 +51,7 @@ const LoginForm = () => {
         className: "border-emerald-300"
       });
     }
-  }, [formState, toast]);
+  }, [formState, toast, dispatch]);
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
