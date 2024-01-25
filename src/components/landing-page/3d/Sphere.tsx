@@ -6,7 +6,6 @@ import * as THREE from "three";
 import { fragmentShader } from "./fragmentShader";
 import { vertexShader } from "./vertexShader";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 import * as TWEEN from "@tweenjs/tween.js";
 
 function Sphere() {
