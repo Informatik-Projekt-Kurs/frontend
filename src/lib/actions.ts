@@ -1,6 +1,6 @@
 "use server";
 
-import { type User } from "@/types";
+import { CompanyAuthObject } from "@/types";
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
 
@@ -68,7 +68,7 @@ export async function refreshAccessToken() {
   }
 }
 
-export async function getUser(): Promise<User | null> {
+export async function getUser(): Promise<CompanyAuthObject | null> {
   try {
     if (cookies().get("accessToken") === null) {
       throw new Error("Unauthorized");
@@ -86,7 +86,7 @@ export async function getUser(): Promise<User | null> {
       } else if (!response.ok) {
         throw new Error("Network error");
       }
-      return response.json() as Promise<User>;
+      return response.json() as Promise<CompanyAuthObject>;
     });
     return null;
   } catch (error) {
