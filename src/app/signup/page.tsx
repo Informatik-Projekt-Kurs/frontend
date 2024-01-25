@@ -7,25 +7,24 @@ import { Button } from "@/components/ui/button";
 import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { registerUser } from "@/lib/actions";
+import { useToast } from "@/components/ui/use-toast";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
     <Button type="submit" className="w-full gap-2 text-foreground" disabled={pending}>
-      <IoLogInOutline className="font-bold text-lg" />
+      <IoLogInOutline className="text-lg font-bold" />
       Create Account
     </Button>
   );
 };
 
 const SignupForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
-
+  const { toast } = useToast();
   const [formState, formAction] = useFormState(registerUser, {
     message: "",
     errors: undefined,
@@ -37,14 +36,25 @@ const SignupForm = () => {
     }
   });
 
+  useEffect(() => {
+    if (formState.message === "success") {
+      toast({
+        title: "Logged In!",
+        description: "Welcome back! You will be redirected any moment",
+        variant: "default",
+        className: "border-emerald-300"
+      });
+    }
+  }, [formState, toast]);
+
   return (
-    <div className="w-screen min-h-screen flex justify-center items-center flex-col authBg">
-      <div className="flex justify-center items-center gap-x-2 my-8">
-        <Image width={100} height={100} alt="" src="/landingLogo.png" className="w-16 h-16 select-none"></Image>
-        <h1 className="text-foreground text-3xl font-bold">Meetmate</h1>
+    <div className="authBg flex min-h-screen w-screen flex-col items-center justify-center">
+      <div className="my-8 flex items-center justify-center gap-x-2">
+        <Image width={100} height={100} alt="" src="/landingLogo.png" className="size-16 select-none"></Image>
+        <h1 className="text-3xl font-bold text-foreground">Meetmate</h1>
       </div>
-      <div className="max-w-screen-sm w-[70%] max-sm:w-[90%] py-11 border-primary border-2 rounded-lg shadow-md shadow-primary flex justify-center items-center flex-col bg-background">
-        <div className="flex justify-center items-center flex-col w-[70%] max-sm:w-[85%] h-[60%] gap-y-4 max-w-[650px]">
+      <div className="flex w-[70%] max-w-screen-sm flex-col items-center justify-center rounded-lg border-2 border-primary bg-background py-11 shadow-md shadow-primary max-sm:w-[90%]">
+        <div className="flex h-[60%] w-[70%] max-w-[650px] flex-col items-center justify-center gap-y-4 max-sm:w-[85%]">
           <h2 className="text-3xl font-semibold">Sign Up</h2>
           <p className="text-base">
             Already have an account?{" "}
@@ -52,81 +62,73 @@ const SignupForm = () => {
               Log In
             </Link>
           </p>
-          <Separator className="w-full my-2 bg-foreground" />
-          <div className="flex justify-center items-center gap-x-4">
+          <Separator className="my-2 w-full bg-foreground" />
+          <div className="flex items-center justify-center gap-x-4">
             <Link href="#" className="group">
               <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                <FaGoogle className="text-foreground text-3xl group-hover:text-primary transition-colors" />
+                <FaGoogle className="text-3xl text-foreground transition-colors group-hover:text-primary" />
               </Button>
             </Link>
             <Link href="#" className="group">
               <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                <FaGithub className="text-foreground text-3xl group-hover:text-primary transition-colors" />
+                <FaGithub className="text-3xl text-foreground transition-colors group-hover:text-primary" />
               </Button>
             </Link>
           </div>
 
-          <div className="flex justify-between items-center flex-row w-full text-foreground h-1 mb-4">
+          <div className="mb-4 flex h-1 w-full flex-row items-center justify-between text-foreground">
             <Separator className="w-[45%] bg-foreground" />
-            <p className="w-[10%] flex justify-center items-center">or</p>
+            <p className="flex w-[10%] items-center justify-center">or</p>
             <Separator className="w-[45%] bg-foreground" />
           </div>
 
-          <form action={formAction} className="w-full h-full flex justify-center flex-col gap-y-6">
-            <Input
-              name="name"
-              placeholder="Name"
-              type="text"
-              className="border-primary text-background"
-              disabled={loading}
-            />
-            <Input name="email" placeholder="Email" className="border-primary text-background" disabled={loading} />
-            <Input
-              placeholder="Password"
-              name="password"
-              type="password"
-              className="border-primary text-foreground"
-              disabled={loading}
-            />
+          <form action={formAction} className="flex size-full flex-col justify-center gap-y-6">
+            <Input name="name" placeholder="Name" type="text" className="border-primary text-background" />
+            <Input name="email" placeholder="Email" className="border-primary text-background" />
+            <Input placeholder="Password" name="password" type="password" className="border-primary text-foreground" />
 
             <Input
               placeholder="Repeat Password"
               name="confirmPasword"
               type="password"
               className="border-primary text-foreground"
-              disabled={loading}
             />
-            {error && <p className="text-red-800">{error}</p>}
-            <div className="w-full flex justify-between items-center">
-              <div className="flex justify-start items-center text-foreground gap-x-1">
+            {formState?.message === "error" && (
+              <div className="my-[-10px] flex flex-col items-start justify-start">
+                <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.email}</p>
+                <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.password}</p>
+              </div>
+            )}
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center justify-start gap-x-1 text-foreground">
                 <Checkbox defaultChecked id="terms" />
                 <div className="grid leading-none">
                   <label
                     htmlFor="terms"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     I agree to the{" "}
-                    <Link href="#" className="text-primary hover:underline text-sm">
+                    <Link href="#" className="text-sm text-primary hover:underline">
                       Terms of Service
                     </Link>{" "}
                     and{" "}
-                    <Link href="#" className="text-primary hover:underline text-sm">
+                    <Link href="#" className="text-sm text-primary hover:underline">
                       Privacy Policy
                     </Link>
                   </label>
                 </div>
               </div>
             </div>
-            <Button type="submit" className="w-full gap-2 text-foreground" disabled={loading}>
-              <IoLogInOutline className="font-bold text-lg" />
+            <Button type="submit" className="w-full gap-2 text-foreground">
+              <IoLogInOutline className="text-lg font-bold" />
               Create Account
             </Button>
             <SubmitButton />
           </form>
         </div>
       </div>
-      <div className="flex justify-center items-center flex-col my-8">
-        <h1 className="text-2xl font-semibold text-center">Hello, friend!</h1>
-        <h3 className="text-center mx-10">Enter your personal details and start journey with us</h3>
+      <div className="my-8 flex flex-col items-center justify-center">
+        <h1 className="text-center text-2xl font-semibold">Hello, friend!</h1>
+        <h3 className="mx-10 text-center">Enter your personal details and start journey with us</h3>
       </div>
     </div>
   );

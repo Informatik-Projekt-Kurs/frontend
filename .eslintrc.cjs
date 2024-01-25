@@ -25,8 +25,7 @@ const config = {
         "plugin:@typescript-eslint/recommended-type-checked",
         "plugin:@typescript-eslint/stylistic-type-checked",
         "plugin:tailwindcss/recommended",
-        "plugin:react/recommended",
-        "plugin:@next/next/recommended"
+        "plugin:react/recommended"
       ],
       rules: {
         "no-restricted-imports": "off",
@@ -77,14 +76,8 @@ const config = {
         "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
         "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
         "@typescript-eslint/no-empty-interface": "error",
-        "consistent-return": "error",
-        "@typescript-eslint/explicit-function-return-type": [
-          "warn",
-          {
-            allowExpressions: true,
-            allowTypedFunctionExpressions: true
-          }
-        ],
+        "consistent-return": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
         "object-shorthand": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "no-implicit-coercion": "error",

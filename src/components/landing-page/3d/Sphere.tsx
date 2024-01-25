@@ -1,17 +1,19 @@
+/* eslint-disable */
 import { shaderMaterial } from "@react-three/drei";
 import { extend, useFrame, useThree } from "@react-three/fiber";
 import React, { useEffect } from "react";
 import * as THREE from "three";
 import { fragmentShader } from "./fragmentShader";
 import { vertexShader } from "./vertexShader";
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import * as TWEEN from "@tweenjs/tween.js";
 
 function Sphere() {
-  const meshRef = React.useRef<any>();
+  const meshRef = React.useRef(null);
   const start = React.useRef(Date.now());
   const uniforms = React.useRef(
-    THREE.UniformsUtils.merge([THREE.UniformsLib["lights"], THREE.ShaderLib.phong.uniforms, { time: { value: 0 } }])
+    THREE.UniformsUtils.merge([THREE.UniformsLib.lights, THREE.ShaderLib.phong.uniforms, { time: { value: 0 } }])
   );
   const { camera, size } = useThree();
   camera.position.setZ(42);

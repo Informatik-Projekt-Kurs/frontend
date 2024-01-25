@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 type AuthState = {
   consent: boolean;
@@ -12,10 +12,10 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    accept(state, action?) {
+    accept(state) {
       state.consent = true;
     },
-    decline(state, action?) {
+    decline(state) {
       state.consent = false;
     }
   }

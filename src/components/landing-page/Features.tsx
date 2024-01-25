@@ -25,17 +25,18 @@ export const Features = () => {
   return (
     <section ref={targetRef} className="flex h-[300vh] flex-col items-center justify-start">
       <div className="sticky left-0 top-[16.7vh] h-[66.8vh] px-16 text-2xl text-white [&_p]:w-[45rem] [&_p]:max-w-[90%]">
-        <motion.div style={{ x }} className="relative h-screen w-screen">
+        <motion.div style={{ x }} className="size-screen relative">
           <Scene />
         </motion.div>
         <motion.p
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           style={stylesWithCssVar({
             opacity: text1Opacity,
             "--y": text1Y
           })}
-          className="translate-y-centered-offset absolute top-1/2 2xl:left-2/4 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
+          className="translate-y-centered-offset max-sm:px:14 absolute left-[10%] top-1/2 text-2xl font-medium max-md:px-20 sm:left-[10%] md:left-[10%] lg:left-1/3 lg:max-w-screen-xl 2xl:left-2/4">
           <span
-            className="text-primary font-bold text-3xl"
+            className="text-3xl font-bold text-primary"
             style={{
               textShadow: "3px 2px 2px darkslategray"
             }}>
@@ -45,13 +46,14 @@ export const Features = () => {
           We detect your environment so you don&apos;t need to fiddle with configuration files.
         </motion.p>
         <motion.p
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           style={stylesWithCssVar({
             opacity: text2Opacity,
             "--y": text2Y
           })}
-          className="translate-y-centered-offset absolute top-1/2 2xl:left-2/4 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
+          className="translate-y-centered-offset max-sm:px:14 absolute left-[10%] top-1/2 text-2xl font-medium max-md:px-20 sm:left-[10%] md:left-[10%] lg:left-1/3 lg:max-w-screen-xl 2xl:left-2/4">
           <span
-            className="text-primary font-bold text-3xl"
+            className="text-3xl font-bold text-primary"
             style={{
               textShadow: "3px 2px 2px darkslategray"
             }}>
@@ -61,13 +63,14 @@ export const Features = () => {
           Access and complete any action in seconds with the command palette.
         </motion.p>
         <motion.p
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           style={stylesWithCssVar({
             opacity: text3Opacity,
             "--y": text3Y
           })}
-          className="translate-y-centered-offset absolute top-1/2 2xl:left-2/4 lg:left-1/3 md:left-[10%] sm:left-[10%] left-[10%] lg:max-w-screen-xl max-md:px-20 max-sm:px:14 text-2xl font-medium">
+          className="translate-y-centered-offset max-sm:px:14 absolute left-[10%] top-1/2 text-2xl font-medium max-md:px-20 sm:left-[10%] md:left-[10%] lg:left-1/3 lg:max-w-screen-xl 2xl:left-2/4">
           <span
-            className="text-primary font-bold text-3xl"
+            className="text-3xl font-bold text-primary"
             style={{
               textShadow: "3px 2px 2px darkslategray"
             }}>

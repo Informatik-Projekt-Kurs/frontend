@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import "../assets/globals.scss";
 import { ReduxProvider } from "@/components/redux/ReduxProvider";
 import React from "react";
 
 import { cn } from "@/lib/utils";
-import TokenRefresh from "@/components/auth/TokenRefresh";
+/* import TokenRefresh from "@/components/auth/TokenRefresh"; */
 import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({

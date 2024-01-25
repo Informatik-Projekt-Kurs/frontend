@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import useAuth from "@/hooks/useAuth";
 
@@ -23,8 +23,8 @@ function Hero() {
     }
   };
   return (
-    <div className="flex justify-start items-center bg-background min-h-screen flex-col overflow-x-clip w-full relative">
-      <div className="flex justify-center items-center flex-col gap-6">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background">
+      <div className="flex flex-col items-center justify-center gap-6">
         <div className="landingGradient relative"></div>
         <motion.div
           initial={{ opacity: 0, y: -50 }}
@@ -34,20 +34,20 @@ function Hero() {
           <div className="bg-background">Introducing MeetMate</div>
         </motion.div>
         <motion.h1
-          className="text-5xl font-semibold landingHeading text-center max-sm:text-4xl"
+          className="landingHeading text-center text-5xl font-semibold max-sm:text-4xl"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}>
-          Your brand, <br className="max-sm:block hidden" /> built <span>better</span>
+          Your brand, <br className="hidden max-sm:block" /> built <span>better</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-foreground max-w-[600px] text-center text-base font-light leading-6 max-md:max-w-[80vw]">
+          className="max-w-[600px] text-center text-base font-light leading-6 text-foreground max-md:max-w-[80vw]">
           Crafting Your Brands Story into Unforgettable Web, Graphic, and Video Masterpieces that Captivate and Convert.
         </motion.p>
-        <Button className="rounded-full text-foreground px-6" size={"lg"}>
+        <Button className="rounded-full px-6 text-foreground" size={"lg"}>
           Launch a project
         </Button>
       </div>
@@ -56,13 +56,13 @@ function Hero() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="home_hero_graphic-wrapper pointer-events-none w-full px-10 absolute top-auto bottom-16 left-0 right-0 text-center overflow-visible">
+        className="home_hero_graphic-wrapper pointer-events-none absolute inset-x-0 bottom-16 top-auto w-full overflow-visible px-10 text-center">
         <motion.img
           variants={pulseVariants}
           animate="animate"
           src={"/landingLogoNoBg.png"}
           loading="lazy"
-          className="graphic_brand-logo w-[4.75rem] h-[4.75rem] mx-auto absolute top-auto bottom-5 left-0 right-0 max-w-full inline-block"
+          className="graphic_brand-logo absolute inset-x-0 bottom-5 top-auto mx-auto inline-block size-[4.75rem] max-w-full"
           alt={""}
           width={100}
           height={100}></motion.img>
@@ -73,7 +73,7 @@ function Hero() {
             width={100}
             height={100}
             alt=""
-            className="home_hero_stars z-[5] relative w-auto inline-block"
+            className="home_hero_stars relative z-[5] inline-block w-auto"
           />
           <div className="home_hero_circles">
             <div className="graphic_circle_large" />

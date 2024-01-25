@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import { type AppDispatch, type RootState } from "@/store/store";
 
 const useCookieConsent = () => {
   const dispatch: AppDispatch = useDispatch();

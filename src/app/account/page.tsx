@@ -1,4 +1,3 @@
-import TokenRefresh from "@/components/auth/TokenRefresh";
 import React from "react";
 
 function Account() {

@@ -1,7 +1,7 @@
 import { deleteToken, refreshAccessToken, storeToken } from "@/lib/actions";
 import { setIsAuthenticated, setUser } from "@/store/features/authSlice";
-import { AppDispatch } from "@/store/store";
-import { LoginInputs, RegisterInputs } from "@/types";
+import { type AppDispatch } from "@/store/store";
+import { type LoginInputs, type RegisterInputs } from "@/types";
 
 export const login = async (dispatch: AppDispatch, credentials: LoginInputs) => {
   try {
@@ -21,14 +21,24 @@ export const login = async (dispatch: AppDispatch, credentials: LoginInputs) => 
         }
         return response.json();
       })
-      .then((data) => {
-        if (data.token) {
-          storeToken({ token: data.token, refresh_token: data.refreshToken });
-          dispatch(setUser({ id: data.id, name: data.name, email: data.email, role: data.role }));
-          dispatch(setIsAuthenticated(true));
-          return data;
+      .then(
+        async (data: {
+          token: string;
+          refreshToken: string;
+          id: number;
+          name: string;
+          email: string;
+          role: string;
+        }) => {
+          if (data.token !== undefined && data.refreshToken !== undefined) {
+            await storeToken({ token: data.token, refresh_token: data.refreshToken });
+            dispatch(setUser({ id: data.id, name: data.name, email: data.email, role: data.role }));
+            dispatch(setIsAuthenticated(true));
+            return data;
+          }
+          return "Login failed";
         }
-      })
+      )
       .catch((error) => {
         console.error("There was a problem with the Fetch operation:", error);
       });
@@ -40,7 +50,7 @@ export const login = async (dispatch: AppDispatch, credentials: LoginInputs) => 
 
 export const logout = async (dispatch: AppDispatch) => {
   try {
-    deleteToken().then(() => {
+    await deleteToken().then(() => {
       dispatch(setUser(null));
       dispatch(setIsAuthenticated(false));
       return "Logged out";
@@ -94,7 +104,7 @@ export const verify = async (id: string) => {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(() => {
         // Success
         return "Account verified! Please login.";
       })

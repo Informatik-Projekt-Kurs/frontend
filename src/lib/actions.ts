@@ -1,13 +1,13 @@
 "use server";
 
-import { User } from "@/types";
+import { type User } from "@/types";
 import { cookies } from "next/headers";
-import { ZodError, z } from "zod";
+import { type ZodError, z } from "zod";
 
-interface StoreTokenRequest {
+type StoreTokenRequest = {
   token: string;
   refresh_token: string;
-}
+};
 
 export async function storeToken(request: StoreTokenRequest) {
   cookies().set({
@@ -37,7 +37,7 @@ export async function deleteToken() {
 
 export async function refreshAccessToken() {
   try {
-    if (!cookies().get("accessToken")) {
+    if (cookies().get("accessToken") !== null) {
       return;
     }
     await fetch("http://localhost:8080/api/test/refresh", {
@@ -48,18 +48,18 @@ export async function refreshAccessToken() {
       },
       body: JSON.stringify({ refreshToken: cookies().get("refreshToken") })
     })
-      .then((response) => {
+      .then(async (response) => {
         if (response.status === 401) {
-          deleteToken();
+          await deleteToken();
           throw new Error("Unauthorized");
         } else if (!response.ok) {
           throw new Error("Network error");
         }
         return response.json();
       })
-      .then((data) => {
-        if (data.accessToken) {
-          storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
+      .then(async (data: { accessToken: string; refreshToken: string }) => {
+        if (data.accessToken !== undefined) {
+          await storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
           return data;
         }
       });
@@ -70,7 +70,7 @@ export async function refreshAccessToken() {
 
 export async function getUser(): Promise<User | null> {
   try {
-    if (!cookies().get("accessToken")) {
+    if (cookies().get("accessToken") === null) {
       throw new Error("Unauthorized");
     }
     await fetch("http://localhost:8080/api/user/get", {
@@ -79,9 +79,9 @@ export async function getUser(): Promise<User | null> {
         "Content-Type": "application/json",
         Authorization: "Bearer " + cookies().get("accessToken")?.value
       }
-    }).then((response) => {
+    }).then(async (response) => {
       if (response.status === 401) {
-        deleteToken();
+        await deleteToken();
         throw new Error("Unauthorized");
       } else if (!response.ok) {
         throw new Error("Network error");
@@ -121,8 +121,8 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     return {
       message: "error",
       errors: {
-        email: parse.error.flatten().fieldErrors["email"]?.[0] ?? "",
-        password: parse.error.flatten().fieldErrors["password"]?.[0] ?? ""
+        email: parse.error.flatten().fieldErrors.email?.[0] ?? "",
+        password: parse.error.flatten().fieldErrors.password?.[0] ?? ""
       },
       fieldValues: { email, password }
     };
@@ -141,8 +141,8 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
       body: encodedData
     });
     if (response.ok) {
-      const data = await response.json();
-      storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
+      const res = (await response.json()) as { accessToken: string; refreshToken: string };
+      await storeToken({ token: res.accessToken, refresh_token: res.refreshToken });
       return {
         message: "success",
         errors: undefined,
@@ -163,7 +163,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     const errorMap = zodError.flatten().fieldErrors;
     return {
       message: "error",
-      errors: { email: errorMap["email"]?.[0] ?? "", password: errorMap["password"]?.[0] ?? "" },
+      errors: { email: errorMap.email?.[0] ?? "", password: errorMap.password?.[0] ?? "" },
       fieldValues: { email, password }
     };
   }
@@ -202,10 +202,10 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
     return {
       message: "error",
       errors: {
-        name: parse.error.flatten().fieldErrors["name"]?.[0] ?? "",
-        email: parse.error.flatten().fieldErrors["email"]?.[0] ?? "",
-        password: parse.error.flatten().fieldErrors["password"]?.[0] ?? "",
-        confirmPassword: parse.error.flatten().fieldErrors["confirmPassword"]?.[0] ?? ""
+        name: parse.error.flatten().fieldErrors.name?.[0] ?? "",
+        email: parse.error.flatten().fieldErrors.email?.[0] ?? "",
+        password: parse.error.flatten().fieldErrors.password?.[0] ?? "",
+        confirmPassword: parse.error.flatten().fieldErrors.confirmPassword?.[0] ?? ""
       },
       fieldValues: { name, email, password, confirmPassword }
     };
@@ -252,10 +252,10 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
     return {
       message: "error",
       errors: {
-        name: errorMap["name"]?.[0] ?? "",
-        email: errorMap["email"]?.[0] ?? "",
-        password: errorMap["password"]?.[0] ?? "",
-        confirmPassword: errorMap["confirmPassword"]?.[0] ?? ""
+        name: errorMap.name?.[0] ?? "",
+        email: errorMap.email?.[0] ?? "",
+        password: errorMap.password?.[0] ?? "",
+        confirmPassword: errorMap.confirmPassword?.[0] ?? ""
       },
       fieldValues: { name, email, password, confirmPassword }
     };

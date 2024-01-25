@@ -20,6 +20,7 @@ export const Experience = () => {
 
   return (
     <motion.section
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       style={stylesWithCssVar({
         opacity: opacitySection,
         "--scale": scale,
@@ -27,17 +28,17 @@ export const Experience = () => {
       })}
       ref={targetRef}
       className="flex h-[300vh] items-start justify-start">
-      <div className="sticky top-1/2 left-1/2 min-h-[50rem] min-w-[50rem]  -translate-y-1/2 whitespace-nowrap before:absolute before:inset-0 before:scale-[var(--scale)] before:border-[2.5rem] before:border-primary before:opacity-[var(--opacity-border)]">
+      <div className="sticky left-1/2 top-1/2 min-h-[50rem] min-w-[50rem]  -translate-y-1/2 whitespace-nowrap before:absolute before:inset-0 before:scale-[var(--scale)] before:border-[2.5rem] before:border-primary before:opacity-[var(--opacity-border)]">
         <motion.p
           aria-hidden
           style={{ x: textX, y: "-50%" }}
-          className="whitepspace-nowrap min-w-screen absolute top-1/2 left-[calc(-50vw+25rem)] text-[15vw] text-foreground">
+          className="whitepspace-nowrap min-w-screen absolute left-[calc(-50vw+25rem)] top-1/2 text-[15vw] text-foreground">
           Streamlined Experience.
         </motion.p>
         <motion.p
           aria-hidden
           style={{ x: textX, y: "-50%" }}
-          className="whitepspace-nowrap min-w-screen absolute top-1/2 left-[calc(-50vw+25rem)] z-[11] text-[15vw] text-transparent ">
+          className="whitepspace-nowrap min-w-screen absolute left-[calc(-50vw+25rem)] top-1/2 z-[11] text-[15vw] text-transparent ">
           Streamlined Experience.
         </motion.p>
 

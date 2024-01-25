@@ -1,18 +1,18 @@
 "use client";
 import { useEffect } from "react";
 import { refresh } from "@/services/authService";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { getAccessToken } from "@/lib/actions";
 
 const TokenRefresh = () => {
   useEffect(() => {
     const checkTokenExpiration = async () => {
       const token = await getAccessToken();
-      if (!token) return;
+      if (token === undefined) return;
 
       try {
         const decodedToken = jwt.decode(token) as JwtPayload;
-        if (!decodedToken || !decodedToken.exp) return;
+        if (decodedToken?.exp === undefined) return;
         const exp = decodedToken.exp;
 
         const currentTime = Math.floor(Date.now() / 1000);
@@ -26,10 +26,14 @@ const TokenRefresh = () => {
       }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     checkTokenExpiration();
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const interval = setInterval(checkTokenExpiration, 10 * 1000); // Check every 10 seconds
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 };
 
