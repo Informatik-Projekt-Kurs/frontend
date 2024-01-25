@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 import { FaUser } from "react-icons/fa6";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function LandingNavbar() {
   useEffect(() => {
@@ -14,32 +14,31 @@ function LandingNavbar() {
       navLeft?.classList.toggle("navScroll", window.pageYOffset > 0);
       navRight?.classList.toggle("navScroll", window.pageYOffset > 0);
     });
-    return () => {};
   }, []);
 
   return (
-    <nav className="flex justify-center items-center sticky top-0 left-0 z-10  w-full px-8 nav max-sm:px-0 ">
-      <div className="flex justify-between items-center sticky top-0 left-0 z-10 max-w-screen-xl w-full px-8 backdrop-blur-[1px]">
-        <div className="flex justify-center items-center mt-8 navLeft">
+    <nav className="nav sticky left-0 top-0 z-10 flex w-full  items-center justify-center px-8 max-sm:px-0 ">
+      <div className="sticky left-0 top-0 z-10 flex w-full max-w-screen-xl items-center justify-between px-8 backdrop-blur-[1px]">
+        <div className="navLeft mt-8 flex items-center justify-center">
           <Image src="/landingLogo.png" alt="MeetMate" width={40} height={0}></Image>
-          <h2 className="text-2xl font-bold ml-2 text-foreground">MeetMate</h2>
+          <h2 className="ml-2 text-2xl font-bold text-foreground">MeetMate</h2>
         </div>
 
-        <li className="list-none flex justify-between items-center border-[1px] pl-6 h-12 rounded-full border-primary ml-[-2vw] max-lg:hidden mt-8">
-          <div className="flex justify-between items-ceter gap-6 text-foreground">
-            <Link className="hover:text-white hover:font-semibold navLink" href="/">
+        <li className="ml-[-2vw] mt-8 flex h-12 list-none items-center justify-between rounded-full border-[1px] border-primary pl-6 max-lg:hidden">
+          <div className="items-ceter flex justify-between gap-6 text-foreground">
+            <Link className="navLink hover:font-semibold hover:text-white" href="/">
               Home
             </Link>
-            <Link className=" hover:text-white hover:font-semibold navLink" href="about">
+            <Link className=" navLink hover:font-semibold hover:text-white" href="about">
               About Us
             </Link>
-            <Link className=" hover:text-white hover:font-semibold navLink" href="services">
+            <Link className=" navLink hover:font-semibold hover:text-white" href="services">
               Services
             </Link>
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger>
-                  <Link className="navLink opacity-80 cursor-default" href="#">
+                  <Link className="navLink cursor-default opacity-80" href="#">
                     Pricing
                   </Link>
                 </TooltipTrigger>
@@ -51,18 +50,18 @@ function LandingNavbar() {
           </div>
 
           <Link
-            className="bg-primary text-lg  rounded-full w-12 h-12 flex justify-center items-center ml-6 text-foreground hover:text-white"
+            className="ml-6 flex  size-12 items-center justify-center rounded-full bg-primary text-lg text-foreground hover:text-white"
             href="account">
-            <div className="hover:scale-110 transition-transform">
+            <div className="transition-transform hover:scale-110">
               <FaUser />
             </div>
           </Link>
         </li>
 
-        <Button size={"lg"} className="rounded-full px-8 max-lg:hidden mt-8 navRight text-foreground">
+        <Button size={"lg"} className="navRight mt-8 rounded-full px-8 text-foreground max-lg:hidden">
           <Link href="#">Talk To Us</Link>
         </Button>
-        <Button className="hidden max-lg:block rounded-full px-6 mt-8" variant={"secondary"}>
+        <Button className="mt-8 hidden rounded-full px-6 max-lg:block" variant={"secondary"}>
           Menu
         </Button>
       </div>

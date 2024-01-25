@@ -1,5 +1,5 @@
-import { CompanyAuthObject } from "@/types";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { type CompanyAuthObject } from "@/types";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
   user: CompanyAuthObject | null;

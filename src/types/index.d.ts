@@ -1,18 +1,37 @@
-import { ReactThreeFiber } from "@react-three/fiber";
-import { ShaderMaterialParameters } from "three";
-import { shaderMaterial } from "@react-three/drei";
+import { type ReactThreeFiber } from "@react-three/fiber";
+import { type ShaderMaterialParameters } from "three";
+import { type shaderMaterial } from "@react-three/drei";
 
 declare global {
   namespace JSX {
-    interface IntrinsicElements {
+    type IntrinsicElements = {
       customShaderMaterial: ReactThreeFiber.Node<ShaderMaterialParameters, typeof shaderMaterial>;
-    }
+    };
   }
 }
 
-type CompanyAuthObject = {
+export type CompanyAuthObject = {
   id: number;
   name: string;
   email: string;
   role: string;
 } | null;
+
+export type LoginInputs = {
+  email: string;
+  password: string;
+};
+
+export type RegisterInputs = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};

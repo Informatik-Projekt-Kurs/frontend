@@ -1,4 +1,4 @@
-import { MotionStyle, MotionValue } from "framer-motion";
+import { type MotionStyle, type MotionValue } from "framer-motion";
 
 /**
  * Unfortunately animating CSS variables requires you to type the styles
@@ -14,7 +14,9 @@ type MotionStyleWithCssVar = {
     | MotionStyle[K]
     | MotionValue<number>
     | MotionValue<string>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | MotionValue<any>;
 };
 
-export const stylesWithCssVar = (styles: MotionStyleWithCssVar) => styles as any;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+export const stylesWithCssVar = (styles: MotionStyleWithCssVar) => styles as any; // eslint-disable-line @typescript-eslint/no-explicit-any
