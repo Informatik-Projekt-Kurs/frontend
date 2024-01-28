@@ -17,7 +17,7 @@ const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" className="w-full gap-2 text-foreground" disabled={pending}>
+    <Button type="submit" className="w-full gap-2 text-background" disabled={pending}>
       <IoLogInOutline className="text-lg font-bold" />
       Create Account
     </Button>
@@ -151,7 +151,7 @@ const SignupForm = () => {
       </div>
       <div className="my-8 flex flex-col items-center justify-center">
         <h1 className="text-center text-2xl font-semibold">Hello, friend!</h1>
-        <h3 className="mx-10 text-center">Enter your personal details and start journey with us</h3>
+        <h2 className="mx-10 text-center">Enter your personal details and start journey with us</h2>
       </div>
     </div>
   );

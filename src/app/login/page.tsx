@@ -19,7 +19,7 @@ const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" className="w-full gap-2 text-foreground" disabled={pending}>
+    <Button type="submit" className="w-full gap-2 text-background" disabled={pending}>
       <IoLogInOutline className="text-lg font-bold" />
       Log In
     </Button>
@@ -75,13 +75,13 @@ const LoginForm = () => {
           </p>
           <Separator className="my-2 w-full bg-foreground" />
           <div className="flex items-center justify-center gap-x-4">
-            <Link href="#" className="group">
-              <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
+            <Link href="#" className="group" aria-label="Google Login">
+              <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                 <FaGoogle className="text-3xl text-foreground transition-colors group-hover:text-primary" />
               </Button>
             </Link>
-            <Link href="#" className="group">
-              <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
+            <Link href="#" className="group" aria-label="Github Login">
+              <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                 <FaGithub className="text-3xl text-foreground transition-colors group-hover:text-primary" />
               </Button>
             </Link>
@@ -142,7 +142,7 @@ const LoginForm = () => {
       </div>
       <div className="my-8 flex flex-col items-center justify-center">
         <h1 className="text-center text-2xl font-semibold">Welcome back</h1>
-        <h3 className="mx-10 text-center">To keep connected with us please login with your info </h3>
+        <h2 className="mx-10 text-center">To keep connected with us please login with your info </h2>
       </div>
     </div>
   );
