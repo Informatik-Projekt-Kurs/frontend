@@ -90,7 +90,7 @@ const SignupForm = () => {
               type="text"
               className={cx(
                 "text-foreground bg-background border-primary",
-                formState.errors?.email !== undefined && "border-red-700"
+                formState.errors?.name !== undefined && "border-red-700"
               )}
             />
             <Input
@@ -107,7 +107,7 @@ const SignupForm = () => {
               type="password"
               className={cx(
                 "text-foreground bg-background border-primary",
-                formState.errors?.email !== undefined && "border-red-700"
+                formState.errors?.password !== undefined && "border-red-700"
               )}
             />
 
@@ -117,7 +117,7 @@ const SignupForm = () => {
               type="password"
               className={cx(
                 "text-foreground bg-background border-primary",
-                formState.errors?.email !== undefined && "border-red-700"
+                formState.errors?.confirmPassword !== undefined && "border-red-700"
               )}
             />
             {formState?.message === "error" && (
