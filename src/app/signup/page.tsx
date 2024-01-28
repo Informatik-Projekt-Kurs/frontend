@@ -65,13 +65,13 @@ const SignupForm = () => {
           </p>
           <Separator className="my-2 w-full bg-foreground" />
           <div className="flex items-center justify-center gap-x-4">
-            <Link href="#" className="group">
-              <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
+            <Link href="#" className="group" aria-label="Google Login">
+              <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                 <FaGoogle className="text-3xl text-foreground transition-colors group-hover:text-primary" />
               </Button>
             </Link>
-            <Link href="#" className="group">
-              <Button variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
+            <Link href="#" className="group" aria-label="Github Login">
+              <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                 <FaGithub className="text-3xl text-foreground transition-colors group-hover:text-primary" />
               </Button>
             </Link>
