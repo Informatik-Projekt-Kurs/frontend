@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { registerUser } from "@/lib/actions";
 import { useToast } from "@/components/ui/use-toast";
+import cx from "classnames";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -83,15 +84,41 @@ const SignupForm = () => {
           </div>
 
           <form action={formAction} className="flex size-full flex-col justify-center gap-y-6">
-            <Input name="name" placeholder="Name" type="text" className="border-primary text-background" />
-            <Input name="email" placeholder="Email" className="border-primary text-background" />
-            <Input placeholder="Password" name="password" type="password" className="border-primary text-foreground" />
+            <Input
+              name="name"
+              placeholder="Name"
+              type="text"
+              className={cx(
+                "text-foreground bg-background border-primary",
+                formState.errors?.email !== undefined && "border-red-700"
+              )}
+            />
+            <Input
+              name="email"
+              placeholder="Email"
+              className={cx(
+                "text-foreground bg-background border-primary",
+                formState.errors?.email !== undefined && "border-red-700"
+              )}
+            />
+            <Input
+              placeholder="Password"
+              name="password"
+              type="password"
+              className={cx(
+                "text-foreground bg-background border-primary",
+                formState.errors?.email !== undefined && "border-red-700"
+              )}
+            />
 
             <Input
               placeholder="Repeat Password"
               name="confirmPasword"
               type="password"
-              className="border-primary text-foreground"
+              className={cx(
+                "text-foreground bg-background border-primary",
+                formState.errors?.email !== undefined && "border-red-700"
+              )}
             />
             {formState?.message === "error" && (
               <div className="my-[-10px] flex flex-col items-start justify-start">
@@ -118,10 +145,6 @@ const SignupForm = () => {
                 </div>
               </div>
             </div>
-            <Button type="submit" className="w-full gap-2 text-foreground">
-              <IoLogInOutline className="text-lg font-bold" />
-              Create Account
-            </Button>
             <SubmitButton />
           </form>
         </div>

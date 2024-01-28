@@ -100,7 +100,7 @@ const LoginForm = () => {
               name="email"
               className={cx(
                 "text-foreground bg-background border-primary",
-                formState.errors?.email !== null && "border-red-700"
+                formState.errors?.email !== undefined && "border-red-700"
               )}
             />
 
@@ -111,14 +111,14 @@ const LoginForm = () => {
               type="password"
               className={cx(
                 "text-foreground bg-background border-primary",
-                formState.errors?.password !== null && "border-red-700"
+                formState.errors?.password !== undefined && "border-red-700"
               )}
             />
 
             {formState?.message === "error" && (
               <div className="my-[-10px] flex flex-col items-start justify-start">
-                <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.email}</p>
-                <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.password}</p>
+                <p className="text-sm text-red-700 empty:hidden">{formState.errors?.email}</p>
+                <p className="text-sm text-red-700 empty:hidden">{formState.errors?.password}</p>
               </div>
             )}
             <div className="flex w-full items-center justify-between">
