@@ -1,10 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getUser } from "./lib/actions";
-import { CompanyAuthObject } from "./types";
+import { type CompanyAuthObject } from "./types";
 
 export async function middleware(req: NextRequest) {
   const user = (await getUser())!;
-  if (user !== null && user !== undefined) return NextResponse.redirect(new URL("/login", req.url));
+  if (user === null || user === undefined) return NextResponse.redirect(new URL("/login", req.url));
 
   try {
     if (req.nextUrl.pathname.startsWith("/admin") && (user as CompanyAuthObject)?.role !== "ADMIN") {

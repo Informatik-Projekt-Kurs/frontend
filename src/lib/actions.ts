@@ -1,6 +1,6 @@
 "use server";
 
-import { CompanyAuthObject } from "@/types";
+import { type CompanyAuthObject } from "@/types";
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
 
