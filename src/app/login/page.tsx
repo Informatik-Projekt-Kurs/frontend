@@ -39,10 +39,15 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (formState.message === "success") {
-      void getUser().then((user) => {
+    async function setStores() {
+      await getUser().then((user) => {
         dispatch(setUser(user));
         dispatch(setIsAuthenticated(true));
+      });
+    }
+    if (formState.message === "success") {
+      setStores().catch((err) => {
+        throw err;
       });
       toast({
         title: "Logged In!",
