@@ -1,17 +1,15 @@
 "use server";
 
-import { type CompanyAuthObject } from "@/types";
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
 
 type StoreTokenRequest = {
   access_token: string;
-  refresh_token: string;
-  expires_in: number;
+  refresh_token?: string;
+  expires_in: string;
 };
 
 export async function storeToken(request: StoreTokenRequest) {
-  console.log(request);
   cookies().set({
     name: "accessToken",
     value: request.access_token,
@@ -21,20 +19,20 @@ export async function storeToken(request: StoreTokenRequest) {
     expires: new Date(Date.now() + Number(request.expires_in))
   });
 
+  if (request.refresh_token === undefined) return;
   cookies().set({
     name: "refreshToken",
     value: request.refresh_token,
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-    path: "/api/user/refresh"
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
   });
 
   cookies().set({
     name: "expiresIn",
-    value: request.expires_in.toString(),
-    expires: new Date(Date.now() + Number(request.expires_in)),
+    value: request.expires_in,
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     httpOnly: true,
     sameSite: "strict",
     secure: true
@@ -44,66 +42,60 @@ export async function storeToken(request: StoreTokenRequest) {
 export async function deleteToken() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
+  cookies().delete("expiresIn");
 }
 
 export async function refreshAccessToken() {
   try {
-    if (cookies().get("accessToken") !== null) {
-      return;
-    }
-    await fetch("http://localhost:8080/api/test/refresh", {
+    cookies().delete("expiresIn");
+    const response = await fetch("http://localhost:8080/api/user/refresh", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + cookies().get("accessToken")?.value
+        "Content-Type": "application/json;charset=UTF-8",
+        Authorization: "Bearer " + cookies().get("refreshToken")?.value
       },
-      body: JSON.stringify({ refreshToken: cookies().get("refreshToken") })
-    })
-      .then(async (response) => {
-        if (response.status === 401) {
-          await deleteToken();
-          throw new Error("Unauthorized");
-        } else if (!response.ok) {
-          throw new Error("Network error");
-        }
-        return response.json();
-      })
-      .then(async (data: { accessToken: string; refreshToken: string; expires_in: number }) => {
-        if (data.accessToken !== undefined) {
-          await storeToken({
-            access_token: data.accessToken,
-            refresh_token: data.refreshToken,
-            expires_in: data.expires_in
-          });
-          return data;
-        }
-      });
+      body: undefined
+    });
+
+    if (response.ok) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const res = await response.json();
+      const newTokens = {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+        access_token: res.access_token,
+        refresh_token: cookies().get("refreshToken")?.value,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        expires_in: res.expires_in
+      };
+      await storeToken(newTokens);
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
   }
 }
 
-export async function getUser(): Promise<CompanyAuthObject | null> {
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+export async function getUser(): Promise<unknown | null> {
   try {
     if (cookies().get("accessToken") === null) {
       throw new Error("Unauthorized");
     }
-    await fetch("http://localhost:8080/api/user/get", {
+    const response = await fetch("http://localhost:8080/api/user/get", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
         Authorization: "Bearer " + cookies().get("accessToken")?.value
-      }
-    }).then(async (response) => {
-      if (response.status === 401) {
-        await deleteToken();
-        throw new Error("Unauthorized");
-      } else if (!response.ok) {
-        throw new Error("Network error");
-      }
-      return response.json() as Promise<CompanyAuthObject>;
+      },
+      body: undefined
     });
-    return null;
+
+    if (response.ok) {
+      return (await response.json()) as unknown;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
     return null;
@@ -112,6 +104,10 @@ export async function getUser(): Promise<CompanyAuthObject | null> {
 
 export async function getAccessToken() {
   return cookies().get("accessToken")?.value;
+}
+
+export async function getTokenExpiration() {
+  return cookies().get("expiresIn")?.value;
 }
 
 type LoginFormState = {
@@ -159,11 +155,10 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     });
     if (response.ok) {
       const res = (await response.json()) as { access_token: string; refresh_token: string; expires_in: number };
-      console.log(res);
       await storeToken({
         access_token: res.access_token,
         refresh_token: res.refresh_token,
-        expires_in: res.expires_in
+        expires_in: res.expires_in.toString()
       });
       return {
         message: "success",
