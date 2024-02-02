@@ -81,7 +81,7 @@ function Sphere() {
 
   extend({ CustomShaderMaterial });
   return (
-    <mesh visible ref={meshRef} userData={{ test: "hello" }} position={[0, 0, 0]}>
+    <mesh visible ref={meshRef} position={[0, 0, 0]}>
       <sphereGeometry args={[32, 128, 128]} />
       <customShaderMaterial uniforms={uniforms.current} lights={true} />
     </mesh>
