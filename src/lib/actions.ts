@@ -39,7 +39,7 @@ export async function storeToken(request: StoreTokenRequest) {
   });
 }
 
-export async function deleteToken() {
+export function deleteToken() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
   cookies().delete("expires_at");
@@ -102,11 +102,11 @@ export async function getUser(): Promise<unknown | null> {
   }
 }
 
-export async function getAccessToken() {
+export function getAccessToken() {
   return cookies().get("accessToken")?.value;
 }
 
-export async function getTokenExpiration() {
+export function getTokenExpiration() {
   return cookies().get("expires_at")?.value;
 }
 
