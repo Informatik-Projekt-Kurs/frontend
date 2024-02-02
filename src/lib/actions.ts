@@ -6,7 +6,7 @@ import { type ZodError, z } from "zod";
 type StoreTokenRequest = {
   access_token: string;
   refresh_token?: string;
-  expires_in: string;
+  expires_at: string;
 };
 
 export async function storeToken(request: StoreTokenRequest) {
@@ -16,7 +16,7 @@ export async function storeToken(request: StoreTokenRequest) {
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + Number(request.expires_in))
+    expires: new Date(Date.now() + Number(request.expires_at))
   });
 
   if (request.refresh_token === undefined) return;
@@ -26,12 +26,13 @@ export async function storeToken(request: StoreTokenRequest) {
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    domain: "http://localhost/api/user/refresh"
   });
 
   cookies().set({
-    name: "expiresIn",
-    value: request.expires_in,
+    name: "expires_at",
+    value: request.expires_at,
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     httpOnly: true,
     sameSite: "strict",
@@ -42,12 +43,12 @@ export async function storeToken(request: StoreTokenRequest) {
 export async function deleteToken() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
-  cookies().delete("expiresIn");
+  cookies().delete("expires_at");
 }
 
 export async function refreshAccessToken() {
   try {
-    cookies().delete("expiresIn");
+    cookies().delete("expires_at");
     const response = await fetch("http://localhost:8080/api/user/refresh", {
       method: "POST",
       headers: {
@@ -65,7 +66,7 @@ export async function refreshAccessToken() {
         access_token: res.access_token,
         refresh_token: cookies().get("refreshToken")?.value,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        expires_in: res.expires_in
+        expires_at: res.expires_at
       };
       await storeToken(newTokens);
     } else {
@@ -107,7 +108,7 @@ export async function getAccessToken() {
 }
 
 export async function getTokenExpiration() {
-  return cookies().get("expiresIn")?.value;
+  return cookies().get("expires_at")?.value;
 }
 
 type LoginFormState = {
@@ -120,7 +121,12 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const schema = z.object({
-    email: z.string().email({ message: "Please enter your email in format: yourname@example.com" }).min(5),
+    email: z
+      .string()
+      .email({
+        message: "Please enter your email in format: yourname@example.com"
+      })
+      .min(5),
     password: z.string().min(8, { message: "Your Password must be at least 8 characters long" })
   });
   const parse = schema.safeParse({
@@ -154,11 +160,15 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
       body: encodedData
     });
     if (response.ok) {
-      const res = (await response.json()) as { access_token: string; refresh_token: string; expires_in: number };
+      const res = (await response.json()) as {
+        access_token: string;
+        refresh_token: string;
+        expires_at: number;
+      };
       await storeToken({
         access_token: res.access_token,
         refresh_token: res.refresh_token,
-        expires_in: res.expires_in.toString()
+        expires_at: res.expires_at.toString()
       });
       return {
         message: "success",
@@ -180,7 +190,10 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     const errorMap = zodError.flatten().fieldErrors;
     return {
       message: "error",
-      errors: { email: errorMap.email?.[0] ?? "", password: errorMap.password?.[0] ?? "" },
+      errors: {
+        email: errorMap.email?.[0] ?? "",
+        password: errorMap.password?.[0] ?? ""
+      },
       fieldValues: { email, password }
     };
   }
@@ -199,7 +212,12 @@ export type SignupFormState = {
         string
       >
     | undefined;
-  fieldValues: { name: string; email: string; password: string; confirmPassword: string };
+  fieldValues: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
 };
 
 export async function registerUser(prevState: SignupFormState, formData: FormData): Promise<SignupFormState> {
