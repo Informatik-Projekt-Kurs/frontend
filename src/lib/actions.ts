@@ -5,18 +5,20 @@ import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
 
 type StoreTokenRequest = {
-  token: string;
+  access_token: string;
   refresh_token: string;
+  expires_in: number;
 };
 
 export async function storeToken(request: StoreTokenRequest) {
+  console.log(request);
   cookies().set({
     name: "accessToken",
-    value: request.token,
+    value: request.access_token,
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + Number(process.env.JWT_EXPIRATION_MS ?? 0))
+    expires: new Date(Date.now() + Number(request.expires_in))
   });
 
   cookies().set({
@@ -25,8 +27,17 @@ export async function storeToken(request: StoreTokenRequest) {
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + Number(process.env.JWT_REFRESH_EXPIRATION_MS ?? 0)),
-    path: "/api/test/refresh"
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    path: "/api/user/refresh"
+  });
+
+  cookies().set({
+    name: "expiresIn",
+    value: request.expires_in.toString(),
+    expires: new Date(Date.now() + Number(request.expires_in)),
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true
   });
 }
 
@@ -57,9 +68,13 @@ export async function refreshAccessToken() {
         }
         return response.json();
       })
-      .then(async (data: { accessToken: string; refreshToken: string }) => {
+      .then(async (data: { accessToken: string; refreshToken: string; expires_in: number }) => {
         if (data.accessToken !== undefined) {
-          await storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
+          await storeToken({
+            access_token: data.accessToken,
+            refresh_token: data.refreshToken,
+            expires_in: data.expires_in
+          });
           return data;
         }
       });
@@ -128,21 +143,28 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     };
   }
   const data = parse.data;
-  const encodedData = Object.keys(data)
+  /* const encodedData = Object.keys(data)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key as keyof typeof data]))
-    .join("&");
+    .join("&"); */
+
+  const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
     const response = await fetch("http://localhost:8080/api/user/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
       body: encodedData
     });
     if (response.ok) {
-      const res = (await response.json()) as { accessToken: string; refreshToken: string };
-      await storeToken({ token: res.accessToken, refresh_token: res.refreshToken });
+      const res = (await response.json()) as { access_token: string; refresh_token: string; expires_in: number };
+      console.log(res);
+      await storeToken({
+        access_token: res.access_token,
+        refresh_token: res.refresh_token,
+        expires_in: res.expires_in
+      });
       return {
         message: "success",
         errors: undefined,
@@ -154,7 +176,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     } else {
       return {
         message: "error",
-        errors: { email: "Invalid email or password", password: "Invalid email or password" },
+        errors: { email: "Invalid email or password", password: undefined! },
         fieldValues: { email, password }
       };
     }
@@ -171,7 +193,17 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
 
 export type SignupFormState = {
   message: string;
-  errors: Record<keyof { name: string; email: string; password: string; confirmPassword: string }, string> | undefined;
+  errors:
+    | Record<
+        keyof {
+          name: string | undefined;
+          email: string | undefined;
+          password: string | undefined;
+          confirmPassword: string | undefined;
+        },
+        string
+      >
+    | undefined;
   fieldValues: { name: string; email: string; password: string; confirmPassword: string };
 };
 
@@ -184,18 +216,16 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
     .object({
       name: z.string().min(3),
       email: z.string().email(),
-      password: z.string().min(8),
-      confirmPassword: z.string().min(8)
+      password: z.string().min(8)
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data) => data.password === confirmPassword, {
       message: "Passwords don't match",
       path: ["confirmPassword"]
     });
   const parse = schema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword")
+    name,
+    email,
+    password
   });
 
   if (!parse.success) {
@@ -205,21 +235,22 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
         name: parse.error.flatten().fieldErrors.name?.[0] ?? "",
         email: parse.error.flatten().fieldErrors.email?.[0] ?? "",
         password: parse.error.flatten().fieldErrors.password?.[0] ?? "",
-        confirmPassword: parse.error.flatten().fieldErrors.confirmPassword?.[0] ?? ""
+        confirmPassword: ""
       },
       fieldValues: { name, email, password, confirmPassword }
     };
   }
   const data = parse.data;
-  const encodedData = Object.keys(data)
+  /* const encodedData = Object.keys(data)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key as keyof typeof data]))
-    .join("&");
+    .join("&"); */
+  const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
     const response = await fetch("http://localhost:8080/api/user/signup", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
       body: encodedData
     });
@@ -234,14 +265,25 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
           confirmPassword: ""
         }
       };
+    } else if (response.status === 409) {
+      return {
+        message: "error",
+        errors: {
+          name: undefined!,
+          email: "This email is already taken",
+          password: undefined!,
+          confirmPassword: undefined!
+        },
+        fieldValues: { name, email, password, confirmPassword }
+      };
     } else {
       return {
         message: "error",
         errors: {
-          name: "Something went wrong",
-          email: "Something went wrong",
-          password: "Something went wrong",
-          confirmPassword: "Something went wrong"
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: ""
         },
         fieldValues: { name, email, password, confirmPassword }
       };

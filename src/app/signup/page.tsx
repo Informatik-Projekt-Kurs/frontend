@@ -40,8 +40,8 @@ const SignupForm = () => {
   useEffect(() => {
     if (formState.message === "success") {
       toast({
-        title: "Logged In!",
-        description: "Welcome back! You will be redirected any moment",
+        title: "Signed Up!",
+        description: "Success! Check your email to verify your account.",
         variant: "default",
         className: "border-emerald-300"
       });
@@ -87,6 +87,7 @@ const SignupForm = () => {
             <Input
               name="name"
               placeholder="Name"
+              required
               type="text"
               className={cx(
                 "text-foreground bg-background border-primary",
@@ -96,6 +97,7 @@ const SignupForm = () => {
             <Input
               name="email"
               placeholder="Email"
+              required
               className={cx(
                 "text-foreground bg-background border-primary",
                 formState.errors?.email !== undefined && "border-red-700"
@@ -104,6 +106,7 @@ const SignupForm = () => {
             <Input
               placeholder="Password"
               name="password"
+              required
               type="password"
               className={cx(
                 "text-foreground bg-background border-primary",
@@ -113,7 +116,8 @@ const SignupForm = () => {
 
             <Input
               placeholder="Repeat Password"
-              name="confirmPasword"
+              name="confirmPassword"
+              required
               type="password"
               className={cx(
                 "text-foreground bg-background border-primary",
@@ -122,8 +126,10 @@ const SignupForm = () => {
             />
             {formState?.message === "error" && (
               <div className="my-[-10px] flex flex-col items-start justify-start">
+                <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.name}</p>
                 <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.email}</p>
                 <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.password}</p>
+                <p className="text-sm text-red-700 empty:hidden">{formState?.errors?.confirmPassword}</p>
               </div>
             )}
             <div className="flex w-full items-center justify-between">
