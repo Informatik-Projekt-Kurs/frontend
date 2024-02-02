@@ -9,7 +9,7 @@ type StoreTokenRequest = {
   expires_at: string;
 };
 
-export function storeToken(request: StoreTokenRequest) {
+export async function storeToken(request: StoreTokenRequest) {
   cookies().set({
     name: "accessToken",
     value: request.access_token,
@@ -39,7 +39,7 @@ export function storeToken(request: StoreTokenRequest) {
   });
 }
 
-export function deleteToken() {
+export async function deleteToken() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
   cookies().delete("expires_at");
@@ -67,7 +67,7 @@ export async function refreshAccessToken() {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         expires_at: res.expires_at
       };
-      storeToken(newTokens);
+      void storeToken(newTokens);
     } else {
       return null;
     }
@@ -102,11 +102,11 @@ export async function getUser(): Promise<unknown | null> {
   }
 }
 
-export function getAccessToken() {
+export async function getAccessToken() {
   return cookies().get("accessToken")?.value;
 }
 
-export function getTokenExpiration() {
+export async function getTokenExpiration() {
   return cookies().get("expires_at")?.value;
 }
 
@@ -164,7 +164,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
         refresh_token: string;
         expires_at: number;
       };
-      storeToken({
+      void storeToken({
         access_token: res.access_token,
         refresh_token: res.refresh_token,
         expires_at: res.expires_at.toString()
