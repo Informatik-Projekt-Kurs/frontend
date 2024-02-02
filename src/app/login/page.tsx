@@ -8,11 +8,10 @@ import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
 import { useFormStatus, useFormState } from "react-dom";
-import { getUser, loginUser } from "@/lib/actions";
+import { loginUser } from "@/lib/actions";
 import cx from "classnames";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { setIsAuthenticated } from "@/store/features/authSlice";
 import { useDispatch } from "react-redux";
 
 const SubmitButton = () => {
@@ -39,16 +38,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function setStores() {
-      await getUser().then(() => {
-        /* dispatch(setUser(user)); */
-        dispatch(setIsAuthenticated(true));
-      });
-    }
     if (formState.message === "success") {
-      setStores().catch((err) => {
-        throw err;
-      });
       toast({
         title: "Logged In!",
         description: "Welcome back! You will be redirected any moment",
