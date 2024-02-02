@@ -9,7 +9,7 @@ type StoreTokenRequest = {
   expires_at: string;
 };
 
-export async function storeToken(request: StoreTokenRequest) {
+export function storeToken(request: StoreTokenRequest) {
   cookies().set({
     name: "accessToken",
     value: request.access_token,
@@ -67,7 +67,7 @@ export async function refreshAccessToken() {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         expires_at: res.expires_at
       };
-      await storeToken(newTokens);
+      storeToken(newTokens);
     } else {
       return null;
     }
@@ -164,7 +164,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
         refresh_token: string;
         expires_at: number;
       };
-      await storeToken({
+      storeToken({
         access_token: res.access_token,
         refresh_token: res.refresh_token,
         expires_at: res.expires_at.toString()
