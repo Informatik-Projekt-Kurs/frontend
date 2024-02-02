@@ -12,7 +12,7 @@ const TokenRefresh = () => {
         }
 
         const secondsToExpire = (Number(exp) - Date.now()) / 1000;
-        if (secondsToExpire < 60) {
+        if (secondsToExpire < 30) {
           await refreshAccessToken();
           return;
         }
@@ -24,7 +24,7 @@ const TokenRefresh = () => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const interval = setInterval(async () => {
       await checkTokenExpiration();
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearInterval(interval);
