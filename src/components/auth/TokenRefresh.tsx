@@ -1,40 +1,36 @@
 "use client";
 import { useEffect } from "react";
-import { refresh } from "@/services/authService";
-import jwt, { type JwtPayload } from "jsonwebtoken";
-import { getAccessToken } from "@/lib/actions";
+import { getTokenExpiration, refreshAccessToken } from "@/lib/actions";
 
 const TokenRefresh = () => {
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      const token = await getAccessToken();
-      if (token === undefined) return;
-
       try {
-        const decodedToken = jwt.decode(token) as JwtPayload;
-        if (decodedToken?.exp === undefined) return;
-        const exp = decodedToken.exp;
+        const exp = await getTokenExpiration();
+        if (exp === null || exp === undefined) {
+          return;
+        }
 
-        const currentTime = Math.floor(Date.now() / 1000);
-        const timeUntilExpiration = exp - currentTime;
-        if (timeUntilExpiration < 120) {
-          // Refresh if less than 2 minutes left
-          await refresh();
+        const secondsToExpire = (Number(exp) - Date.now()) / 1000;
+        if (secondsToExpire < 30) {
+          await refreshAccessToken();
+          return;
         }
       } catch (error) {
         console.error("Error refreshing token:", error);
       }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    checkTokenExpiration();
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    const interval = setInterval(checkTokenExpiration, 10 * 1000); // Check every 10 seconds
+    const interval = setInterval(async () => {
+      await checkTokenExpiration();
+    }, 10000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
+  return null;
 };
 
 export default TokenRefresh;

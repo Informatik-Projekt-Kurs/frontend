@@ -1,94 +1,101 @@
 "use server";
 
-import { type CompanyAuthObject } from "@/types";
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
 
 type StoreTokenRequest = {
-  token: string;
-  refresh_token: string;
+  access_token: string;
+  refresh_token?: string;
+  expires_at: string;
 };
 
 export async function storeToken(request: StoreTokenRequest) {
   cookies().set({
     name: "accessToken",
-    value: request.token,
+    value: request.access_token,
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + Number(process.env.JWT_EXPIRATION_MS ?? 0))
+    expires: new Date(Date.now() + Number(request.expires_at))
   });
 
+  if (request.refresh_token === undefined) return;
   cookies().set({
     name: "refreshToken",
     value: request.refresh_token,
     httpOnly: true,
     sameSite: "strict",
     secure: true,
-    expires: new Date(Date.now() + Number(process.env.JWT_REFRESH_EXPIRATION_MS ?? 0)),
-    path: "/api/test/refresh"
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+  });
+
+  cookies().set({
+    name: "expires_at",
+    value: request.expires_at,
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true
   });
 }
 
 export async function deleteToken() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
+  cookies().delete("expires_at");
 }
 
 export async function refreshAccessToken() {
   try {
-    if (cookies().get("accessToken") !== null) {
-      return;
-    }
-    await fetch("http://localhost:8080/api/test/refresh", {
+    cookies().delete("expires_at");
+    const response = await fetch("http://localhost:3000/api/user/refresh", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + cookies().get("accessToken")?.value
+        "Content-Type": "application/json;charset=UTF-8",
+        Authorization: "Bearer " + cookies().get("refreshToken")?.value
       },
-      body: JSON.stringify({ refreshToken: cookies().get("refreshToken") })
-    })
-      .then(async (response) => {
-        if (response.status === 401) {
-          await deleteToken();
-          throw new Error("Unauthorized");
-        } else if (!response.ok) {
-          throw new Error("Network error");
-        }
-        return response.json();
-      })
-      .then(async (data: { accessToken: string; refreshToken: string }) => {
-        if (data.accessToken !== undefined) {
-          await storeToken({ token: data.accessToken, refresh_token: data.refreshToken });
-          return data;
-        }
-      });
+      body: undefined
+    });
+
+    if (response.ok) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const res = await response.json();
+      const newTokens = {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+        access_token: res.access_token,
+        refresh_token: cookies().get("refreshToken")?.value,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        expires_at: res.expires_at
+      };
+      void storeToken(newTokens);
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
   }
 }
 
-export async function getUser(): Promise<CompanyAuthObject | null> {
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+export async function getUser(): Promise<unknown | null> {
   try {
     if (cookies().get("accessToken") === null) {
       throw new Error("Unauthorized");
     }
-    await fetch("http://localhost:8080/api/user/get", {
+    const response = await fetch("http://localhost:3000/api/user/get", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
         Authorization: "Bearer " + cookies().get("accessToken")?.value
-      }
-    }).then(async (response) => {
-      if (response.status === 401) {
-        await deleteToken();
-        throw new Error("Unauthorized");
-      } else if (!response.ok) {
-        throw new Error("Network error");
-      }
-      return response.json() as Promise<CompanyAuthObject>;
+      },
+      body: undefined
     });
-    return null;
+
+    if (response.ok) {
+      return (await response.json()) as unknown;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
     return null;
@@ -97,6 +104,10 @@ export async function getUser(): Promise<CompanyAuthObject | null> {
 
 export async function getAccessToken() {
   return cookies().get("accessToken")?.value;
+}
+
+export async function getTokenExpiration() {
+  return cookies().get("expires_at")?.value;
 }
 
 type LoginFormState = {
@@ -109,7 +120,12 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const schema = z.object({
-    email: z.string().email({ message: "Please enter your email in format: yourname@example.com" }).min(5),
+    email: z
+      .string()
+      .email({
+        message: "Please enter your email in format: yourname@example.com"
+      })
+      .min(5),
     password: z.string().min(8, { message: "Your Password must be at least 8 characters long" })
   });
   const parse = schema.safeParse({
@@ -128,21 +144,31 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     };
   }
   const data = parse.data;
-  const encodedData = Object.keys(data)
+  /* const encodedData = Object.keys(data)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key as keyof typeof data]))
-    .join("&");
+    .join("&"); */
+
+  const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
-    const response = await fetch("http://localhost:8080/api/user/login", {
+    const response = await fetch("http://localhost:3000/api/user/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
       body: encodedData
     });
     if (response.ok) {
-      const res = (await response.json()) as { accessToken: string; refreshToken: string };
-      await storeToken({ token: res.accessToken, refresh_token: res.refreshToken });
+      const res = (await response.json()) as {
+        access_token: string;
+        refresh_token: string;
+        expires_at: number;
+      };
+      void storeToken({
+        access_token: res.access_token,
+        refresh_token: res.refresh_token,
+        expires_at: res.expires_at.toString()
+      });
       return {
         message: "success",
         errors: undefined,
@@ -154,7 +180,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     } else {
       return {
         message: "error",
-        errors: { email: "Invalid email or password", password: "Invalid email or password" },
+        errors: { email: "Invalid email or password", password: undefined! },
         fieldValues: { email, password }
       };
     }
@@ -163,7 +189,10 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     const errorMap = zodError.flatten().fieldErrors;
     return {
       message: "error",
-      errors: { email: errorMap.email?.[0] ?? "", password: errorMap.password?.[0] ?? "" },
+      errors: {
+        email: errorMap.email?.[0] ?? "",
+        password: errorMap.password?.[0] ?? ""
+      },
       fieldValues: { email, password }
     };
   }
@@ -171,8 +200,23 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
 
 export type SignupFormState = {
   message: string;
-  errors: Record<keyof { name: string; email: string; password: string; confirmPassword: string }, string> | undefined;
-  fieldValues: { name: string; email: string; password: string; confirmPassword: string };
+  errors:
+    | Record<
+        keyof {
+          name: string | undefined;
+          email: string | undefined;
+          password: string | undefined;
+          confirmPassword: string | undefined;
+        },
+        string
+      >
+    | undefined;
+  fieldValues: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
 };
 
 export async function registerUser(prevState: SignupFormState, formData: FormData): Promise<SignupFormState> {
@@ -184,18 +228,16 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
     .object({
       name: z.string().min(3),
       email: z.string().email(),
-      password: z.string().min(8),
-      confirmPassword: z.string().min(8)
+      password: z.string().min(8)
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data) => data.password === confirmPassword, {
       message: "Passwords don't match",
       path: ["confirmPassword"]
     });
   const parse = schema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword")
+    name,
+    email,
+    password
   });
 
   if (!parse.success) {
@@ -205,21 +247,22 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
         name: parse.error.flatten().fieldErrors.name?.[0] ?? "",
         email: parse.error.flatten().fieldErrors.email?.[0] ?? "",
         password: parse.error.flatten().fieldErrors.password?.[0] ?? "",
-        confirmPassword: parse.error.flatten().fieldErrors.confirmPassword?.[0] ?? ""
+        confirmPassword: ""
       },
       fieldValues: { name, email, password, confirmPassword }
     };
   }
   const data = parse.data;
-  const encodedData = Object.keys(data)
+  /* const encodedData = Object.keys(data)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key as keyof typeof data]))
-    .join("&");
+    .join("&"); */
+  const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
-    const response = await fetch("http://localhost:8080/api/user/signup", {
+    const response = await fetch("http://localhost:3000/api/user/signup", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
       body: encodedData
     });
@@ -234,14 +277,25 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
           confirmPassword: ""
         }
       };
+    } else if (response.status === 409) {
+      return {
+        message: "error",
+        errors: {
+          name: undefined!,
+          email: "This email is already taken",
+          password: undefined!,
+          confirmPassword: undefined!
+        },
+        fieldValues: { name, email, password, confirmPassword }
+      };
     } else {
       return {
         message: "error",
         errors: {
-          name: "Something went wrong",
-          email: "Something went wrong",
-          password: "Something went wrong",
-          confirmPassword: "Something went wrong"
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: ""
         },
         fieldValues: { name, email, password, confirmPassword }
       };

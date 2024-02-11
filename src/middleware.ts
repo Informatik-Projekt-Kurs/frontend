@@ -3,7 +3,8 @@ import { getUser } from "./lib/actions";
 import { type CompanyAuthObject } from "./types";
 
 export async function middleware(req: NextRequest) {
-  const user = (await getUser())!;
+  const user = await getUser();
+  console.log(user);
   if (user === null || user === undefined) return NextResponse.redirect(new URL("/login", req.url));
 
   try {
