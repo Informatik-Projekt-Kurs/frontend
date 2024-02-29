@@ -47,7 +47,8 @@ export async function deleteToken() {
 
 export async function refreshAccessToken() {
   try {
-    const response = await fetch("http://localhost:3000/api/user/refresh", {
+    cookies().delete("expires_at");
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -81,7 +82,7 @@ export async function getUser(): Promise<unknown | null> {
     if (cookies().get("accessToken") === null) {
       throw new Error("Unauthorized");
     }
-    const response = await fetch("http://localhost:3000/api/user/get", {
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/get", {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -150,7 +151,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
   const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
-    const response = await fetch("http://localhost:3000/api/user/login", {
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
@@ -258,7 +259,7 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
   const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
-    const response = await fetch("http://localhost:3000/api/user/signup", {
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
