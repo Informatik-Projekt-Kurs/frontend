@@ -58,16 +58,16 @@ export async function refreshAccessToken() {
     });
 
     if (response.ok) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const res = await response.json();
-      const newTokens = {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-        access_token: res.access_token,
-        refresh_token: cookies().get("refreshToken")?.value,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        expires_at: res.expires_at
+      const res = (await response.json()) as {
+        access_Token: string;
+        expires_at: number;
+        refresh_Token: string;
       };
-      void storeToken(newTokens);
+      void storeToken({
+        access_token: res.access_Token,
+        refresh_token: res.refresh_Token,
+        expires_at: res.expires_at.toString()
+      });
     } else {
       return null;
     }
@@ -160,13 +160,13 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     });
     if (response.ok) {
       const res = (await response.json()) as {
-        access_token: string;
-        refresh_token: string;
+        access_Token: string;
         expires_at: number;
+        refresh_Token: string;
       };
       void storeToken({
-        access_token: res.access_token,
-        refresh_token: res.refresh_token,
+        access_token: res.access_Token,
+        refresh_token: res.refresh_Token,
         expires_at: res.expires_at.toString()
       });
       return {
