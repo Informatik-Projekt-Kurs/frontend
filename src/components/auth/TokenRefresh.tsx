@@ -11,8 +11,9 @@ const TokenRefresh = () => {
           return;
         }
 
-        const secondsToExpire = (Number(exp) - Date.now()) / 1000;
-        if (secondsToExpire < 30) {
+        const secondsToExpire = Number(exp) - Date.now() / 1000;
+        console.log(secondsToExpire);
+        if (secondsToExpire < 290) {
           await refreshAccessToken();
           return;
         }
