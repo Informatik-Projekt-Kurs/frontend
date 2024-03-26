@@ -21,6 +21,6 @@ export const authSlice = createSlice({
   }
 });
 
-export const { accept, decline } = authSlice.actions;
+export const {} = authSlice.actions;
 
 export default authSlice.reducer;

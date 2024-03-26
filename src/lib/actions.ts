@@ -78,9 +78,6 @@ export async function refreshAccessToken() {
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export async function getUser(): Promise<unknown | null> {
   try {
-    if (cookies().get("accessToken") === null) {
-      throw new Error("Unauthorized");
-    }
     const response = await fetch("http://localhost:3000/api/user/get", {
       method: "GET",
       headers: {
@@ -101,9 +98,7 @@ export async function getUser(): Promise<unknown | null> {
   }
 }
 
-export async function getAccessToken() {
-  return cookies().get("accessToken")?.value;
-}
+export const getAccessToken = async () => cookies().get("accessToken")?.value;
 
 export async function getTokenExpiration() {
   return cookies().get("expires_at")?.value;

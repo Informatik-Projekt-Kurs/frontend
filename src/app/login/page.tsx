@@ -59,7 +59,7 @@ const LoginForm = () => {
           <h2 className="text-3xl font-semibold">Log In</h2>
           <p className="text-base">
             Don&apos;t have an account yet?{" "}
-            <Link className="text-primary hover:underline" href="/signup">
+            <Link className="text-primary hover:underline" href={"/signup"}>
               Sign Up
             </Link>
           </p>
@@ -89,7 +89,7 @@ const LoginForm = () => {
               required
               name="email"
               className={cx(
-                "text-foreground bg-background border-primary",
+                "border-primary bg-background text-foreground",
                 formState.errors?.email !== undefined && "border-red-700"
               )}
             />
@@ -100,7 +100,7 @@ const LoginForm = () => {
               name="password"
               type="password"
               className={cx(
-                "text-foreground bg-background border-primary",
+                "border-primary bg-background text-foreground",
                 formState.errors?.password !== undefined && "border-red-700"
               )}
             />
@@ -122,7 +122,7 @@ const LoginForm = () => {
                   </label>
                 </div>
               </div>
-              <Link className="text-sm text-primary hover:underline" href="/forgot-password">
+              <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
                 Forgot password?
               </Link>
             </div>

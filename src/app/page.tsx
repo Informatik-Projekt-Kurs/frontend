@@ -29,7 +29,7 @@ export default function Home() {
           </div>
           <div className="home_aspects_grid">
             <Link
-              href="/services/web-design"
+              href={"/services/web-design"}
               className="home_aspects_card w-inline-block"
               style={{
                 transform:
@@ -70,7 +70,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              href="/services/graphic-design"
+              href={"/services/graphic-design"}
               className="home_aspects_card w-inline-block"
               style={{
                 transform:
@@ -109,7 +109,7 @@ export default function Home() {
               </p>
             </Link>
             <Link
-              href="/services/software-development"
+              href={"/services/software-development"}
               className="home_aspects_card is-grid flex max-w-full flex-col"
               style={{
                 transform:

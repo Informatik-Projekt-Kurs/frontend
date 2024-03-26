@@ -63,7 +63,7 @@ function Dashboard() {
           </div>
         </div>
       </aside>
-      <main className="mr-8 mt-8 min-h-screen w-full rounded-[20px] border-2 border-border md:w-2/3 lg:w-3/4">
+      <main className="mr-8 mt-8 min-h-screen w-full rounded-[20px] border-2 border-border">
         <div className="flex flex-col items-center justify-start p-8 px-6">
           <header className="flex w-full flex-row items-center justify-between">
             <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">Welcome back, Tim</h1>
@@ -88,7 +88,7 @@ function Dashboard() {
 
           <div className="h-[50vh]"></div>
         </div>
-        <footer className="flex h-8 w-full items-center justify-start rounded-[20px] bg-primary">
+        <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
       </main>

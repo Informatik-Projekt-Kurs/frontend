@@ -59,7 +59,7 @@ const SignupForm = () => {
           <h2 className="text-3xl font-semibold">Sign Up</h2>
           <p className="text-base">
             Already have an account?{" "}
-            <Link className="text-primary hover:underline" href="/login">
+            <Link className="text-primary hover:underline" href={"/login"}>
               Log In
             </Link>
           </p>
@@ -90,7 +90,7 @@ const SignupForm = () => {
               required
               type="text"
               className={cx(
-                "text-foreground bg-background border-primary",
+                "border-primary bg-background text-foreground",
                 formState.errors?.name !== undefined && "border-red-700"
               )}
             />
@@ -99,7 +99,7 @@ const SignupForm = () => {
               placeholder="Email"
               required
               className={cx(
-                "text-foreground bg-background border-primary",
+                "border-primary bg-background text-foreground",
                 formState.errors?.email !== undefined && "border-red-700"
               )}
             />
@@ -109,7 +109,7 @@ const SignupForm = () => {
               required
               type="password"
               className={cx(
-                "text-foreground bg-background border-primary",
+                "border-primary bg-background text-foreground",
                 formState.errors?.password !== undefined && "border-red-700"
               )}
             />
@@ -120,7 +120,7 @@ const SignupForm = () => {
               required
               type="password"
               className={cx(
-                "text-foreground bg-background border-primary",
+                "border-primary bg-background text-foreground",
                 formState.errors?.confirmPassword !== undefined && "border-red-700"
               )}
             />
