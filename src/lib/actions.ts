@@ -2,6 +2,8 @@
 
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
+import { gql } from "@apollo/client";
+import { getClient } from "@/lib/graphql";
 
 type StoreTokenRequest = {
   access_token: string;
@@ -104,6 +106,25 @@ export async function getUser(): Promise<unknown | null> {
 
 export async function getAccessToken() {
   return cookies().get("accessToken")?.value;
+}
+
+const TEST_QUERY = gql`
+  query Query {
+    user {
+      id
+      firstName
+      email
+      phone
+    }
+  }
+`;
+
+export async function graphqlTest() {
+  const client = getClient();
+  const response = await client.query({
+    query: TEST_QUERY
+  });
+  console.log(response.data);
 }
 
 export async function getTokenExpiration() {

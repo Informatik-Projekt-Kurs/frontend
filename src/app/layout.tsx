@@ -8,6 +8,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import TokenRefresh from "@/components/auth/TokenRefresh";
 import { Toaster } from "@/components/ui/toaster";
+import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="overflow-x-hidden">
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <TokenRefresh />
-        <ReduxProvider>{children}</ReduxProvider>
+        <ApolloWrapper>
+          <ReduxProvider>{children}</ReduxProvider>
+        </ApolloWrapper>
         <Toaster />
       </body>
     </html>
