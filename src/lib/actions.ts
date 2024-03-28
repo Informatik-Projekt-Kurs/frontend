@@ -178,11 +178,19 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
         }
       };
     } else {
-      return {
-        message: "error",
-        errors: { email: "Invalid email or password", password: undefined! },
-        fieldValues: { email, password }
-      };
+      console.log(response.status);
+      if (response.status === 429)
+        return {
+          message: "error",
+          errors: { email: "Too many requests", password: "" },
+          fieldValues: { email, password }
+        };
+      else
+        return {
+          message: "error",
+          errors: { email: "Invalid email or password", password: " " },
+          fieldValues: { email, password }
+        };
     }
   } catch (error) {
     const zodError = error as ZodError;
