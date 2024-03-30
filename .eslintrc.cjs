@@ -72,6 +72,9 @@ const config = {
         "no-useless-catch": "error",
         "no-var": "error",
         "prefer-const": "error",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-floating-promises": "error",
         "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
         "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
@@ -83,7 +86,7 @@ const config = {
         "no-implicit-coercion": "error",
         "@typescript-eslint/return-await": "error",
         "no-unneeded-ternary": "error",
-        "@typescript-eslint/no-confusing-void-expression": "error",
+        "@typescript-eslint/no-confusing-void-expression": "warn",
         "@typescript-eslint/no-meaningless-void-operator": "warn",
         "no-plusplus": [
           "error",

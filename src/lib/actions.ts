@@ -2,6 +2,8 @@
 
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
+import { gql } from "@apollo/client";
+import { getClient } from "@/lib/graphql";
 
 type StoreTokenRequest = {
   access_token: string;
@@ -47,7 +49,8 @@ export async function deleteToken() {
 
 export async function refreshAccessToken() {
   try {
-    const response = await fetch("http://localhost:3000/api/user/refresh", {
+    cookies().delete("expires_at");
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -100,6 +103,25 @@ export async function getUser(): Promise<unknown | null> {
 
 export const getAccessToken = async () => cookies().get("accessToken")?.value;
 
+const TEST_QUERY = gql`
+  query Query {
+    user {
+      id
+      firstName
+      email
+      phone
+    }
+  }
+`;
+
+export async function graphqlTest() {
+  const client = getClient();
+  const response = await client.query({
+    query: TEST_QUERY
+  });
+  console.log(response.data);
+}
+
 export async function getTokenExpiration() {
   return cookies().get("expires_at")?.value;
 }
@@ -145,7 +167,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
   const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
-    const response = await fetch("http://localhost:3000/api/user/login", {
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
@@ -172,11 +194,19 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
         }
       };
     } else {
-      return {
-        message: "error",
-        errors: { email: "Invalid email or password", password: undefined! },
-        fieldValues: { email, password }
-      };
+      console.log(response.status);
+      if (response.status === 429)
+        return {
+          message: "error",
+          errors: { email: "Too many requests", password: "" },
+          fieldValues: { email, password }
+        };
+      else
+        return {
+          message: "error",
+          errors: { email: "Invalid email or password", password: " " },
+          fieldValues: { email, password }
+        };
     }
   } catch (error) {
     const zodError = error as ZodError;
@@ -253,7 +283,7 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
   const encodedData = new URLSearchParams(data as Record<string, string>).toString();
 
   try {
-    const response = await fetch("http://localhost:3000/api/user/signup", {
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
