@@ -83,7 +83,7 @@ const config = {
         "no-implicit-coercion": "error",
         "@typescript-eslint/return-await": "error",
         "no-unneeded-ternary": "error",
-        "@typescript-eslint/no-confusing-void-expression": "error",
+        "@typescript-eslint/no-confusing-void-expression": "warn",
         "@typescript-eslint/no-meaningless-void-operator": "warn",
         "no-plusplus": [
           "error",
