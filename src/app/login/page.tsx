@@ -49,7 +49,7 @@ const LoginForm = () => {
   }, [formState, toast, dispatch]);
 
   return (
-    <React.Fragment>
+    <>
       <Button className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
       </Button>
@@ -141,7 +141,7 @@ const LoginForm = () => {
           <h2 className="mx-10 text-center">To keep connected with us please login with your info </h2>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
