@@ -29,10 +29,10 @@ function LandingNavbar() {
             <Link className="navLink hover:font-semibold hover:text-white" href="/">
               Home
             </Link>
-            <Link className=" navLink hover:font-semibold hover:text-white" href="about">
+            <Link className=" navLink hover:font-semibold hover:text-white" href={"about"}>
               About Us
             </Link>
-            <Link className=" navLink hover:font-semibold hover:text-white" href="services">
+            <Link className=" navLink hover:font-semibold hover:text-white" href={"services"}>
               Services
             </Link>
             <TooltipProvider delayDuration={0}>
@@ -51,7 +51,7 @@ function LandingNavbar() {
 
           <Link
             className="ml-6 flex  size-12 items-center justify-center rounded-full bg-primary text-lg text-foreground hover:text-white"
-            href="account">
+            href={"account"}>
             <div className="transition-transform hover:scale-110">
               <FaUser />
             </div>

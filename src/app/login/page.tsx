@@ -63,7 +63,7 @@ const LoginForm = () => {
             <h2 className="text-3xl font-semibold">Log In</h2>
             <p className="text-base">
               Don&apos;t have an account yet?{" "}
-              <Link className="text-primary hover:underline" href="/signup">
+              <Link className="text-primary hover:underline" href={"/signup"}>
                 Sign Up
               </Link>
             </p>
@@ -86,53 +86,56 @@ const LoginForm = () => {
               <p className="flex w-[10%] items-center justify-center">or</p>
               <Separator className="w-[45%] bg-foreground" />
             </div>
-
-            <form action={formAction} className="flex size-full flex-col justify-center gap-y-6">
-              <Input
-                placeholder="Email"
-                required
-                name="email"
-                className={cx(
-                  "border-primary bg-background text-foreground",
-                  formState.errors?.email !== undefined && "border-red-700"
-                )}
-              />
-
-              <Input
-                placeholder="Password"
-                required
-                name="password"
-                type="password"
-                className={cx(
-                  "border-primary bg-background text-foreground",
-                  formState.errors?.password !== undefined && "border-red-700"
-                )}
-              />
-
-              {formState?.message === "error" && (
-                <div className="my-[-10px] flex flex-col items-start justify-start">
-                  <p className="text-sm text-red-700 empty:hidden">{formState.errors?.email}</p>
-                  <p className="text-sm text-red-700 empty:hidden">{formState.errors?.password}</p>
-                </div>
-              )}
-              <div className="flex w-full items-center justify-between">
-                <div className="flex items-center justify-start gap-x-2 text-foreground">
-                  <Checkbox defaultChecked id="remember" />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="remember"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <Link className="text-sm text-primary hover:underline" href="/forgot-password">
-                  Forgot password?
-                </Link>
-              </div>
-              <SubmitButton />
-            </form>
           </div>
+
+          <form action={formAction} className="flex size-full flex-col justify-center gap-y-6">
+            <Input
+              placeholder="Email"
+              required
+              name="email"
+              className={cx(
+                "border-primary bg-background text-foreground",
+                formState.errors?.email !== undefined && "border-red-700"
+              )}
+            />
+
+            <Input
+              placeholder="Password"
+              required
+              name="password"
+              type="password"
+              className={cx(
+                "border-primary bg-background text-foreground",
+                formState.errors?.password !== undefined && "border-red-700"
+              )}
+            />
+
+            {formState?.message === "error" && (
+              <div className="my-[-10px] flex flex-col items-start justify-start">
+                <p className="text-sm text-red-700 empty:hidden">{formState.errors?.email}</p>
+                <p className="text-sm text-red-700 empty:hidden">{formState.errors?.password}</p>
+              </div>
+            )}
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center justify-start gap-x-2 text-foreground">
+                <Checkbox defaultChecked id="remember" />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Remember me
+                  </label>
+                </div>
+              </div>
+              <Link className="text-sm text-primary hover:underline" href="/forgot-password">
+                Forgot password?
+              </Link>
+            </div>
+            <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
+              Forgot password?
+            </Link>
+            <SubmitButton />
+          </form>
         </div>
         <div className="my-8 flex flex-col items-center justify-center">
           <h1 className="text-center text-2xl font-semibold">Welcome back</h1>
