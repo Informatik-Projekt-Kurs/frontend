@@ -52,7 +52,11 @@ const LoginForm = () => {
 
   return (
     <React.Fragment>
-      <Button onClick={() => { router.push("/setup"); }} className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
+      <Button
+        onClick={() => {
+          router.push("/setup");
+        }}
+        className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
       </Button>
       <div className="authBg flex min-h-screen w-screen flex-col items-center justify-center">
@@ -83,7 +87,7 @@ const LoginForm = () => {
               </Link>
             </div>
 
-            <div className="mb-4 flex h-1 w-full flex-row items-center justify-between text-foreground">
+            <div className="mb-8 flex h-1 w-full flex-row items-center justify-between text-foreground">
               <Separator className="w-[45%] bg-foreground" />
               <p className="flex w-[10%] items-center justify-center">or</p>
               <Separator className="w-[45%] bg-foreground" />
@@ -129,7 +133,7 @@ const LoginForm = () => {
                   </label>
                 </div>
               </div>
-              <Link className="text-sm text-primary hover:underline" href="/forgot-password">
+              <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
                 Forgot password?
               </Link>
             </div>
