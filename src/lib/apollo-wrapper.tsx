@@ -10,16 +10,14 @@ import {
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: "put your api endpoint here"
+    uri: "http://localhost:8080/graphql"
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link:
       typeof window === "undefined"
-        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          ApolloLink.from([
+        ? ApolloLink.from([
             new SSRMultipartLink({
               stripDefer: true
             }),
