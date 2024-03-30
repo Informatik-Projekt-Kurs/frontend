@@ -49,7 +49,7 @@ const LoginForm = () => {
   }, [formState, toast, dispatch]);
 
   return (
-    <>
+    <React.Fragment>
       <Button className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
       </Button>
@@ -63,7 +63,7 @@ const LoginForm = () => {
             <h2 className="text-3xl font-semibold">Log In</h2>
             <p className="text-base">
               Don&apos;t have an account yet?{" "}
-              <Link className="text-primary hover:underline" href="/signup">
+              <Link className="text-primary hover:underline" href={"/signup"}>
                 Sign Up
               </Link>
             </p>
@@ -86,6 +86,7 @@ const LoginForm = () => {
               <p className="flex w-[10%] items-center justify-center">or</p>
               <Separator className="w-[45%] bg-foreground" />
             </div>
+          </div>
 
           <form action={formAction} className="flex size-full flex-col justify-center gap-y-6">
             <Input
@@ -109,30 +110,30 @@ const LoginForm = () => {
               )}
             />
 
-              {formState?.message === "error" && (
-                <div className="my-[-10px] flex flex-col items-start justify-start">
-                  <p className="text-sm text-red-700 empty:hidden">{formState.errors?.email}</p>
-                  <p className="text-sm text-red-700 empty:hidden">{formState.errors?.password}</p>
-                </div>
-              )}
-              <div className="flex w-full items-center justify-between">
-                <div className="flex items-center justify-start gap-x-2 text-foreground">
-                  <Checkbox defaultChecked id="remember" />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="remember"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <Link className="text-sm text-primary hover:underline" href="/forgot-password">
-                  Forgot password?
-                </Link>
+            {formState?.message === "error" && (
+              <div className="my-[-10px] flex flex-col items-start justify-start">
+                <p className="text-sm text-red-700 empty:hidden">{formState.errors?.email}</p>
+                <p className="text-sm text-red-700 empty:hidden">{formState.errors?.password}</p>
               </div>
-              <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
+            )}
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center justify-start gap-x-2 text-foreground">
+                <Checkbox defaultChecked id="remember" />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Remember me
+                  </label>
+                </div>
+              </div>
+              <Link className="text-sm text-primary hover:underline" href="/forgot-password">
                 Forgot password?
               </Link>
+            </div>
+            <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
+              Forgot password?
+            </Link>
             <SubmitButton />
           </form>
         </div>
@@ -141,7 +142,7 @@ const LoginForm = () => {
           <h2 className="mx-10 text-center">To keep connected with us please login with your info </h2>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -1,8 +1,7 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache, type NormalizedCacheObject } from "@apollo/client";
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
-export const { getClient } = registerApolloClient(() => {
+export const { getClient } = registerApolloClient((): ApolloClient<NormalizedCacheObject> => {
   return new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
