@@ -66,7 +66,10 @@ function Setup() {
           placeholder={placeholders[step]}
           className={"border-0 text-lg font-medium text-foreground focus-visible:ring-0"}
         />
-        <Progress className={"h-1 max-sm:w-[350px] sm:w-[450px] md:w-[600px] lg:w-[960px]"} value={(step / 3) * 100} />
+        <Progress
+          className={"h-1 drop-shadow-glow max-sm:w-[350px] sm:w-[450px] md:w-[600px] lg:w-[960px]"}
+          value={(step / 3) * 100}
+        />
 
         <div className={"mt-2 flex items-center justify-center gap-x-2 self-end"}>
           <p className={"text-sm text-red-500"}>{error}</p>
