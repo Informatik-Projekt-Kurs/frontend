@@ -13,6 +13,7 @@ import cx from "classnames";
 import React, { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -27,6 +28,7 @@ const SubmitButton = () => {
 
 const LoginForm = () => {
   const { toast } = useToast();
+  const router = useRouter();
   const [formState, formAction] = useFormState(loginUser, {
     message: "",
     errors: undefined,
@@ -50,13 +52,13 @@ const LoginForm = () => {
 
   return (
     <React.Fragment>
-      <Button className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
+      <Button onClick={() => { router.push("/setup"); }} className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
       </Button>
       <div className="authBg flex min-h-screen w-screen flex-col items-center justify-center">
         <div className="my-8 flex items-center justify-center gap-x-2">
           <Image width={100} height={100} alt="" src="/landingLogo.png" className="size-16 select-none"></Image>
-          <h1 className="text-3xl font-bold text-foreground">Meetmate</h1>B
+          <h1 className="text-3xl font-bold text-foreground">Meetmate</h1>
         </div>
         <div className="flex w-[70%] max-w-screen-sm flex-col items-center justify-center rounded-lg border-2 border-primary bg-background py-11 shadow-md shadow-primary max-sm:w-[90%]">
           <div className="flex h-[60%] w-[70%] max-w-[650px] flex-col items-center justify-center gap-y-4 max-sm:w-[85%]">
@@ -88,7 +90,7 @@ const LoginForm = () => {
             </div>
           </div>
 
-          <form action={formAction} className="flex size-full flex-col justify-center gap-y-6">
+          <form action={formAction} className="flex size-full w-[70%] flex-col justify-center gap-y-6">
             <Input
               placeholder="Email"
               required
@@ -131,9 +133,6 @@ const LoginForm = () => {
                 Forgot password?
               </Link>
             </div>
-            <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
-              Forgot password?
-            </Link>
             <SubmitButton />
           </form>
         </div>

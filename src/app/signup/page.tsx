@@ -12,6 +12,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { registerUser } from "@/lib/actions";
 import { useToast } from "@/components/ui/use-toast";
 import cx from "classnames";
+import { useRouter } from "next/navigation";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -26,6 +27,7 @@ const SubmitButton = () => {
 
 const SignupForm = () => {
   const { toast } = useToast();
+  const router = useRouter();
   const [formState, formAction] = useFormState(registerUser, {
     message: "",
     errors: undefined,
@@ -50,7 +52,7 @@ const SignupForm = () => {
 
   return (
     <React.Fragment>
-      <Button className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
+      <Button onClick={() => { router.push("/setup"); }} className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
       </Button>
       <div className="authBg flex min-h-screen w-screen flex-col items-center justify-center">
@@ -63,7 +65,7 @@ const SignupForm = () => {
             <h2 className="text-3xl font-semibold">Sign Up</h2>
             <p className="text-base">
               Already have an account?{" "}
-              <Link className="text-primary hover:underline" href="/login">
+              <Link className="text-primary hover:underline" href={"/login"}>
                 Log In
               </Link>
             </p>
