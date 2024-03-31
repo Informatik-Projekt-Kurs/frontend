@@ -23,9 +23,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        <TokenRefresh />
         <ApolloWrapper>
-          <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <TokenRefresh>{children}</TokenRefresh>
+          </ReduxProvider>
         </ApolloWrapper>
         <Toaster />
       </body>

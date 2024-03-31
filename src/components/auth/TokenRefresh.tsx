@@ -1,8 +1,8 @@
 "use client";
-import { useEffect } from "react";
+import { Fragment, useEffect, type PropsWithChildren } from "react";
 import { getTokenExpiration, refreshAccessToken } from "@/lib/actions";
 
-const TokenRefresh = () => {
+const TokenRefresh = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const checkTokenExpiration = async () => {
       try {
@@ -12,9 +12,10 @@ const TokenRefresh = () => {
         }
 
         const secondsToExpire = Number(exp) - Date.now() / 1000;
-        console.log(secondsToExpire);
-        if (secondsToExpire < 290) {
-          await refreshAccessToken();
+        if (Math.round(secondsToExpire) < 200) {
+          await refreshAccessToken().catch((error) => {
+            console.error("Error refreshing token:", error);
+          });
           return;
         }
       } catch (error) {
@@ -31,7 +32,10 @@ const TokenRefresh = () => {
       clearInterval(interval);
     };
   }, []);
-  return null;
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <Fragment>{children}</Fragment>
+  );
 };
 
 export default TokenRefresh;
