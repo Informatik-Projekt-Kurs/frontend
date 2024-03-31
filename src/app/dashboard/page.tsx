@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React, { useEffect, useState } from "react";
-import { LuLayoutDashboard, LuBookCopy, LuSettings, LuCreditCard, LuGauge, LuUser2, LuBuilding } from "react-icons/lu";
+import { LuLayoutDashboard, LuBookCopy, LuSettings, LuGauge, LuUser2, LuBuilding } from "react-icons/lu";
 import { deleteToken, getUser } from "@/lib/actions";
 import {
   DropdownMenu,
@@ -65,10 +65,6 @@ function Dashboard() {
               <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
                 <LuBookCopy className="mx-2" size={18} />
                 Bookings
-              </Button>
-              <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
-                <LuCreditCard className="mx-2" size={18} />
-                Payouts
               </Button>
               <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
                 <LuSettings className="mx-2" size={18} />
