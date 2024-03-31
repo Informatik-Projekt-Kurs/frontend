@@ -12,7 +12,7 @@ const TokenRefresh = ({ children }: PropsWithChildren) => {
         }
 
         const secondsToExpire = Number(exp) - Date.now() / 1000;
-        if (Math.round(secondsToExpire) < 200) {
+        if (Math.round(secondsToExpire) < 20) {
           await refreshAccessToken().catch((error) => {
             console.error("Error refreshing token:", error);
           });
