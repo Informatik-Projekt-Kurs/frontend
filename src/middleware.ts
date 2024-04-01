@@ -1,15 +1,20 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getUser } from "./lib/actions";
-import { type CompanyAuthObject } from "./types";
 
 export async function middleware(req: NextRequest) {
   const user = await getUser();
-  console.log(user);
-  if (user === null || user === undefined) return NextResponse.redirect(new URL("/login", req.url));
+  if (user === null) return NextResponse.redirect(new URL("/login", req.url));
 
   try {
-    if (req.nextUrl.pathname.startsWith("/admin") && (user as CompanyAuthObject)?.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    if (req.nextUrl.pathname.startsWith("/dashboard") && user?.role !== "CLIENT" && user?.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/company/dashboard", req.url));
+    }
+    if (
+      req.nextUrl.pathname.startsWith("/company/dashboard") &&
+      user?.role !== "COMPANY_MEMBER" &&
+      user?.role !== "COMPANY_ADMIN"
+    ) {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
     return NextResponse.next();
@@ -20,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/account/:path*"]
+  matcher: ["/dashboard/:path*", "/account/:path*", "/company/dashboard/:path*"]
 };

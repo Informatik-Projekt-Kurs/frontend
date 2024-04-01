@@ -1,8 +1,8 @@
-import { type CompanyAuthObject } from "@/types";
+import { type User } from "@/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
-  user: CompanyAuthObject | null;
+  user: User | null;
   isAuthenticated: boolean;
 };
 
@@ -15,7 +15,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<CompanyAuthObject>) {
+    setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
     },
     setIsAuthenticated(state, action: PayloadAction<boolean>) {

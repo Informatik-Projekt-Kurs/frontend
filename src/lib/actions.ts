@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
+import { type User } from "@/types";
 
 type StoreTokenRequest = {
   access_token: string;
@@ -47,7 +48,6 @@ export async function deleteToken() {
 
 export async function refreshAccessToken() {
   try {
-    cookies().delete("expires_at");
     const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
       method: "POST",
       headers: {
@@ -61,15 +61,14 @@ export async function refreshAccessToken() {
       const res = (await response.json()) as {
         access_Token: string;
         expires_at: number;
-        refresh_Token: string;
       };
       void storeToken({
         access_token: res.access_Token,
-        refresh_token: res.refresh_Token,
+        refresh_token: cookies().get("refreshToken")?.value,
         expires_at: res.expires_at.toString()
       });
     } else {
-      return null;
+      console.log(response.status);
     }
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
@@ -77,7 +76,7 @@ export async function refreshAccessToken() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-export async function getUser(): Promise<unknown | null> {
+export async function getUser(): Promise<User | null> {
   try {
     const response = await fetch("http://localhost:3000/api/user/get", {
       method: "GET",
@@ -89,12 +88,12 @@ export async function getUser(): Promise<unknown | null> {
     });
 
     if (response.ok) {
-      return (await response.json()) as unknown;
+      return (await response.json()) as User;
     } else {
       return null;
     }
   } catch (error) {
-    console.error("There was a problem with the Fetch operation: ", error);
+    console.log("There was a problem with the Fetch operation: ", error);
     return null;
   }
 }

@@ -1,11 +1,41 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import React from "react";
-import { LuLayoutDashboard, LuBookCopy, LuSettings, LuCreditCard, LuGauge, LuUser2, LuBuilding } from "react-icons/lu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import React, { useEffect, useState } from "react";
+import { LuLayoutDashboard, LuBookCopy, LuSettings, LuGauge, LuUser2, LuBuilding } from "react-icons/lu";
+import { deleteToken, getUser } from "@/lib/actions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 function Dashboard() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const logout = async () => {
+    try {
+      await deleteToken();
+    } catch (error) {
+      console.error("Logout failed", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const user = await getUser();
+      setIsAdmin(user?.role === "ADMIN");
+    };
+    checkAdmin().catch(() => {
+      setIsAdmin(false);
+    });
+  }, []);
   return (
     <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
       <aside className="hidden lg:block">
@@ -37,28 +67,27 @@ function Dashboard() {
                 Bookings
               </Button>
               <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
-                <LuCreditCard className="mx-2" size={18} />
-                Payouts
-              </Button>
-              <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
                 <LuSettings className="mx-2" size={18} />
                 Settings
               </Button>
 
-              {/* Only Display this for Admin Users */}
-              <header className="relative left-[-40%] mb-[-6px] mt-6 text-xs text-muted-foreground">Admin</header>
-              <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
-                <LuBuilding className="mx-2" size={18} />
-                Companies
-              </Button>
-              <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
-                <LuUser2 className="mx-2" size={18} />
-                Users
-              </Button>
-              <Button disabled className="w-[168px] justify-start text-muted-foreground" variant="ghost">
-                <LuGauge className="mx-2" size={18} />
-                Analytics
-              </Button>
+              {isAdmin && (
+                <React.Fragment>
+                  <header className="relative left-[-40%] mb-[-6px] mt-6 text-xs text-muted-foreground">Admin</header>
+                  <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                    <LuBuilding className="mx-2" size={18} />
+                    Companies
+                  </Button>
+                  <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                    <LuUser2 className="mx-2" size={18} />
+                    Users
+                  </Button>
+                  <Button disabled className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                    <LuGauge className="mx-2" size={18} />
+                    Analytics
+                  </Button>
+                </React.Fragment>
+              )}
             </div>
           </div>
         </div>
@@ -67,12 +96,31 @@ function Dashboard() {
         <div className="flex flex-col items-center justify-start p-8 px-6">
           <header className="flex w-full flex-row items-center justify-between">
             <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">Welcome back, Tim</h1>
-            <div className="flex items-center justify-between gap-x-6">
+            <div className="flex items-center gap-x-6">
               <Input className="w-[320px]" placeholder="Search"></Input>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>TL</AvatarFallback>
-              </Avatar>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild className={"mr-4"}>
+                  <Button variant="ghost" className="relative size-8 rounded-full">
+                    <Avatar className="size-10">
+                      <AvatarFallback className={"bg-primary"}>TL</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">shadcn</p>
+                      <p className="text-xs leading-none text-muted-foreground">m@example.com</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className={"text-red-500"}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </header>
 
