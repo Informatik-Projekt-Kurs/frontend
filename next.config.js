@@ -7,7 +7,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "/api/:path*"
+        destination: process.env.BACKEND_DOMAIN + "/api/:path*"
       }
     ];
   }
