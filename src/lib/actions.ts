@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { type ZodError, z } from "zod";
 import { type User } from "@/types";
+import { type NextRequest } from "next/server";
 
 type StoreTokenRequest = {
   access_token: string;
@@ -20,15 +21,16 @@ export async function storeToken(request: StoreTokenRequest) {
     expires: new Date(Date.now() + Number(request.expires_at))
   });
 
-  if (request.refresh_token === undefined) return;
-  cookies().set({
-    name: "refreshToken",
-    value: request.refresh_token,
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-  });
+  if (request.refresh_token !== undefined) {
+    cookies().set({
+      name: "refreshToken",
+      value: request.refresh_token,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    });
+  }
 
   cookies().set({
     name: "expires_at",
@@ -46,32 +48,61 @@ export async function deleteToken() {
   cookies().delete("expires_at");
 }
 
-export async function refreshAccessToken() {
-  try {
-    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        Authorization: "Bearer " + cookies().get("refreshToken")?.value
-      },
-      body: undefined
-    });
-
-    if (response.ok) {
-      const res = (await response.json()) as {
-        access_Token: string;
-        expires_at: number;
-      };
-      void storeToken({
-        access_token: res.access_Token,
-        refresh_token: cookies().get("refreshToken")?.value,
-        expires_at: res.expires_at.toString()
+export async function refreshAccessToken(refreshToken?: string, req?: NextRequest) {
+  if (refreshToken !== undefined && req !== undefined) {
+    try {
+      const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          Authorization: "Bearer " + refreshToken
+        },
+        body: undefined
       });
-    } else {
-      console.log(response.status);
+
+      if (response.ok) {
+        const res = (await response.json()) as {
+          access_Token: string;
+          expires_at: number;
+        };
+        req.cookies.set("accessToken", res.access_Token);
+        req.cookies.set("expires_at", res.expires_at.toString());
+        return res.access_Token;
+      } else {
+        console.log(response.status);
+        return null;
+      }
+    } catch (error) {
+      console.error("There was a problem with the Fetch operation: ", error);
+      return null;
     }
-  } catch (error) {
-    console.error("There was a problem with the Fetch operation: ", error);
+  } else {
+    try {
+      const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          Authorization: "Bearer " + cookies().get("refreshToken")?.value
+        },
+        body: undefined
+      });
+
+      if (response.ok) {
+        const res = (await response.json()) as {
+          access_Token: string;
+          expires_at: number;
+        };
+        void storeToken({
+          access_token: res.access_Token,
+          refresh_token: cookies().get("refreshToken")?.value,
+          expires_at: res.expires_at.toString()
+        });
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.error("There was a problem with the Fetch operation: ", error);
+    }
   }
 }
 
@@ -93,12 +124,13 @@ export async function getUser(): Promise<User | null> {
       return null;
     }
   } catch (error) {
-    console.log("There was a problem with the Fetch operation: ", error);
+    console.log("There was a problem getting user information: ", error);
     return null;
   }
 }
 
 export const getAccessToken = async () => cookies().get("accessToken")?.value;
+export const getRefreshToken = async (req: NextRequest) => req.cookies.get("refreshToken")?.value;
 
 export async function getTokenExpiration() {
   return cookies().get("expires_at")?.value;

@@ -23,6 +23,9 @@ const TokenRefresh = ({ children }: PropsWithChildren) => {
       }
     };
 
+    checkTokenExpiration().catch((error) => {
+      console.error("Error refreshing token:", error);
+    });
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const interval = setInterval(async () => {
       await checkTokenExpiration();
