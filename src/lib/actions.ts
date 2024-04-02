@@ -78,7 +78,7 @@ export async function refreshAccessToken() {
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export async function getUser(): Promise<User | null> {
   try {
-    const response = await fetch("http://localhost:3000/api/user/get", {
+    const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/get", {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
