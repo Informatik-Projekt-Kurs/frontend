@@ -7,7 +7,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://meetmate.bencodes.de/api/:path*"
+        destination: "/api/:path*"
       }
     ];
   }
