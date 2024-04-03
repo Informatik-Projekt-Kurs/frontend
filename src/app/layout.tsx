@@ -6,7 +6,6 @@ import { ReduxProvider } from "@/components/redux/ReduxProvider";
 import React from "react";
 
 import { cn } from "@/lib/utils";
-import TokenRefresh from "@/components/auth/TokenRefresh";
 import { Toaster } from "@/components/ui/toaster";
 import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
@@ -24,9 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="overflow-x-hidden">
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <ApolloWrapper>
-          <ReduxProvider>
-            <TokenRefresh>{children}</TokenRefresh>
-          </ReduxProvider>
+          <ReduxProvider>{children}</ReduxProvider>
         </ApolloWrapper>
         <Toaster />
       </body>

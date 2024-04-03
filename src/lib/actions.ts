@@ -20,15 +20,16 @@ export async function storeToken(request: StoreTokenRequest) {
     expires: new Date(Date.now() + Number(request.expires_at))
   });
 
-  if (request.refresh_token === undefined) return;
-  cookies().set({
-    name: "refreshToken",
-    value: request.refresh_token,
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-  });
+  if (request.refresh_token !== undefined) {
+    cookies().set({
+      name: "refreshToken",
+      value: request.refresh_token,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    });
+  }
 
   cookies().set({
     name: "expires_at",
@@ -46,15 +47,15 @@ export async function deleteToken() {
   cookies().delete("expires_at");
 }
 
-export async function refreshAccessToken() {
+export async function refreshAccessToken(refreshToken?: string) {
   try {
     const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
-        Authorization: "Bearer " + cookies().get("refreshToken")?.value
+        Authorization: "Bearer " + refreshToken ?? cookies().get("refreshToken")?.value
       },
-      body: undefined
+      body: null
     });
 
     if (response.ok) {
@@ -62,13 +63,19 @@ export async function refreshAccessToken() {
         access_Token: string;
         expires_at: number;
       };
-      void storeToken({
-        access_token: res.access_Token,
-        refresh_token: cookies().get("refreshToken")?.value,
-        expires_at: res.expires_at.toString()
-      });
+      if (refreshToken !== undefined) {
+        return [res.access_Token, res.expires_at.toString()];
+      } else {
+        void storeToken({
+          access_token: res.access_Token,
+          refresh_token: cookies().get("refreshToken")?.value,
+          expires_at: res.expires_at.toString()
+        });
+        return res.access_Token;
+      }
     } else {
       console.log(response.status);
+      return undefined;
     }
   } catch (error) {
     console.error("There was a problem with the Fetch operation: ", error);
@@ -76,13 +83,13 @@ export async function refreshAccessToken() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-export async function getUser(): Promise<User | null> {
+export async function getUser(accessToken?: string): Promise<User | null> {
   try {
     const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/get", {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
-        Authorization: "Bearer " + cookies().get("accessToken")?.value
+        Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
       },
       body: undefined
     });
@@ -90,18 +97,13 @@ export async function getUser(): Promise<User | null> {
     if (response.ok) {
       return (await response.json()) as User;
     } else {
+      console.log(response.status);
       return null;
     }
   } catch (error) {
-    console.log("There was a problem with the Fetch operation: ", error);
+    console.log("There was a problem getting user information: ", error);
     return null;
   }
-}
-
-export const getAccessToken = async () => cookies().get("accessToken")?.value;
-
-export async function getTokenExpiration() {
-  return cookies().get("expires_at")?.value;
 }
 
 type LoginFormState = {

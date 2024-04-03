@@ -52,7 +52,11 @@ const SignupForm = () => {
 
   return (
     <React.Fragment>
-      <Button onClick={() => { router.push("/setup"); }} className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
+      <Button
+        onClick={() => {
+          router.push("/company/setup");
+        }}
+        className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
       </Button>
       <div className="authBg flex min-h-screen w-screen flex-col items-center justify-center">

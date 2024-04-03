@@ -54,7 +54,7 @@ const LoginForm = () => {
     <React.Fragment>
       <Button
         onClick={() => {
-          router.push("/setup");
+          router.push("/company/setup");
         }}
         className="absolute right-4 top-4 bg-subtle px-6 text-foreground">
         Create a Company <FaArrowRight className="ml-2" />
