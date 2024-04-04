@@ -1,0 +1,100 @@
+"use client";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2 } from "react-icons/lu";
+import React, { useEffect, useState } from "react";
+import type { User } from "@/types";
+import { getAccessToken, getUser } from "@/lib/actions";
+import Link from "next/link";
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>();
+  const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const accessToken = await getAccessToken();
+        setUser(await getUser(accessToken));
+      } catch (error) {
+        setIsAdmin(false);
+        console.error("Failed to fetch user", error);
+      }
+    };
+    fetchUser().catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    setIsAdmin(user?.role === "ADMIN");
+  }, [user]);
+  return (
+    <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
+      <aside className="hidden lg:block">
+        <div className="sticky top-8 flex h-[calc(100vh-64px)] flex-row">
+          <div className="flex h-full w-[80px] flex-col items-center justify-start">
+            <div className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg">
+              <div className="ml-[8px] h-[50%] w-[1px] bg-primary"></div>
+            </div>
+            <div className="mt-12 size-12 rounded-md">
+              <Image width={48} height={48} src="/landingLogo.png" alt="logo" />
+            </div>
+            <div className="mt-14 flex flex-col gap-y-6">
+              <div className="size-12 rounded-md bg-secondary"></div>
+              <div className="size-12 rounded-md bg-secondary"></div>
+              <div className="size-12 rounded-md bg-secondary"></div>
+              <div className="size-12 rounded-md bg-secondary"></div>
+            </div>
+          </div>
+          <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
+            <h1 className="mt-8 text-xl font-bold">MeetMate</h1>
+            <div className="mt-[35%] flex flex-col items-center justify-start gap-y-4">
+              <header className="relative left-[-40%] mb-[-6px] text-xs text-muted-foreground">Tools</header>
+              <Link href={"/dashboard"}>
+                <Button className="w-[168px] justify-start text-foreground" variant="default">
+                  <LuLayoutDashboard className="mx-2" size={18} />
+                  Dashboard
+                </Button>
+              </Link>
+              <Link href={"/dashboard/bookings"}>
+                <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                  <LuBookCopy className="mx-2" size={18} />
+                  Bookings
+                </Button>
+              </Link>
+              <Link href={"/dashboard/settings"}>
+                <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                  <LuSettings className="mx-2" size={18} />
+                  Settings
+                </Button>
+              </Link>
+
+              {isAdmin && (
+                <React.Fragment>
+                  <header className="relative left-[-40%] mb-[-6px] mt-6 text-xs text-muted-foreground">Admin</header>
+                  <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                    <LuBuilding className="mx-2" size={18} />
+                    Companies
+                  </Button>
+                  <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                    <LuUser2 className="mx-2" size={18} />
+                    Users
+                  </Button>
+                  <Button disabled className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                    <LuGauge className="mx-2" size={18} />
+                    Analytics
+                  </Button>
+                </React.Fragment>
+              )}
+            </div>
+          </div>
+        </div>
+      </aside>
+      <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
+        {children}
+        <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
+          <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
+        </footer>
+      </main>
+    </div>
+  );
+}

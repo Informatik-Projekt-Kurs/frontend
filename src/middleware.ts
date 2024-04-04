@@ -12,7 +12,6 @@ export async function middleware(req: NextRequest) {
     if (refreshToken !== undefined || refreshToken !== "") {
       const newAccessToken = await refreshAccessToken(refreshToken);
       if (newAccessToken !== undefined) {
-        console.log(newAccessToken);
         response.cookies.set("accessToken", newAccessToken[0], { httpOnly: true, secure: true, sameSite: "strict" });
         response.cookies.set("expires_at", newAccessToken[1], { httpOnly: true, secure: true, sameSite: "strict" });
         user = await getUser(newAccessToken[0]);

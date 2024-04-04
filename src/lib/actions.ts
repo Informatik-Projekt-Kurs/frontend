@@ -97,13 +97,17 @@ export async function getUser(accessToken?: string): Promise<User | null> {
     if (response.ok) {
       return (await response.json()) as User;
     } else {
-      console.log(response.status);
+      console.log("Error getting User", response.status);
       return null;
     }
   } catch (error) {
     console.log("There was a problem getting user information: ", error);
     return null;
   }
+}
+
+export async function getAccessToken() {
+  return cookies().get("accessToken")?.value;
 }
 
 type LoginFormState = {
