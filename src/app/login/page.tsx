@@ -47,6 +47,9 @@ const LoginForm = () => {
         variant: "default",
         className: "border-emerald-300"
       });
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500);
     }
   }, [formState, toast, dispatch]);
 
