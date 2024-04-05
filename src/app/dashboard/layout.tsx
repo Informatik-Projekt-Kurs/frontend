@@ -6,10 +6,13 @@ import React, { useEffect, useState } from "react";
 import type { User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/actions";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>();
   const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
+  const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -27,6 +30,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     setIsAdmin(user?.role === "ADMIN");
   }, [user]);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Derive the active state based on the current pathname
+    if (pathname.includes("/dashboard/bookings")) {
+      setActive("bookings");
+    } else if (pathname.includes("/dashboard/settings")) {
+      setActive("settings");
+    } else {
+      setActive("dashboard");
+    }
+  }, [pathname]);
   return (
     <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
       <aside className="hidden lg:block">
@@ -50,19 +66,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="mt-[35%] flex flex-col items-center justify-start gap-y-4">
               <header className="relative left-[-40%] mb-[-6px] text-xs text-muted-foreground">Tools</header>
               <Link href={"/dashboard"}>
-                <Button className="w-[168px] justify-start text-foreground" variant="default">
+                <Button
+                  className={cn(
+                    "w-[168px] justify-start",
+                    active === "dashboard" ? "text-foreground" : "text-muted-foreground"
+                  )}
+                  variant={active === "dashboard" ? "default" : "ghost"}>
                   <LuLayoutDashboard className="mx-2" size={18} />
                   Dashboard
                 </Button>
               </Link>
               <Link href={"/dashboard/bookings"}>
-                <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                <Button
+                  className={cn(
+                    "w-[168px] justify-start",
+                    active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                  )}
+                  variant={active === "bookings" ? "default" : "ghost"}>
                   <LuBookCopy className="mx-2" size={18} />
                   Bookings
                 </Button>
               </Link>
               <Link href={"/dashboard/settings"}>
-                <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
+                <Button
+                  className={cn(
+                    "w-[168px] justify-start",
+                    active === "settings" ? "text-foreground" : "text-muted-foreground"
+                  )}
+                  variant={active === "settings" ? "default" : "ghost"}>
                   <LuSettings className="mx-2" size={18} />
                   Settings
                 </Button>
