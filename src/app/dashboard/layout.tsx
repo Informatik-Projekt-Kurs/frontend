@@ -13,6 +13,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [user, setUser] = useState<User | null>();
   const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
+  const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
+
+  const companies = [
+    { id: "1", name: "Company 1" },
+    { id: "2", name: "Company 2" },
+    { id: "3", name: "Company 3" }
+  ];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,23 +49,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     } else {
       setActive("dashboard");
     }
+
+    // Derive the top position of the company indicator
+    const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
+    // default is 10px from the top. As soon as the first company is selected, it will be 20px + 64px * companyIndex
+    setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
   }, [pathname]);
+
   return (
     <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
       <aside className="hidden lg:block">
         <div className="sticky top-8 flex h-[calc(100vh-64px)] flex-row">
           <div className="flex h-full w-[80px] flex-col items-center justify-start">
-            <div className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg">
+            <div
+              className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg"
+              style={{ marginTop: companyIndicatorTop }}>
               <div className="ml-[8px] h-[50%] w-[1px] bg-primary"></div>
             </div>
             <div className="mt-12 size-12 rounded-md">
-              <Image width={48} height={48} src="/landingLogo.png" alt="logo" />
+              <Link href={"/dashboard"}>
+                <Image width={48} height={48} src="/landingLogo.png" alt="logo" />
+              </Link>
             </div>
             <div className="mt-14 flex flex-col gap-y-6">
-              <div className="size-12 rounded-md bg-secondary"></div>
-              <div className="size-12 rounded-md bg-secondary"></div>
-              <div className="size-12 rounded-md bg-secondary"></div>
-              <div className="size-12 rounded-md bg-secondary"></div>
+              {companies.map((company) => (
+                <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
+                  <div key={company.id} className="size-12 rounded-md bg-secondary"></div>
+                </Link>
+              ))}
             </div>
           </div>
           <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
