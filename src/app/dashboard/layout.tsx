@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2 } from "react-icons/lu";
+import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2, LuHome } from "react-icons/lu";
 import React, { useEffect, useState } from "react";
 import type { User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/actions";
@@ -16,9 +16,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
 
   const companies = [
-    { id: "1", name: "Company 1" },
-    { id: "2", name: "Company 2" },
-    { id: "3", name: "Company 3" }
+    { id: "29103", name: "Company 1" },
+    { id: "61241", name: "Company 2" },
+    { id: "1241", name: "Company 3" }
   ];
 
   useEffect(() => {
@@ -52,7 +52,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     // Derive the top position of the company indicator
     const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
-    // default is 10px from the top. As soon as the first company is selected, it will be 20px + 64px * companyIndex
     setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
   }, [pathname]);
 
@@ -90,21 +89,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     active === "dashboard" ? "text-foreground" : "text-muted-foreground"
                   )}
                   variant={active === "dashboard" ? "default" : "ghost"}>
-                  <LuLayoutDashboard className="mx-2" size={18} />
-                  Dashboard
-                </Button>
-              </Link>
-              <Link href={"/dashboard/bookings"}>
-                <Button
-                  className={cn(
-                    "w-[168px] justify-start",
-                    active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                  {!pathname.includes("/dashboard/company") ? (
+                    <LuLayoutDashboard className="mx-2" size={18} />
+                  ) : (
+                    <LuHome className={"mx-2"} />
                   )}
-                  variant={active === "bookings" ? "default" : "ghost"}>
-                  <LuBookCopy className="mx-2" size={18} />
-                  Bookings
+                  {pathname.includes("/dashboard/company") ? "Home" : "Dashboard"}
                 </Button>
               </Link>
+              {!companies.some((company) => pathname.includes(company.id)) && (
+                <Link href={"/dashboard/bookings"}>
+                  <Button
+                    className={cn(
+                      "w-[168px] justify-start",
+                      active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                    )}
+                    variant={active === "bookings" ? "default" : "ghost"}>
+                    <LuBookCopy className="mx-2" size={18} />
+                    Bookings
+                  </Button>
+                </Link>
+              )}
               <Link href={"/dashboard/settings"}>
                 <Button
                   className={cn(
