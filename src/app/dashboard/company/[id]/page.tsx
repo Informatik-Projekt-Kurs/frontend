@@ -118,9 +118,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 </p>
               </div>
             </div>
-            <Button className={"ml-6"} variant={"secondary"}>
-              Follow
-            </Button>
+            <Button className={"ml-6 text-foreground"}>Follow</Button>
           </div>
           <p className={"mt-10 text-muted-foreground"}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
