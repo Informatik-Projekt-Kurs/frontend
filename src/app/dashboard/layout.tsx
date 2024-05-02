@@ -24,6 +24,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        console.log("fetching user");
         const accessToken = await getAccessToken();
         setUser(await getUser(accessToken));
       } catch (error) {
