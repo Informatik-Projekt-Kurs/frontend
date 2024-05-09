@@ -1,5 +1,5 @@
 import React from "react";
-import { ScheduleComponent, ViewsDirective, ViewDirective, Week, Inject } from "@syncfusion/ej2-react-schedule";
+import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } from "@syncfusion/ej2-react-schedule";
 import "./scheduler.css";
 
 function Scheduler() {
@@ -18,9 +18,9 @@ function Scheduler() {
   return (
     <ScheduleComponent height="650px" eventSetings={eventSettings} showHeaderBar={false}>
       <ViewsDirective>
-        <ViewDirective option="Week" />
+        <ViewDirective option="WorkWeek" />
       </ViewsDirective>
-      <Inject services={[Week]} />
+      <Inject services={[WorkWeek]} />
     </ScheduleComponent>
   );
 }
