@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "node_modules/locomotive-scroll/dist/locomotive-scroll";
-
 @layer base {
   :root {
     --background: 240 10% 4%;
@@ -520,13 +518,4 @@ canvas {
   background: linear-gradient(213deg, $background 50%, $secondary 200%);
 }
 
-@import "../../node_modules/@syncfusion/ej2-base/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-buttons/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-calendars/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-dropdowns/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-lists/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-navigations/styles/bootstrap5-dark.css";
 @import "../../node_modules/@syncfusion/ej2-popups/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-splitbuttons/styles/bootstrap5-dark.css";
-@import "../../node_modules/@syncfusion/ej2-react-schedule/styles/bootstrap5-dark.css";

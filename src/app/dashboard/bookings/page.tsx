@@ -16,7 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import Overview from "@/components/dashboard/scheduler/Scheduler";
+import Scheduler from "@/components/dashboard/scheduler/Scheduler";
+import { FaPlus } from "react-icons/fa6";
+import { CiFilter } from "react-icons/ci";
 
 function Bookings() {
   const [user, setUser] = useState<User | null>();
@@ -94,7 +96,22 @@ function Bookings() {
             </DropdownMenu>
           </div>
         </header>
-        <Overview />
+        <div className={"mt-2 flex w-full items-center justify-between pl-4 text-foreground"}>
+          Your Appointments at a glance. Book a new appointment now!
+          <div className={"flex w-fit items-center justify-center gap-x-4 text-foreground"}>
+            <Button variant={"secondary"}>
+              <CiFilter className={"mr-1"} />
+              Filter
+            </Button>
+            <Button className={"text-foreground"}>
+              <FaPlus className={"mr-1"} />
+              New Appointment
+            </Button>
+          </div>
+        </div>
+        <div className="mt-4 flex h-fit w-full rounded-[20px] bg-subtle p-6">
+          <Scheduler />
+        </div>
       </div>
     );
 }
