@@ -817,12 +817,10 @@
   height: 0 !important; /* stylelint-disable-line declaration-no-important */
 }
 .e-schedule .e-vertical-view.e-timescale-disable .e-appointment {
-  background: #0d6efd;
-  border: 1px solid #444c54;
-  border-radius: 2px;
-  color: #fff;
   display: -ms-flexbox;
   display: flex;
+  justify-content: center;
+  align-items: center;
   height: 54px;
   margin-bottom: 2px;
   overflow: hidden;
@@ -833,7 +831,6 @@
   display: flex;
   -ms-flex: auto;
   flex: auto;
-  padding: 2px 4px 0 2px;
   text-align: left;
 }
 .e-schedule .e-vertical-view.e-timescale-disable .e-appointment .e-inner-wrap {
@@ -871,7 +868,6 @@
 .e-schedule .e-vertical-view.e-timescale-disable .e-appointment .e-left-icon,
 .e-schedule .e-vertical-view.e-timescale-disable .e-appointment .e-right-icon {
   line-height: 54px;
-  padding: 0 2px;
 }
 .e-schedule .e-vertical-view.e-timescale-disable .e-appointment.e-appointment-border, .e-schedule .e-vertical-view.e-timescale-disable .e-appointment:focus {
   border: 0;
@@ -4659,8 +4655,7 @@
 .e-appointment {
   background: hsl(240 6% 10%) !important;
   border-radius: 12px !important;
-  border: 1px solid #6EE7B7 !important;
-  padding: 2px !important;
+  //border: 1px solid #6EE7B7 !important;
 }
 
 .e-appointment .e-location {
@@ -4696,4 +4691,8 @@
 
 .e-schedule .e-current-day {
   color: hsl(217.2 91.2% 59.8%) !important;
+}
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+  border: none !important;
+  width: 100% !important;
 }
