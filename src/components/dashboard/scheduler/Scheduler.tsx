@@ -3,6 +3,7 @@ import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } fr
 import "./scheduler.scss";
 import { registerLicense } from "@syncfusion/ej2-base";
 import { Button } from "@/components/ui/button";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 
 function Scheduler() {
   const data = [
@@ -54,12 +55,16 @@ function Scheduler() {
 
   return (
     <React.Fragment>
-      <div className="absolute z-10 ml-2 mt-3">
+      <div className="absolute z-10 ml-1 mt-3">
         <Button size={"sm"} variant={"outline"} className={"rounded-full text-foreground"} onClick={handlePreviousWeek}>
-          -
+          <FaArrowLeft size={10} />
         </Button>
-        <Button size={"sm"} variant={"outline"} className={"rounded-full text-foreground"} onClick={handleNextWeek}>
-          +
+        <Button
+          size={"sm"}
+          variant={"outline"}
+          className={"ml-1 rounded-full text-foreground"}
+          onClick={handleNextWeek}>
+          <FaArrowRight size={10} />
         </Button>
       </div>
       <ScheduleComponent
@@ -82,12 +87,12 @@ function Scheduler() {
                   borderColor: getRandomColor()
                 }}>
                 <h2 className={"font-bold"}>{props.Subject}</h2>
-                <div className={"mt-1 text-xs text-muted-foreground"}>
+                <div className={"mt-1 flex items-center gap-x-2 text-xs text-muted-foreground"}>
                   {new Intl.DateTimeFormat("en-US", {
                     hour: "numeric",
                     minute: "numeric"
                   }).format(props.StartTime)}{" "}
-                  -{" "}
+                  <FaArrowRight />{" "}
                   {new Intl.DateTimeFormat("en-US", {
                     hour: "numeric",
                     minute: "numeric"

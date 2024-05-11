@@ -18,7 +18,7 @@ import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Scheduler from "@/components/dashboard/scheduler/Scheduler";
 import { FaPlus } from "react-icons/fa6";
-import { CiFilter } from "react-icons/ci";
+import { FiFilter } from "react-icons/fi";
 
 function Bookings() {
   const [user, setUser] = useState<User | null>();
@@ -100,12 +100,12 @@ function Bookings() {
           Your Appointments at a glance. Book a new appointment now!
           <div className={"flex w-fit items-center justify-center gap-x-4 text-foreground"}>
             <Button variant={"secondary"}>
-              <CiFilter className={"mr-1"} />
+              <FiFilter className={"mr-1 font-bold"} />
               Filter
             </Button>
             <Button className={"text-foreground"}>
               <FaPlus className={"mr-1"} />
-              New Appointment
+              Book Appointment
             </Button>
           </div>
         </div>
