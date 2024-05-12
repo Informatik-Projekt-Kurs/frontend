@@ -107,7 +107,9 @@ function Bookings() {
               className="w-[320px]"
               placeholder="Search"
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); }}></Input>
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}></Input>
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger className={"mr-4"}>
                 <Button variant="ghost" className="relative size-8 rounded-full">
@@ -151,8 +153,9 @@ function Bookings() {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>You need help?</AlertDialogTitle>
-                  <AlertDialogDescription className={"flex gap-x-2"}>
-                    If you need any help or want to request a new feature contact <pre>&quot;boeckmannben{"<at>"}gmail.com&quot;</pre>.
+                  <AlertDialogDescription className={"flex flex-wrap gap-x-2"}>
+                    If you need any help or would like to request a new feature contact{" "}
+                    <a href={"mailto:boeckmannben@gmail.com"}>&quot;boeckmannben{"<at>"}gmail.com&quot;</a>.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className={"text-foreground"}>
