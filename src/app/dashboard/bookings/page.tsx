@@ -152,7 +152,7 @@ function Bookings() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>You need help?</AlertDialogTitle>
                   <AlertDialogDescription className={"flex gap-x-2"}>
-                    Contact <pre>&quot;boeckmannben{"<at>"}gmail.com&quot;</pre> for help
+                    If you need any help or want to request a new feature contact <pre>&quot;boeckmannben{"<at>"}gmail.com&quot;</pre>.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className={"text-foreground"}>
