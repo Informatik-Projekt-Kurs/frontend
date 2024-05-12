@@ -28,6 +28,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
 
 function Bookings() {
   const [user, setUser] = useState<User | null>();
@@ -59,6 +72,23 @@ function Bookings() {
 
   const router = useRouter();
 
+  const [select, setSelect] = useState("");
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const [bookingMode, setBookingMode] = useState(0);
+  const [bookingContent, setBookingContent] = useState({
+    title: "Select your company",
+    description: "With which company do you want to book this appointment?",
+    select: {
+      active: true,
+      content: ["Github", "Böckmann GmbH", "MeetMate"]
+    },
+    calendar: {
+      active: false
+    },
+    progress: 33
+  });
+
   useEffect(() => {
     const fetchUser = async () => {
       setLoading(true);
@@ -76,9 +106,79 @@ function Bookings() {
     fetchUser().catch(console.error);
   }, []);
 
+  const [bookingResult, setBookingResult] = useState<{ company: string; date: Date | undefined; time: string }>({
+    company: "",
+    date: new Date(),
+    time: ""
+  });
+
   useEffect(() => {
     setFilteredEvents(events.filter((event) => event.Subject.toLowerCase().includes(searchQuery.toLowerCase())));
   }, [searchQuery, events]);
+
+  function updateBookingProgress() {
+    if (bookingMode === 1 && select !== "") {
+      setBookingResult({ ...bookingResult, company: select });
+      setSelect("");
+      setBookingContent({
+        title: "Select your Date",
+        description: "When would you like to book this appointment?",
+        select: {
+          active: false,
+          content: ["13:00 - 14:00", "15:00 - 16:00", "19:00 - 20:30"]
+        },
+        calendar: {
+          active: true
+        },
+        progress: 66
+      });
+      setBookingMode(bookingMode + 1);
+    } else if (bookingMode === 2) {
+      setBookingResult({ ...bookingResult, date });
+      setBookingContent({
+        title: "Select your Slot",
+        description: "At what time would you like to book this appointment?",
+        select: {
+          active: true,
+          content: ["13:00 - 14:00", "15:00 - 16:00", "19:00 - 20:30"]
+        },
+        calendar: {
+          active: false
+        },
+        progress: 80
+      });
+      setBookingMode(bookingMode + 1);
+    } else if (bookingMode === 3 && select !== "") {
+      setBookingResult({ ...bookingResult, time: select });
+      setBookingContent({
+        title: "Success",
+        description: "Your appointment was successfully booked",
+        select: {
+          active: false,
+          content: ["13:00 - 14:00", "15:00 - 16:00", "19:00 - 20:30"]
+        },
+        calendar: {
+          active: false
+        },
+        progress: 100
+      });
+      console.log(bookingResult);
+    } else if (bookingMode === 0) {
+      setBookingContent({
+        title: "Select your company",
+        description: "With which company do you want to book this appointment?",
+        select: {
+          active: true,
+          content: ["Github", "Böckmann GmbH", "MeetMate"]
+        },
+        calendar: {
+          active: false
+        },
+        progress: 33
+      });
+      setBookingMode(1);
+    }
+  }
 
   const logout = async () => {
     try {
@@ -150,10 +250,10 @@ function Bookings() {
                   Help
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className={"border-border text-foreground"}>
                 <AlertDialogHeader>
                   <AlertDialogTitle>You need help?</AlertDialogTitle>
-                  <AlertDialogDescription className={"flex flex-wrap gap-x-2"}>
+                  <AlertDialogDescription className={"flex flex-wrap gap-2"}>
                     If you need any help or would like to request a new feature contact{" "}
                     <a href={"mailto:boeckmannben@gmail.com"}>&quot;boeckmannben{"<at>"}gmail.com&quot;</a>.
                   </AlertDialogDescription>
@@ -163,10 +263,59 @@ function Bookings() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            <Button className={"text-foreground"}>
-              <FaPlus className={"mr-1"} />
-              Book Appointment
-            </Button>
+            <Dialog>
+              <DialogTrigger>
+                <Button
+                  onClick={() => {
+                    setBookingMode(0);
+                    setSelect("");
+                  }}
+                  className={"text-foreground"}>
+                  <FaPlus className={"mr-1"} />
+                  Book Appointment
+                </Button>
+              </DialogTrigger>
+              <DialogContent className={"border-border text-foreground"}>
+                <DialogHeader className={"gap-y-3"}>
+                  <DialogTitle>{bookingContent.title}</DialogTitle>
+                  <DialogDescription>{bookingContent.description}</DialogDescription>
+                  <Select onValueChange={setSelect}>
+                    <SelectTrigger style={{ display: bookingContent.select.active ? "flex" : "none" }}>
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent className={"border-border"}>
+                      {bookingContent.select.content.map((content, index) => (
+                        <SelectItem key={index} value={content}>
+                          {content}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Calendar
+                    mode="single"
+                    className="rounded-md"
+                    selected={date}
+                    onSelect={setDate}
+                    style={{ display: bookingContent.calendar.active ? "block" : "none" }}
+                  />
+                </DialogHeader>
+                <DialogFooter>
+                  <div className={"flex w-full flex-col"}>
+                    <div className={"flex justify-end gap-x-4"}>
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Cancel
+                        </Button>
+                      </DialogClose>
+                      <Button onClick={updateBookingProgress} className={"text-foreground"}>
+                        Next
+                      </Button>
+                    </div>
+                    <Progress className={"mt-3 h-1"} value={bookingContent.progress} />
+                  </div>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <div className="mt-4 flex h-fit w-full rounded-[20px] bg-subtle p-6">
