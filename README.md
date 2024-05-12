@@ -62,8 +62,8 @@ See `LICENSE` for more information.
 ## Contact
 
 - Project Link: [https://github.com/Informatik-Projekt-Kurs/frontend](https://github.com/Informatik-Projekt-Kurs/frontend)
-- Company Website: [MeetMate](https://www.meetmate.com)
-- Contact Us: [contact@meetmate.com](mailto:contact@meetmate.com)
+- Company Website: [MeetMate](https://www.meetmate.dev)
+- Contact Us: [boeckmann@gmail.com](mailto:boeckmannben@gmail.com)
 
 ---
 
