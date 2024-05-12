@@ -5,26 +5,11 @@ import { registerLicense } from "@syncfusion/ej2-base";
 import { Button } from "@/components/ui/button";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 
-function Scheduler() {
-  const data = [
-    {
-      Id: 1,
-      Subject: "Scrum Meeting",
-      Location: "Office",
-      StartTime: new Date(2024, 4, 6, 14, 30),
-      EndTime: new Date(2024, 4, 6, 15, 30),
-      RecurrenceRule: ""
-    },
-    {
-      Id: 2,
-      Subject: "Scrum Meeting",
-      Location: "Office",
-      StartTime: new Date(2024, 4, 8, 17, 30),
-      EndTime: new Date(2024, 4, 8, 18, 30),
-      RecurrenceRule: ""
-    }
-  ];
-  const eventSettings = { dataSource: data };
+function Scheduler(props: {
+  openingHours: { open: string; close: string };
+  data: Array<{ Id: number; Subject: string; Location: string; StartTime: Date; EndTime: Date; RecurrenceRule: string }>;
+}) {
+  const eventSettings = { dataSource: props.data };
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -77,26 +62,26 @@ function Scheduler() {
         <ViewsDirective>
           <ViewDirective
             option="WorkWeek"
-            startHour="13:00"
-            endHour="19:00"
+            startHour={props.openingHours.open}
+            endHour={props.openingHours.close}
             timeScale={{ interval: 60, slotCount: 2 }}
-            eventTemplate={(props: { Subject: string; StartTime: Date; EndTime: Date }) => (
+            eventTemplate={(eventProps: { Subject: string; StartTime: Date; EndTime: Date }) => (
               <div
-                className={"absolute z-10 ml-[-4px] size-full rounded-[12px] border-[2px] border-solid p-2"}
+                className={"absolute z-10 ml-[-4px] size-full rounded-[12px] border-2 border-solid p-2"}
                 style={{
                   borderColor: getRandomColor()
                 }}>
-                <h2 className={"font-bold"}>{props.Subject}</h2>
+                <h2 className={"font-bold"}>{eventProps.Subject}</h2>
                 <div className={"mt-1 flex items-center gap-x-2 text-xs text-muted-foreground"}>
                   {new Intl.DateTimeFormat("en-US", {
                     hour: "numeric",
                     minute: "numeric"
-                  }).format(props.StartTime)}{" "}
+                  }).format(eventProps.StartTime)}{" "}
                   <FaArrowRight />{" "}
                   {new Intl.DateTimeFormat("en-US", {
                     hour: "numeric",
                     minute: "numeric"
-                  }).format(props.EndTime)}
+                  }).format(eventProps.EndTime)}
                 </div>
               </div>
             )}

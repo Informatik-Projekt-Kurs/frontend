@@ -17,12 +17,45 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Scheduler from "@/components/dashboard/scheduler/Scheduler";
-import { FaPlus } from "react-icons/fa6";
-import { FiFilter } from "react-icons/fi";
+import { FaPlus, FaRegCircleQuestion } from "react-icons/fa6";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 
 function Bookings() {
   const [user, setUser] = useState<User | null>();
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [events, setEvents] = useState<
+    Array<{ Id: number; Subject: string; Location: string; StartTime: Date; EndTime: Date; RecurrenceRule: string }>
+  >([
+    {
+      Id: 1,
+      Subject: "Scrum Meeting",
+      Location: "Office",
+      StartTime: new Date(2024, 4, 6, 14, 30),
+      EndTime: new Date(2024, 4, 6, 15, 30),
+      RecurrenceRule: ""
+    },
+    {
+      Id: 2,
+      Subject: "Scrum Meeting",
+      Location: "Office",
+      StartTime: new Date(2024, 4, 8, 17, 30),
+      EndTime: new Date(2024, 4, 8, 18, 30),
+      RecurrenceRule: ""
+    }
+  ]);
+  const [filteredEvents, setFilteredEvents] = useState<
+    Array<{ Id: number; Subject: string; Location: string; StartTime: Date; EndTime: Date; RecurrenceRule: string }>
+  >([]);
 
   const router = useRouter();
 
@@ -38,9 +71,14 @@ function Bookings() {
         console.error("Failed to fetch user", error);
         setLoading(false);
       }
+      if (false) setEvents([]); // This is a dummy condition to avoid unused variable warning (events)
     };
     fetchUser().catch(console.error);
   }, []);
+
+  useEffect(() => {
+    setFilteredEvents(events.filter((event) => event.Subject.toLowerCase().includes(searchQuery.toLowerCase())));
+  }, [searchQuery, events]);
 
   const logout = async () => {
     try {
@@ -65,9 +103,13 @@ function Bookings() {
         <header className="flex w-full flex-row items-center justify-between">
           <h1 className="m-4 font-medium text-foreground md:text-2xl">Bookings</h1>
           <div className="flex items-center gap-x-6">
-            <Input className="w-[320px]" placeholder="Search"></Input>
+            <Input
+              className="w-[320px]"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); }}></Input>
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild className={"mr-4"}>
+              <DropdownMenuTrigger className={"mr-4"}>
                 <Button variant="ghost" className="relative size-8 rounded-full">
                   <Avatar className="size-10">
                     <AvatarFallback className={"bg-primary"}>{extractNameInitials(user?.name)}</AvatarFallback>
@@ -99,10 +141,25 @@ function Bookings() {
         <div className={"mt-2 flex w-full items-center justify-between pl-4 text-foreground"}>
           Your Appointments at a glance. Book a new appointment now!
           <div className={"flex w-fit items-center justify-center gap-x-4 text-foreground"}>
-            <Button variant={"secondary"}>
-              <FiFilter className={"mr-1 font-bold"} />
-              Filter
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Button variant={"secondary"}>
+                  <FaRegCircleQuestion className={"mr-1 font-bold"} />
+                  Help
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>You need help?</AlertDialogTitle>
+                  <AlertDialogDescription className={"flex gap-x-2"}>
+                    Contact <pre>&quot;boeckmannben{"<at>"}gmail.com&quot;</pre> for help
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className={"text-foreground"}>
+                  <AlertDialogCancel>Close</AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Button className={"text-foreground"}>
               <FaPlus className={"mr-1"} />
               Book Appointment
@@ -110,7 +167,7 @@ function Bookings() {
           </div>
         </div>
         <div className="mt-4 flex h-fit w-full rounded-[20px] bg-subtle p-6">
-          <Scheduler />
+          <Scheduler openingHours={{ open: "13:00", close: "19:00" }} data={filteredEvents} />
         </div>
       </div>
     );
