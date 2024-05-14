@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "node_modules/locomotive-scroll/dist/locomotive-scroll";
-
 @layer base {
   :root {
     --background: 240 10% 4%;
@@ -359,7 +357,7 @@ canvas {
   grid-row-gap: 1.875rem;
   grid-template-rows: auto;
   grid-template-columns: 1fr 1fr;
-  grid-auto-columns: repeat(1fr);
+  grid-auto-columns: 1fr;
   margin-bottom: 6.25rem;
   display: grid;
 }
@@ -519,3 +517,5 @@ canvas {
 .authBg {
   background: linear-gradient(213deg, $background 50%, $secondary 200%);
 }
+
+@import "../../node_modules/@syncfusion/ej2-popups/styles/bootstrap5-dark.css";

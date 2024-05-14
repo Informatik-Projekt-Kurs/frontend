@@ -47,6 +47,7 @@ function Settings() {
         const accessToken = await getAccessToken();
         const fetchedUser = await getUser(accessToken);
         setUser(fetchedUser);
+        console.log(user);
         setLoading(false);
 
         if (fetchedUser !== null)
@@ -104,9 +105,6 @@ function Settings() {
                 </FormItem>
               )}
             />
-            <pre>
-              Your user ID is: <strong>{user?.id}</strong>
-            </pre>
             <Button type="submit" className={"w-1/4 self-end"}>
               Submit
             </Button>

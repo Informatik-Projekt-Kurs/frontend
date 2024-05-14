@@ -4,7 +4,6 @@ import { Inter as FontSans } from "next/font/google";
 import "../assets/globals.scss";
 import { ReduxProvider } from "@/components/redux/ReduxProvider";
 import React from "react";
-
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import { ApolloWrapper } from "@/lib/apollo-wrapper";
