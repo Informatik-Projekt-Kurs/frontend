@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2 } from "react-icons/lu";
+import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2, LuHome } from "react-icons/lu";
 import React, { useEffect, useState } from "react";
 import type { User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/actions";
@@ -13,10 +13,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [user, setUser] = useState<User | null>();
   const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
+  const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
+
+  const companies = [
+    { id: "29103", name: "Company 1" },
+    { id: "61241", name: "Company 2" },
+    { id: "1241", name: "Company 3" }
+  ];
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        console.log("fetching user");
         const accessToken = await getAccessToken();
         setUser(await getUser(accessToken));
       } catch (error) {
@@ -42,23 +50,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     } else {
       setActive("dashboard");
     }
+
+    // Derive the top position of the company indicator
+    const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
+    setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
   }, [pathname]);
+
   return (
     <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
       <aside className="hidden lg:block">
         <div className="sticky top-8 flex h-[calc(100vh-64px)] flex-row">
           <div className="flex h-full w-[80px] flex-col items-center justify-start">
-            <div className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg">
+            <div
+              className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg"
+              style={{ marginTop: companyIndicatorTop }}>
               <div className="ml-[8px] h-[50%] w-[1px] bg-primary"></div>
             </div>
             <div className="mt-12 size-12 rounded-md">
-              <Image width={48} height={48} src="/landingLogo.png" alt="logo" />
+              <Link href={"/dashboard"}>
+                <Image width={48} height={48} src="/landingLogo.png" alt="logo" />
+              </Link>
             </div>
             <div className="mt-14 flex flex-col gap-y-6">
-              <div className="size-12 rounded-md bg-secondary"></div>
-              <div className="size-12 rounded-md bg-secondary"></div>
-              <div className="size-12 rounded-md bg-secondary"></div>
-              <div className="size-12 rounded-md bg-secondary"></div>
+              {companies.map((company) => (
+                <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
+                  <div key={company.id} className="size-12 rounded-md bg-secondary"></div>
+                </Link>
+              ))}
             </div>
           </div>
           <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
@@ -72,21 +90,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     active === "dashboard" ? "text-foreground" : "text-muted-foreground"
                   )}
                   variant={active === "dashboard" ? "default" : "ghost"}>
-                  <LuLayoutDashboard className="mx-2" size={18} />
-                  Dashboard
-                </Button>
-              </Link>
-              <Link href={"/dashboard/bookings"}>
-                <Button
-                  className={cn(
-                    "w-[168px] justify-start",
-                    active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                  {!pathname.includes("/dashboard/company") ? (
+                    <LuLayoutDashboard className="mx-2" size={18} />
+                  ) : (
+                    <LuHome className={"mx-2"} />
                   )}
-                  variant={active === "bookings" ? "default" : "ghost"}>
-                  <LuBookCopy className="mx-2" size={18} />
-                  Bookings
+                  {pathname.includes("/dashboard/company") ? "Home" : "Dashboard"}
                 </Button>
               </Link>
+              {!companies.some((company) => pathname.includes(company.id)) && (
+                <Link href={"/dashboard/bookings"}>
+                  <Button
+                    className={cn(
+                      "w-[168px] justify-start",
+                      active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                    )}
+                    variant={active === "bookings" ? "default" : "ghost"}>
+                    <LuBookCopy className="mx-2" size={18} />
+                    Bookings
+                  </Button>
+                </Link>
+              )}
               <Link href={"/dashboard/settings"}>
                 <Button
                   className={cn(
