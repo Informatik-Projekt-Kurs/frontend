@@ -43,6 +43,17 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
    ```
    yarn install
    ```
+4. Add a .env file
+   ```dotenv
+    JWT_SECRET="mysecretvalue"
+    JWT_EXPIRATION_MS=60000
+    JWT_REFRESH_EXPIRATION_MS=1209600000
+    REFRESH_DOMAIN="/refresh"
+    FRONTEND_DOMAIN="http://localhost:3000" // for production use real domain
+    BACKEND_DOMAIN="https://meetmate.bencodes.de"
+    GRAPHQL_URL="http://localhost:8080/graphql"
+    NEXT_PUBLIC_SYNCFUSION_LICENSE="mysecretvalue"
+   ```
 
 ### Running the Application
 

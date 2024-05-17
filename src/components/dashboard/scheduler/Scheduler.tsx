@@ -7,7 +7,14 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 
 function Scheduler(props: {
   openingHours: { open: string; close: string };
-  data: Array<{ Id: number; Subject: string; Location: string; StartTime: Date; EndTime: Date; RecurrenceRule: string }>;
+  data: Array<{
+    Id: number;
+    Subject: string;
+    Location: string;
+    StartTime: Date;
+    EndTime: Date;
+    RecurrenceRule: string;
+  }>;
 }) {
   const eventSettings = { dataSource: props.data };
 
@@ -27,7 +34,7 @@ function Scheduler(props: {
 
   const predefinedColors = ["#6EE7B7", "#F87171", "#FACC15", "#3B82F6"];
 
-  registerLicense("Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfcHRSR2BdVUVxW0E=");
+  registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE!);
 
   const onEventClick = (args: { cancel: boolean }) => {
     args.cancel = true;
