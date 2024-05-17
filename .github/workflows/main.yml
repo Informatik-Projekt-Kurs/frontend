@@ -24,6 +24,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create env file
+        run: |
+          touch .env
+          echo JWT_SECRET="mysecretvalue" >> .env
+          echo JWT_EXPIRATION_MS=60000 >> .env
+          echo JWT_REFRESH_EXPIRATION_MS=1209600000 >> .env
+          echo REFRESH_DOMAIN="/refresh" >> .env
+          echo FRONTEND_DOMAIN="https://meetmate.dev" >> .env
+          echo BACKEND_DOMAIN="https://meetmate.bencodes.de" >> .env
+          echo GRAPHQL_URL="http://localhost:8080/graphql" >> .env
+          echo NEXT_PUBLIC_SYNCFUSION_LICENSE="mysecretvalue" >> .env
+          cat .env
+
       - name: Build project
         run: npm run build
 
