@@ -1,6 +1,7 @@
 # MeetMate Frontend
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/cacc80b9-c575-409d-a6a2-a8422deb2304/deploy-status)](https://app.netlify.com/sites/ipk-frontend/deploys)
+[![CI](https://github.com/Informatik-Projekt-Kurs/frontend/actions/workflows/main.yml/badge.svg?branch=dev)](https://github.com/Informatik-Projekt-Kurs/frontend/actions/workflows/main.yml)
 [![DeepSource](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend.svg/?label=code+coverage&show_trend=true&token=Ezt4_99HdoFs6gqs6Hhm6G_4)](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend/)
 [![DeepSource](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend.svg/?label=active+issues&show_trend=true&token=Ezt4_99HdoFs6gqs6Hhm6G_4)](https://app.deepsource.com/gh/Informatik-Projekt-Kurs/frontend/)
 
