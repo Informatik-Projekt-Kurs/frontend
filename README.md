@@ -67,4 +67,4 @@ See `LICENSE` for more information.
 
 ---
 
-MeetMate © 2023 - All Rights Reserved
+MeetMate 2024 - All Rights Reserved
