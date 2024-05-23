@@ -2,14 +2,17 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2, LuHome } from "react-icons/lu";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import type { User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/actions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Loader from "@/components/layout/Loader";
+import { DashboardProvider } from "@/components/dashboard/DashboardContext";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>();
   const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
@@ -23,21 +26,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true);
       try {
-        console.log("fetching user");
         const accessToken = await getAccessToken();
         setUser(await getUser(accessToken));
+        setIsAdmin(user?.role === "ADMIN");
       } catch (error) {
         setIsAdmin(false);
         console.error("Failed to fetch user", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUser().catch(console.error);
   }, []);
-
-  useEffect(() => {
-    setIsAdmin(user?.role === "ADMIN");
-  }, [user]);
 
   const pathname = usePathname();
 
@@ -64,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div
               className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg"
               style={{ marginTop: companyIndicatorTop }}>
-              <div className="ml-[8px] h-[50%] w-[1px] bg-primary"></div>
+              <div className="ml-[8px] h-[50%] w-px bg-primary"></div>
             </div>
             <div className="mt-12 size-12 rounded-md">
               <Link href={"/dashboard"}>
@@ -145,7 +147,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {children}
+        {loading ? (
+          <Loader />
+        ) : (
+          <Suspense fallback={<Loader />}>
+            <DashboardProvider user={user!}>{children}</DashboardProvider>
+          </Suspense>
+        )}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
