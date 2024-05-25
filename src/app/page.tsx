@@ -160,11 +160,11 @@ export default function Home() {
 
       <Features />
       <Experience />
-      <footer className="footer bg-base-200 w-screen bg-primary-foreground p-10">
+      <footer className="footer bg-base-200 w-screen bg-subtle p-10">
         <aside className="flex items-center">
           <Image alt="MeetMate Logo" src="/landingLogo.png" width={50} height={50} className="mr-2" />
           <div>
-            <p className="font-bold">MeetMate &copy;</p>
+            <p className="font-bold">MeetMate</p>
             <p className="text-sm">Enterprise appointment management system</p>
           </div>
         </aside>
