@@ -8,7 +8,7 @@ import { FaGithub, FaGoogle, FaArrowRight } from "react-icons/fa6";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
 import { useFormStatus, useFormState } from "react-dom";
-import { loginUser } from "@/lib/actions";
+import { loginUser } from "@/lib/authActions";
 import cx from "classnames";
 import React, { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
@@ -68,7 +68,7 @@ const LoginForm = () => {
           <h1 className="text-3xl font-bold text-foreground">Meetmate</h1>
         </div>
         <div className="flex w-[70%] max-w-screen-sm flex-col items-center justify-center rounded-lg border-2 border-primary bg-background py-11 shadow-md shadow-primary max-sm:w-[90%]">
-          <div className="flex h-[60%] w-[70%] max-w-[650px] flex-col items-center justify-center gap-y-4 max-sm:w-[85%]">
+          <div className="flex h-3/5 w-[70%] max-w-[650px] flex-col items-center justify-center gap-y-4 max-sm:w-[85%]">
             <h2 className="text-3xl font-semibold">Log In</h2>
             <p className="text-base">
               Don&apos;t have an account yet?{" "}
