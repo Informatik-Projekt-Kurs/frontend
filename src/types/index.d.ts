@@ -10,17 +10,7 @@ declare global {
   }
 }
 
-export type LoginInputs = {
-  email: string;
-  password: string;
-};
-
-export type RegisterInputs = {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-};
+// ----- AUTH ----- //
 
 // eslint-disable-next-line no-shadow
 export enum Role {
@@ -35,4 +25,37 @@ export type User = {
   name: string;
   email: string;
   role: keyof typeof Role;
+};
+
+type StoreTokenRequest = {
+  access_token: string;
+  refresh_token?: string;
+  expires_at: string;
+};
+
+type LoginFormState = {
+  message: string;
+  errors: Record<keyof { email: string; password: string }, string> | undefined;
+  fieldValues: { email: string; password: string };
+};
+
+export type SignupFormState = {
+  message: string;
+  errors:
+    | Record<
+        keyof {
+          name: string | undefined;
+          email: string | undefined;
+          password: string | undefined;
+          confirmPassword: string | undefined;
+        },
+        string
+      >
+    | undefined;
+  fieldValues: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
 };

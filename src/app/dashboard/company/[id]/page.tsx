@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { deleteToken } from "@/lib/actions";
+import { deleteToken } from "@/lib/authActions";
 import Image from "next/image";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
 

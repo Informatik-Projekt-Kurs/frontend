@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React, { useEffect, useState } from "react";
-import { deleteToken, getAccessToken, getUser } from "@/lib/actions";
+import { deleteToken, getAccessToken, getUser } from "@/lib/authActions";
 import {
   DropdownMenu,
   DropdownMenuContent,

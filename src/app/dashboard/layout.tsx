@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2, LuHome } from "react-icons/lu";
 import React, { Suspense, useEffect, useState } from "react";
 import type { User } from "@/types";
-import { getAccessToken, getUser } from "@/lib/actions";
+import { getAccessToken, getUser } from "@/lib/authActions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";

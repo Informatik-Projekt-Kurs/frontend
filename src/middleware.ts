@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getUser, refreshAccessToken } from "./lib/actions";
+import { getUser, refreshAccessToken } from "./lib/authActions";
 
 export async function middleware(req: NextRequest) {
   let user = await getUser(req.cookies.get("accessToken")?.value);

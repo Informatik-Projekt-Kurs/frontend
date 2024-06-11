@@ -9,7 +9,7 @@ import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { registerUser } from "@/lib/actions";
+import { registerUser } from "@/lib/authActions";
 import { useToast } from "@/components/ui/use-toast";
 import cx from "classnames";
 import { useRouter } from "next/navigation";
@@ -65,7 +65,7 @@ const SignupForm = () => {
           <h1 className="text-3xl font-bold text-foreground">Meetmate</h1>
         </div>
         <div className="flex w-[70%] max-w-screen-sm flex-col items-center justify-center rounded-lg border-2 border-primary bg-background py-11 shadow-md shadow-primary max-sm:w-[90%]">
-          <div className="flex h-[60%] w-[70%] max-w-[650px] flex-col items-center justify-center gap-y-4 max-sm:w-[85%]">
+          <div className="flex h-3/5 w-[70%] max-w-[650px] flex-col items-center justify-center gap-y-4 max-sm:w-[85%]">
             <h2 className="text-3xl font-semibold">Sign Up</h2>
             <p className="text-base">
               Already have an account?{" "}

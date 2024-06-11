@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { deleteToken } from "@/lib/actions";
+import { deleteToken } from "@/lib/authActions";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
