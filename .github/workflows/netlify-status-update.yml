@@ -51,7 +51,7 @@ jobs:
           });
           return response.data.id;
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 
     - name: Set deployment status
       uses: actions/github-script@v6
@@ -68,4 +68,4 @@ jobs:
             description: 'Netlify deployment status'
           });
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
