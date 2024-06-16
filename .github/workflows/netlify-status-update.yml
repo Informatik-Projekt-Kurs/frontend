@@ -51,7 +51,7 @@ jobs:
           });
           return response.data.id;
       env:
-        GITHUB_TOKEN: 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
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 
     - name: Set deployment status
       uses: actions/github-script@v6
