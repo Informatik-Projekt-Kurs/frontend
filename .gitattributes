@@ -1,1 +1,1 @@
-*.scss linguist-vendored
+src/components/dashboard/scheduler/scheduler.scss linguist-vendored
