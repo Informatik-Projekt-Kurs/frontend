@@ -3,7 +3,7 @@ name: Update Netlify Deployment Status
 on:
   push:
     branches:
-      - main  # Adjust this to the branch you are deploying from
+      - dev  # Adjust this to the branch you are deploying from
   workflow_dispatch:
 
 jobs:
