@@ -67,7 +67,7 @@ export async function refreshAccessToken(refreshToken?: string) {
       });
       return res.access_Token;
     }
-  } else if (response.status === 401) {
+  } else if (response.status === 401 || response.status === 403) {
     return undefined;
   } else {
     throw new Error("There was a problem refreshing the access token: " + response.statusText);
