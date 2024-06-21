@@ -6,7 +6,7 @@ import { ReduxProvider } from "@/components/redux/ReduxProvider";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
-import { ApolloWrapper } from "@/lib/apollo-wrapper";
+import { ApolloWrapper } from "@/lib/graphql/apollo-wrapper";
 
 const fontSans = FontSans({
   subsets: ["latin"],

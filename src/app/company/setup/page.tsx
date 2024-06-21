@@ -4,8 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
+import { useMutation } from "@apollo/client";
+import { CREATE_COMPANY } from "@/lib/graphql/mutations";
 
 function Setup() {
+  const [createCompany, { error }] = useMutation(CREATE_COMPANY);
   const [step, setStep] = React.useState(0);
   type Inputs = {
     "Full Company Name": string;
@@ -25,28 +28,43 @@ function Setup() {
 
   const placeholders = ["Full Company Name", "CEO Email", "CEO Name", "CEO Password", "Company Logo"];
   const input: React.MutableRefObject<HTMLInputElement | null> = useRef(null);
-  const [error, setError] = React.useState<string>("");
+  const [validationError, setValidationError] = React.useState<string>("");
   const nextStep = () => {
     if (input.current?.value === "") {
-      setError("Please fill in the input field");
+      setValidationError("Please fill in the input field");
       return;
-    } else setError("");
+    } else setValidationError("");
     if (input.current?.validity.valid === false) {
-      setError("Please enter a valid email");
+      setValidationError("Please enter a valid email");
       return;
-    } else setError("");
+    } else setValidationError("");
     setStep(step + 1);
   };
   const submit = () => {
     if (input.current?.value === "") {
-      setError("Please fill in the input field");
+      setValidationError("Please fill in the input field");
       return;
-    } else setError("");
+    } else setValidationError("");
     if (input.current?.validity.valid === false) {
-      setError("Please enter a valid password");
+      setValidationError("Please enter a valid password");
       return;
-    } else setError("");
-    console.log(inputs); // send request here
+    } else setValidationError("");
+
+    void createCompany({
+      variables: {
+        companyName: inputs["Full Company Name"],
+        ownerEmail: inputs["CEO Email"],
+        ownerName: inputs["CEO Name"],
+        ownerPassword: inputs["CEO Password"]
+      }
+    }).then(() => {
+      if (error !== null) {
+        setValidationError("An error occurred while creating the company");
+        return;
+      } else {
+        setValidationError("Company created successfully!");
+      }
+    });
   };
   return (
     <div className={"flex h-screen flex-col items-center justify-start"}>
@@ -72,7 +90,7 @@ function Setup() {
         />
 
         <div className={"mt-2 flex items-center justify-center gap-x-2 self-end"}>
-          <p className={"text-sm text-red-500"}>{error}</p>
+          <p className={"text-sm text-red-500"}>{validationError}</p>
           {step > 0 && (
             <Button
               size={"sm"}
