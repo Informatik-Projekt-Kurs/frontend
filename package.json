@@ -29,7 +29,7 @@
     ]
   },
   "dependencies": {
-    "@apollo/client": "^3.10.3",
+    "@apollo/client": "^3.10.6",
     "@apollo/experimental-nextjs-app-support": "^0.10.1",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
