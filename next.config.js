@@ -8,6 +8,10 @@ const nextConfig = {
       {
         source: "/api/:path*",
         destination: `${process.env.BACKEND_DOMAIN}/api/:path*`
+      },
+      {
+        source: "/graphql",
+        destination: `${process.env.BACKEND_DOMAIN}/graphql`
       }
     ];
   }

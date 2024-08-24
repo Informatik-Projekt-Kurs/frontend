@@ -16,6 +16,7 @@ import { type User } from "@/types";
 import { extractNameInitials } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function Dashboard() {
   const [user, setUser] = useState<User | null>();
@@ -95,9 +96,11 @@ function Dashboard() {
         <div className="mt-8 flex h-[200px] w-full flex-col items-start justify-center gap-2 rounded-[20px] bg-primary pl-12">
           <h2 className="text-3xl font-semibold">MeetMate Dashboard</h2>
           <p className="text-sm">Create your appointments in minutes</p>
-          <Button className="mt-2" variant={"secondary"}>
-            Book now
-          </Button>
+          <Link href={"dashboard/bookings"}>
+            <Button className="mt-2" variant={"secondary"}>
+              Book now
+            </Button>
+          </Link>
         </div>
 
         <div className="mt-8 flex h-[600px] w-full rounded-[20px] bg-subtle"></div>

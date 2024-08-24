@@ -232,7 +232,7 @@ function Bookings() {
                 <AlertDialogTitle>You need help?</AlertDialogTitle>
                 <AlertDialogDescription className={"flex flex-wrap gap-2"}>
                   If you need any help or would like to request a new feature contact{" "}
-                  <a href={"mailto:boeckmannben@gmail.com"}>&quot;boeckmannben{"<at>"}gmail.com&quot;</a>.
+                  <a href={"mailto:boeckmannben@gmail.com"}>&quot;boeckmannben{"<at>"}gmail.com&quot;</a>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className={"text-foreground"}>
@@ -279,14 +279,24 @@ function Bookings() {
               <DialogFooter>
                 <div className={"flex w-full flex-col"}>
                   <div className={"flex justify-end gap-x-4"}>
-                    <DialogClose asChild>
-                      <Button type="button" variant="secondary">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button onClick={updateBookingProgress} className={"text-foreground"}>
-                      Next
-                    </Button>
+                    {bookingContent.progress === 100 ? (
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Done
+                        </Button>
+                      </DialogClose>
+                    ) : (
+                      <React.Fragment>
+                        <DialogClose asChild>
+                          <Button type="button" variant="secondary">
+                            Cancel
+                          </Button>
+                        </DialogClose>
+                        <Button onClick={updateBookingProgress} className={"text-foreground"}>
+                          Next
+                        </Button>
+                      </React.Fragment>
+                    )}
                   </div>
                   <Progress className={"mt-3 h-1"} value={bookingContent.progress} />
                 </div>
