@@ -13,6 +13,7 @@ import { registerUser } from "@/lib/authActions";
 import { useToast } from "@/components/ui/use-toast";
 import cx from "classnames";
 import { useRouter } from "next/navigation";
+import { TooltipProvider, TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -75,16 +76,32 @@ const SignupForm = () => {
             </p>
             <Separator className="my-2 w-full bg-foreground" />
             <div className="flex items-center justify-center gap-x-4">
-              <Link href="#" className="group" aria-label="Google Login">
-                <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                  <FaGoogle className="text-3xl text-foreground transition-colors group-hover:text-primary" />
-                </Button>
-              </Link>
-              <Link href="#" className="group" aria-label="Github Login">
-                <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                  <FaGithub className="text-3xl text-foreground transition-colors group-hover:text-primary" />
-                </Button>
-              </Link>
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
+                      <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
+                        <FaGoogle className="text-3xl text-foreground transition-colors group-hover:text-primary" />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent className="rounded-full border-border">
+                    <p>Not available yet</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
+                      <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
+                        <FaGithub className="text-3xl text-foreground transition-colors group-hover:text-primary" />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent className="rounded-full border-border">
+                    <p>Not available yet</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div className="mb-4 flex h-1 w-full flex-row items-center justify-between text-foreground">
@@ -144,7 +161,7 @@ const SignupForm = () => {
               )}
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center justify-start gap-x-1 text-foreground">
-                  <Checkbox defaultChecked id="terms" />
+                  <Checkbox defaultChecked id="terms" disabled style={{ opacity: 1 }} />
                   <div className="grid leading-none">
                     <label
                       htmlFor="terms"

@@ -24,7 +24,7 @@ function LandingNavbar() {
           <h2 className="ml-2 text-2xl font-bold text-foreground">MeetMate</h2>
         </div>
 
-        <li className="ml-[-2vw] mt-8 flex h-12 list-none items-center justify-between rounded-full border-[1px] border-primary pl-6 max-lg:hidden">
+        <li className="ml-[-2vw] mt-8 flex h-12 list-none items-center justify-between rounded-full border-DEFAULT border-primary pl-6 max-lg:hidden">
           <div className="items-ceter flex justify-between gap-6 text-foreground">
             <Link className="navLink hover:font-semibold hover:text-white" href="/">
               Home
@@ -51,7 +51,7 @@ function LandingNavbar() {
 
           <Link
             className="ml-6 flex  size-12 items-center justify-center rounded-full bg-primary text-lg text-foreground hover:text-white"
-            href={"account"}>
+            href={"dashboard"}>
             <div className="transition-transform hover:scale-110">
               <FaUser />
             </div>
