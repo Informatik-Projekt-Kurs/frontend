@@ -110,7 +110,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
     password: z.string().min(8, { message: "Your Password must be at least 8 characters long" })
   });
   const parse = schema.safeParse({
-    email: formData.get("email")?.toString().toLowerCase(),
+    email: email.toLowerCase(),
     password: formData.get("password")
   });
 
@@ -175,7 +175,7 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
   const schema = z
     .object({
       name: z.string().min(3),
-      email: z.string().email(),
+      email: z.string().email().toLowerCase(),
       password: z.string().min(8)
     })
     .refine((data) => data.password === confirmPassword, {
@@ -184,7 +184,7 @@ export async function registerUser(prevState: SignupFormState, formData: FormDat
     });
   const parse = schema.safeParse({
     name,
-    email: email.toLowerCase(),
+    email,
     password
   });
 

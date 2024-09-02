@@ -5,23 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 // import { gql, useMutation } from "@apollo/client";
+// import { CREATE_COMPANY} from "@/lib/graphql/mutations";
 import Loader from "@/components/layout/Loader";
-
-// const CREATE_COMPANY = gql`
-//   mutation CreateCompany($companyName: String!, $ownerEmail: String!, $ownerName: String!, $ownerPassword: String!) {
-//     createCompany(
-//       companyName: $companyName
-//       ownerEmail: $ownerEmail
-//       ownerName: $ownerName
-//       ownerPassword: $ownerPassword
-//     ) {
-//       companyName
-//       ownerEmail
-//       ownerName
-//       ownerPassword
-//     }
-//   }
-// `;
 
 type Inputs = {
   "Full Company Name": string;
