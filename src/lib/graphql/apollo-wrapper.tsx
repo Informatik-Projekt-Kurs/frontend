@@ -3,14 +3,15 @@
 import { ApolloLink, HttpLink } from "@apollo/client";
 import {
   ApolloNextAppProvider,
-  NextSSRApolloClient,
   NextSSRInMemoryCache,
+  NextSSRApolloClient,
   SSRMultipartLink
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: "/graphql"
+    uri: "/graphql",
+    fetchOptions: { cache: "no-store" }
   });
 
   return new NextSSRApolloClient({
@@ -27,6 +28,6 @@ function makeClient() {
   });
 }
 
-export function ApolloWrapper({ children }: React.PropsWithChildren) {
+export function ApolloWrapper({ children }: { children: React.ReactNode }) {
   return <ApolloNextAppProvider makeClient={makeClient}>{children}</ApolloNextAppProvider>;
 }
