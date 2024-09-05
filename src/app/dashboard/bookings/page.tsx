@@ -40,33 +40,52 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { type Appointment } from "@/types";
 
 function Bookings() {
   const user = useDashboardData().user;
   const [searchQuery, setSearchQuery] = useState("");
-  const [events, setEvents] = useState<
-    Array<{ Id: number; Subject: string; Location: string; StartTime: Date; EndTime: Date; RecurrenceRule: string }>
-  >([
+  const [appointments, setAppointments] = useState<Appointment[]>([
     {
-      Id: 1,
-      Subject: "Scrum Meeting",
-      Location: "Office",
-      StartTime: new Date(2024, 4, 6, 14, 30),
-      EndTime: new Date(2024, 4, 6, 15, 30),
-      RecurrenceRule: ""
+      id: 1,
+      from: new Date(2024, 8, 3, 14, 30),
+      to: new Date(2024, 8, 3, 15, 30),
+      title: "Scrum Meeting",
+      description: "Weekly team sync",
+      companyId: "1",
+      location: "Office",
+      client: null,
+      status: "PENDING"
     },
     {
-      Id: 2,
-      Subject: "Scrum Meeting",
-      Location: "Office",
-      StartTime: new Date(2024, 4, 8, 17, 30),
-      EndTime: new Date(2024, 4, 8, 18, 30),
-      RecurrenceRule: ""
+      id: 2,
+      from: new Date(2024, 8, 5, 17, 30),
+      to: new Date(2024, 8, 5, 18, 30),
+      title: "Client Presentation",
+      description: "Presenting project progress",
+      companyId: "2",
+      location: "Conference Room",
+      client: null,
+      status: "BOOKED"
+    },
+    {
+      id: 3,
+      from: new Date(2024, 8, 6, 17, 30),
+      to: new Date(2024, 8, 6, 18, 30),
+      title: "Client Presentation",
+      description: "Presenting project progress",
+      companyId: "2",
+      location: "Conference Room",
+      client: null,
+      status: "BOOKED"
     }
   ]);
-  const [filteredEvents, setFilteredEvents] = useState<
-    Array<{ Id: number; Subject: string; Location: string; StartTime: Date; EndTime: Date; RecurrenceRule: string }>
-  >([]);
+
+  useEffect(() => {
+    if (false) setAppointments([]); // This is a dummy condition to avoid unused variable warning (events)
+  }, []);
+
+  const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
 
   const router = useRouter();
 
@@ -87,10 +106,6 @@ function Bookings() {
     progress: 33
   });
 
-  useEffect(() => {
-    if (false) setEvents([]); // This is a dummy condition to avoid unused variable warning (events)
-  }, []);
-
   const [bookingResult, setBookingResult] = useState<{ company: string; date: Date | undefined; time: string }>({
     company: "",
     date: new Date(),
@@ -98,8 +113,15 @@ function Bookings() {
   });
 
   useEffect(() => {
-    setFilteredEvents(events.filter((event) => event.Subject.toLowerCase().includes(searchQuery.toLowerCase())));
-  }, [searchQuery, events]);
+    if (searchQuery === "") {
+      setFilteredAppointments(appointments);
+      return;
+    } else {
+      setFilteredAppointments(
+        appointments.filter((appointment) => appointment.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+  }, [searchQuery, appointments]);
 
   function updateBookingProgress() {
     if (bookingMode === 1 && select !== "") {
@@ -173,6 +195,22 @@ function Bookings() {
       console.error("Logout failed", error);
       throw error;
     }
+  };
+
+  const handleAppointmentCancel = (appointment: Appointment): "success" | "error" => {
+    console.log("Appointment cancelled", appointment);
+    // Here you would typically make an API call to cancel the appointment
+    // For now, we'll just update the local state
+    // const updatedAppointments = appointments.map((app) =>
+    //   app.id === cleanedAppointment.id ? { ...app, status: "CANCELLED" } : app
+    // );
+    // setAppointments(updatedAppointments);
+    return "success";
+  };
+
+  const handleAppointmentChange = (appointment: Appointment) => {
+    // Implement appointment change logic here
+    console.log("Appointment change requested", appointment);
   };
 
   return (
@@ -306,7 +344,12 @@ function Bookings() {
         </div>
       </div>
       <div className="mt-4 flex h-fit w-full rounded-[20px] bg-subtle p-6">
-        <Scheduler openingHours={{ open: "13:00", close: "19:00" }} data={filteredEvents} />
+        <Scheduler
+          openingHours={{ open: "13:00", close: "19:00" }}
+          data={filteredAppointments}
+          handleAppointmentCancel={handleAppointmentCancel}
+          handleAppointmentChange={handleAppointmentChange}
+        />
       </div>
     </div>
   );

@@ -59,3 +59,15 @@ export type SignupFormState = {
     confirmPassword: string;
   };
 };
+
+export type Appointment = {
+  id: number;
+  from: Date;
+  to: Date;
+  title: string;
+  description: string;
+  companyId: string;
+  location: string;
+  client: User | null; // null if not booked
+  status: "PENDING" | "BOOKED" | "CANCELLED" | "COMPLETED";
+};
