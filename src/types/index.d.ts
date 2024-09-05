@@ -71,3 +71,22 @@ export type Appointment = {
   client: User | null; // null if not booked
   status: "PENDING" | "BOOKED" | "CANCELLED" | "COMPLETED";
 };
+
+export type Company = {
+  id: string;
+  name: string;
+  createdAt: string;
+  description: string;
+  owner: User;
+  members: User[];
+  settings: {
+    appointmentDuration: number;
+    appointmentBuffer: number;
+    appointmentTypes: string[];
+    appointmentLocations: string[];
+    openingHours: {
+      from: string;
+      to: string;
+    };
+  };
+};
