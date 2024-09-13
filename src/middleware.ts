@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
     response = NextResponse.redirect(new URL("/company/dashboard", req.url));
   } else if (
     req.nextUrl.pathname.startsWith("/company/dashboard") &&
-    !["COMPANY_MEMBER", "COMPANY_ADMIN"].includes(user.role)
+    !["COMPANY_MEMBER", "COMPANY_OWNER"].includes(user.role)
   ) {
     response = NextResponse.redirect(new URL("/dashboard", req.url));
   }

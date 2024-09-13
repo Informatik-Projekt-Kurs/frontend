@@ -67,7 +67,7 @@ export async function refreshAccessToken(refreshToken?: string) {
       });
       return res.access_Token;
     }
-  } else if (response.status === 401 || response.status === 403) {
+  } else if (response.status === 401 || response.status === 403 || response.status === 500) {
     return undefined;
   } else {
     throw new Error("There was a problem refreshing the access token: " + response.statusText);
@@ -86,10 +86,10 @@ export async function getUser(accessToken?: string): Promise<User | null> {
 
   if (response.ok) {
     return (await response.json()) as User;
-  } else if (response.status === 403) {
+  } else if (response.status === 403 || response.status === 500) {
     return null;
   } else {
-    throw new Error("There was a problem fetching the user: " + response.statusText);
+    throw new Error("There was a problem fetching the user: " + response.statusText + " " + response.status);
   }
 }
 

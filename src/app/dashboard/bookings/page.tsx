@@ -104,7 +104,7 @@ function Bookings() {
 
   useEffect(() => {
     if (false) setAppointments([]);
-    setCompanies([]);
+    if (false) setCompanies([]);
   }, []);
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
