@@ -1,0 +1,34 @@
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+  width: 55% !important;
+  border: none !important;
+}
+
+body
+  > div.flex.w-full.flex-col.gap-5.pl-8.md\:flex-row
+  > main
+  > div
+  > div.mt-8.flex.h-\[600px\].w-full.rounded-\[20px\].bg-subtle
+  > div.e-control.e-schedule.e-lib.e-keyboard
+  > div.e-table-container
+  > div
+  > table
+  > tbody
+  > tr:nth-child(2)
+  > td:nth-child(1) {
+  display: none !important;
+}
+
+body
+  > div.flex.w-full.flex-col.gap-5.pl-8.md\:flex-row
+  > main
+  > div
+  > div.mt-8.flex.h-\[600px\].w-full.rounded-\[20px\].bg-subtle
+  > div.e-control.e-schedule.e-lib.e-keyboard
+  > div.e-table-container
+  > div
+  > table
+  > tbody
+  > tr:nth-child(1)
+  > td.e-left-indent {
+  display: none !important;
+}

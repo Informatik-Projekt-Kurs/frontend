@@ -118,9 +118,11 @@ function Scheduler(props: SchedulerProps) {
                 <DialogTrigger asChild>
                   <div
                     className={
-                      "absolute z-10 ml-[-4px] size-full cursor-pointer rounded-[12px] border-2 border-solid p-2"
+                      "absolute z-10 ml-[-4px] size-full cursor-pointer rounded-[12px] border-2 border-solid bg-transparent p-2"
                     }
-                    style={{ borderColor: predefinedColors[Math.floor(Math.random() * predefinedColors.length)] }}>
+                    style={{
+                      borderColor: predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
+                    }}>
                     <h2 className={"overflow-hidden text-ellipsis font-bold"}>{eventProps.title}</h2>
                     <div className={"mt-1 flex items-center gap-x-2 text-xs text-muted-foreground"}>
                       {new Intl.DateTimeFormat("en-US", {

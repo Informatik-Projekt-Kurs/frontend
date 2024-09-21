@@ -153,7 +153,7 @@ const LoginForm = () => {
                   </label>
                 </div>
               </div>
-              <Link className="text-sm text-primary hover:underline" href={"/forgot-password"}>
+              <Link className="cursor-not-allowed text-sm text-primary hover:underline" href={""}>
                 Forgot password?
               </Link>
             </div>
