@@ -4816,7 +4816,13 @@
 .e-schedule .e-current-day {
   color: hsl(217.2 91.2% 59.8%) !important;
 }
-.e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+
+.overviewScheduler .e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+  width: 55% !important;
   border: none !important;
+}
+
+.scheduler .e-appointment {
   width: 100% !important;
+  border: none !important;
 }

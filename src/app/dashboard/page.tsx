@@ -28,8 +28,8 @@ function Dashboard() {
   const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: 1,
-      from: new Date(2024, 8, 18, 18, 30),
-      to: new Date(2024, 8, 18, 19, 30),
+      from: new Date(2024, 8, 23, 18, 30),
+      to: new Date(2024, 8, 23, 19, 30),
       title: "Scrum Meeting",
       description: "Weekly team sync",
       companyId: "1",
@@ -39,8 +39,8 @@ function Dashboard() {
     },
     {
       id: 2,
-      from: new Date(2024, 8, 19, 17, 30),
-      to: new Date(2024, 8, 19, 18, 30),
+      from: new Date(2024, 8, 25, 17, 30),
+      to: new Date(2024, 8, 25, 18, 30),
       title: "Client Presentation",
       description: "Presenting project progress",
       companyId: "2",
@@ -50,8 +50,8 @@ function Dashboard() {
     },
     {
       id: 3,
-      from: new Date(2024, 8, 19, 21, 30),
-      to: new Date(2024, 8, 19, 22, 30),
+      from: new Date(2024, 8, 25, 21, 30),
+      to: new Date(2024, 8, 25, 22, 30),
       title: "Client Presentation",
       description: "Presenting project progress",
       companyId: "2",
@@ -144,17 +144,15 @@ function Dashboard() {
           </Link>
         </div>
 
-        <div className="mt-8 flex h-[600px] w-full rounded-[20px] bg-subtle">
-          <div className="flex flex-col items-start justify-start gap-4 p-8">
-            <div className="flex flex-col items-start justify-start gap-2">
-              <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
-              <p className="text-sm">Here are your upcoming appointments</p>
-            </div>
+        <div className="mt-8 flex h-fit w-full rounded-[20px] bg-subtle py-4">
+          <div className="flex flex-col items-center justify-start gap-4 p-8">
+            <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
           </div>
-          <OverviewScheduler data={appointments} />
+          <div className="items-center-justify-start flex flex-col gap-4 p-8">
+            <h2 className="text-2xl font-semibold">Timeline</h2>
+            <OverviewScheduler data={appointments} />
+          </div>
         </div>
-
-        <div className="h-[50vh]"></div>
       </div>
     );
 }

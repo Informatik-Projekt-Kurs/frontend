@@ -75,36 +75,37 @@ function OverviewScheduler(props: SchedulerProps) {
 
   const onEventRendered = (args: { element: HTMLDivElement }) => {
     args.element.style.background = predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
-    args.element.style.width = "50% !important";
     args.element.style.left = "50%";
     args.element.style.transform = "translateX(-50%)";
   };
 
   return (
-    <ScheduleComponent
-      selectedDate={new Date()}
-      height={"500px"}
-      eventSettings={eventSettings}
-      showHeaderBar={false}
-      eventRendered={onEventRendered}
-      readonly={true}
-      eventClick={onEventClick}>
-      <ViewsDirective>
-        <ViewDirective
-          option="WorkWeek"
-          startHour={schedulerHours.open}
-          endHour={schedulerHours.close}
-          eventTemplate={() => (
-            <div
-              className={"z-10 rounded-[12px]"}
-              style={{
-                backgroundColor: predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
-              }}></div>
-          )}
-        />
-      </ViewsDirective>
-      <Inject services={[WorkWeek]} />
-    </ScheduleComponent>
+    <div className="overviewScheduler">
+      <ScheduleComponent
+        selectedDate={new Date()}
+        height={"500px"}
+        eventSettings={eventSettings}
+        showHeaderBar={false}
+        eventRendered={onEventRendered}
+        readonly={true}
+        eventClick={onEventClick}>
+        <ViewsDirective>
+          <ViewDirective
+            option="WorkWeek"
+            startHour={schedulerHours.open}
+            endHour={schedulerHours.close}
+            eventTemplate={() => (
+              <div
+                className={"z-10 rounded-[12px]"}
+                style={{
+                  backgroundColor: predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
+                }}></div>
+            )}
+          />
+        </ViewsDirective>
+        <Inject services={[WorkWeek]} />
+      </ScheduleComponent>
+    </div>
   );
 }
 

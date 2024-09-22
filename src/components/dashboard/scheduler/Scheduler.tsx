@@ -56,7 +56,8 @@ function Scheduler(props: SchedulerProps) {
   };
 
   const onEventRendered = (args: { element: HTMLDivElement }) => {
-    args.element.style.borderColor = predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
+    args.element.style.borderColor = "transparent";
+    args.element.style.width = "100%";
   };
 
   const handleAppointmentCancel = (event: Appointment): void => {
@@ -87,7 +88,7 @@ function Scheduler(props: SchedulerProps) {
 
   return (
     <React.Fragment>
-      <div className="absolute z-10 ml-1 mt-3">
+      <div className="scheduler absolute z-10 ml-1 mt-3">
         <Button size={"sm"} variant={"outline"} className={"rounded-full text-foreground"} onClick={handlePreviousWeek}>
           <FaArrowLeft size={10} />
         </Button>
