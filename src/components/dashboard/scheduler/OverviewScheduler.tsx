@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } from "@syncfusion/ej2-react-schedule";
 import "./scheduler.scss";
 import "./overviewscheduler.scss";
@@ -7,6 +7,7 @@ import { type Appointment } from "@/types";
 
 type SchedulerProps = {
   data: Appointment[];
+  selectedAppointmentId: number | null;
 };
 
 function OverviewScheduler(props: SchedulerProps) {
@@ -21,7 +22,7 @@ function OverviewScheduler(props: SchedulerProps) {
   };
   const eventSettings = { dataSource: props.data, fields: fieldsData };
 
-  const predefinedColors = ["#6EE7B7", "#F87171", "#FACC15", "#3B82F6"];
+  const predefinedColors = ["#6EE7B7", "#F87171", "#FACC15"];
 
   registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE!);
 
@@ -70,11 +71,23 @@ function OverviewScheduler(props: SchedulerProps) {
     };
   };
 
+  const appointmentColors = useMemo(() => {
+    return props.data.reduce(
+      (acc, appointment) => {
+        acc[appointment.id] = predefinedColors[appointment.id % predefinedColors.length];
+        return acc;
+      },
+      {} as Record<number, string>
+    );
+  }, [props.data]);
+
   // Calculate scheduler hours whenever appointments change
   const schedulerHours = calculateSchedulerHours(props.data);
 
-  const onEventRendered = (args: { element: HTMLDivElement }) => {
-    args.element.style.background = predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
+  const onEventRendered = (args: { data: Record<string, unknown>; element: HTMLDivElement }) => {
+    const appointmentData = args.data as Appointment;
+    const color = appointmentColors[appointmentData.id];
+    args.element.style.background = color;
     args.element.style.left = "50%";
     args.element.style.transform = "translateX(-50%)";
   };
@@ -87,6 +100,7 @@ function OverviewScheduler(props: SchedulerProps) {
         eventSettings={eventSettings}
         showHeaderBar={false}
         eventRendered={onEventRendered}
+        key={props.selectedAppointmentId}
         readonly={true}
         eventClick={onEventClick}>
         <ViewsDirective>
@@ -94,13 +108,15 @@ function OverviewScheduler(props: SchedulerProps) {
             option="WorkWeek"
             startHour={schedulerHours.open}
             endHour={schedulerHours.close}
-            eventTemplate={() => (
-              <div
-                className={"z-10 rounded-[12px]"}
-                style={{
-                  backgroundColor: predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
-                }}></div>
-            )}
+            eventTemplate={(eventProps: Record<string, unknown>) => {
+              return (
+                <div
+                  className={`z-10 size-full rounded-[12px] border-primary`}
+                  style={{
+                    borderWidth: eventProps.id === props.selectedAppointmentId ? "2px" : "0"
+                  }}></div>
+              );
+            }}
           />
         </ViewsDirective>
         <Inject services={[WorkWeek]} />

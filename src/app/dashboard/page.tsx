@@ -18,6 +18,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OverviewScheduler from "@/components/dashboard/scheduler/OverviewScheduler";
+import AppointmentDisplay from "@/components/dashboard/AppointmentDisplay";
 
 function Dashboard() {
   const [user, setUser] = useState<User | null>();
@@ -79,6 +80,15 @@ function Dashboard() {
     };
     fetchUser().catch(console.error);
   }, []);
+
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
+
+  const handleAppointmentClick = (appointment: Appointment) => {
+    console.log("Appointment clicked", appointment);
+    // highlight selected appointment
+    setSelectedAppointmentId(appointment.id === selectedAppointmentId ? null : appointment.id);
+    console.log(selectedAppointmentId);
+  };
 
   const logout = async () => {
     try {
@@ -147,10 +157,20 @@ function Dashboard() {
         <div className="mt-8 flex h-fit w-full rounded-[20px] bg-subtle py-4">
           <div className="flex flex-col items-center justify-start gap-4 p-8">
             <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
+            <div className="mt-2 flex max-h-[500px] flex-col items-start justify-start gap-y-6 overflow-scroll">
+              {appointments.map((appointment) => (
+                <AppointmentDisplay
+                  onClick={handleAppointmentClick}
+                  key={appointment.id}
+                  data={appointment}
+                  selected={appointment.id === selectedAppointmentId}
+                />
+              ))}
+            </div>
           </div>
           <div className="items-center-justify-start flex flex-col gap-4 p-8">
             <h2 className="text-2xl font-semibold">Timeline</h2>
-            <OverviewScheduler data={appointments} />
+            <OverviewScheduler data={appointments} selectedAppointmentId={selectedAppointmentId} />
           </div>
         </div>
       </div>
