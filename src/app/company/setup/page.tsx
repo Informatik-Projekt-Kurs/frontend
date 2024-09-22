@@ -7,7 +7,7 @@ import Image from "next/image";
 import { type FetchResult, useMutation } from "@apollo/client";
 import { CREATE_COMPANY } from "@/lib/graphql/mutations";
 import Loader from "@/components/layout/Loader";
-import { router } from "next/client";
+import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 
 type DisplayInputs = {
@@ -26,6 +26,7 @@ type MutationInputs = {
 
 function Setup() {
   const [step, setStep] = useState(0);
+  const router = useRouter();
   const [inputs, setInputs] = useState<DisplayInputs>({
     "Full Company Name": "",
     "CEO Email": "",
@@ -87,7 +88,7 @@ function Setup() {
           className: "border-emerald-300"
         });
         setTimeout(() => {
-          void router.push("/login");
+          router.push("/login");
         }, 1000);
       } else {
         setError("An error occurred while creating the company: " + res.data?.createCompany);
