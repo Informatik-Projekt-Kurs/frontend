@@ -48,6 +48,9 @@ const SignupForm = () => {
         variant: "default",
         className: "border-emerald-300"
       });
+      setTimeout(() => {
+        router.push("/login");
+      }, 2500);
     }
   }, [formState, toast]);
 

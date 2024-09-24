@@ -12,17 +12,59 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { type User } from "@/types";
+import { type User, type Appointment } from "@/types";
 import { extractNameInitials } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import OverviewScheduler from "@/components/dashboard/scheduler/OverviewScheduler";
+import AppointmentDisplay from "@/components/dashboard/AppointmentDisplay";
 
 function Dashboard() {
   const [user, setUser] = useState<User | null>();
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
+
+  const [appointments, setAppointments] = useState<Appointment[]>([
+    {
+      id: 1,
+      from: new Date(2024, 8, 23, 18, 30),
+      to: new Date(2024, 8, 23, 19, 30),
+      title: "Scrum Meeting",
+      description: "Weekly team sync",
+      companyId: "1",
+      location: "Office",
+      client: null,
+      status: "PENDING"
+    },
+    {
+      id: 2,
+      from: new Date(2024, 8, 25, 17, 30),
+      to: new Date(2024, 8, 25, 18, 30),
+      title: "Client Presentation",
+      description: "Presenting project progress",
+      companyId: "2",
+      location: "Conference Room",
+      client: null,
+      status: "BOOKED"
+    },
+    {
+      id: 3,
+      from: new Date(2024, 8, 25, 21, 30),
+      to: new Date(2024, 8, 25, 22, 30),
+      title: "Client Presentation",
+      description: "Presenting project progress",
+      companyId: "2",
+      location: "Conference Room",
+      client: null,
+      status: "BOOKED"
+    }
+  ]);
+
+  useEffect(() => {
+    if (false) setAppointments([]);
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -38,6 +80,15 @@ function Dashboard() {
     };
     fetchUser().catch(console.error);
   }, []);
+
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
+
+  const handleAppointmentClick = (appointment: Appointment) => {
+    console.log("Appointment clicked", appointment);
+    // highlight selected appointment
+    setSelectedAppointmentId(appointment.id === selectedAppointmentId ? null : appointment.id);
+    console.log(selectedAppointmentId);
+  };
 
   const logout = async () => {
     try {
@@ -103,9 +154,25 @@ function Dashboard() {
           </Link>
         </div>
 
-        <div className="mt-8 flex h-[600px] w-full rounded-[20px] bg-subtle"></div>
-
-        <div className="h-[50vh]"></div>
+        <div className="mt-8 flex h-fit w-full rounded-[20px] bg-subtle py-4">
+          <div className="flex flex-col items-center justify-start gap-4 p-8">
+            <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
+            <div className="mt-2 flex max-h-[500px] flex-col items-start justify-start gap-y-6 overflow-scroll">
+              {appointments.map((appointment) => (
+                <AppointmentDisplay
+                  onClick={handleAppointmentClick}
+                  key={appointment.id}
+                  data={appointment}
+                  selected={appointment.id === selectedAppointmentId}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="items-center-justify-start flex flex-col gap-4 p-8">
+            <h2 className="text-2xl font-semibold">Timeline</h2>
+            <OverviewScheduler data={appointments} selectedAppointmentId={selectedAppointmentId} />
+          </div>
+        </div>
       </div>
     );
 }

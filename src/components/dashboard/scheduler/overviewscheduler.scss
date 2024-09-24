@@ -1,0 +1,24 @@
+.overviewScheduler .e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+  width: 55% !important;
+  border: none !important;
+}
+.overviewScheduler .e-left-indent {
+  display: none !important;
+}
+
+.overviewScheduler .e-table-container > div > table > tbody > tr:nth-child(2) > td:nth-child(1) {
+  display: none !important;
+}
+
+.overviewScheduler .e-appointment-details,
+.overviewScheduler .e-appointment-details div {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+.overviewScheduler .e-schedule .e-vertical-view .e-day-wrapper .e-appointment .e-appointment-details {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
