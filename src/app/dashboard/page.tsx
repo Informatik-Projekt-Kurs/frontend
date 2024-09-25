@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React, { useEffect, useState } from "react";
 import { deleteToken, getAccessToken, getUser } from "@/lib/authActions";
@@ -19,6 +18,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OverviewScheduler from "@/components/dashboard/scheduler/OverviewScheduler";
 import AppointmentDisplay from "@/components/dashboard/AppointmentDisplay";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
 
 function Dashboard() {
   const [user, setUser] = useState<User | null>();
@@ -26,45 +27,7 @@ function Dashboard() {
 
   const router = useRouter();
 
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: 1,
-      from: new Date(2024, 8, 23, 18, 30),
-      to: new Date(2024, 8, 23, 19, 30),
-      title: "Scrum Meeting",
-      description: "Weekly team sync",
-      companyId: "1",
-      location: "Office",
-      client: null,
-      status: "PENDING"
-    },
-    {
-      id: 2,
-      from: new Date(2024, 8, 25, 17, 30),
-      to: new Date(2024, 8, 25, 18, 30),
-      title: "Client Presentation",
-      description: "Presenting project progress",
-      companyId: "2",
-      location: "Conference Room",
-      client: null,
-      status: "BOOKED"
-    },
-    {
-      id: 3,
-      from: new Date(2024, 8, 25, 21, 30),
-      to: new Date(2024, 8, 25, 22, 30),
-      title: "Client Presentation",
-      description: "Presenting project progress",
-      companyId: "2",
-      location: "Conference Room",
-      client: null,
-      status: "BOOKED"
-    }
-  ]);
-
-  useEffect(() => {
-    if (false) setAppointments([]);
-  }, []);
+  const appointments = useSelector((state: RootState) => state.collection.appointments);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -112,7 +75,6 @@ function Dashboard() {
         <header className="flex w-full flex-row items-center justify-between">
           <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">Welcome back, {user?.name}</h1>
           <div className="flex items-center gap-x-6">
-            <Input className="w-[320px]" placeholder="Search"></Input>
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild className={"mr-4"}>
                 <Button variant="ghost" className="relative size-8 rounded-full">
@@ -157,18 +119,27 @@ function Dashboard() {
         <div className="mt-8 flex h-fit w-full rounded-[20px] bg-subtle py-4">
           <div className="flex flex-col items-center justify-start gap-4 p-8">
             <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
-            <div className="mt-2 flex max-h-[500px] flex-col items-start justify-start gap-y-6 overflow-scroll">
-              {appointments.map((appointment) => (
-                <AppointmentDisplay
-                  onClick={handleAppointmentClick}
-                  key={appointment.id}
-                  data={appointment}
-                  selected={appointment.id === selectedAppointmentId}
-                />
-              ))}
+            <div className="mt-2 flex max-h-[500px] flex-col items-start justify-start gap-y-6 overflow-y-auto overflow-x-hidden">
+              {appointments.length !== 0 ? (
+                appointments.map((appointment) => (
+                  <AppointmentDisplay
+                    onClick={handleAppointmentClick}
+                    key={appointment.id}
+                    data={appointment}
+                    selected={appointment.id === selectedAppointmentId}
+                  />
+                ))
+              ) : (
+                <p className={"min-w-80 text-center text-muted-foreground"}>
+                  You have no upcoming appointments. <br />
+                  <Button variant={"secondary"} className="mt-2">
+                    <Link href={"/dashboard/bookings"}>Book now</Link>
+                  </Button>
+                </p>
+              )}
             </div>
           </div>
-          <div className="items-center-justify-start flex flex-col gap-4 p-8">
+          <div className="items-center-justify-start flex max-w-3xl flex-col gap-4 p-8">
             <h2 className="text-2xl font-semibold">Timeline</h2>
             <OverviewScheduler data={appointments} selectedAppointmentId={selectedAppointmentId} />
           </div>

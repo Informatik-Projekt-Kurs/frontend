@@ -41,45 +41,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
 import { type Appointment, type Company } from "@/types";
+import { useSelector } from "react-redux";
+import { type RootState } from "@/store/store";
 
 function Bookings() {
   const { user } = useDashboardData();
   const [searchQuery, setSearchQuery] = useState("");
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: 1,
-      from: new Date(2024, 8, 3, 18, 30),
-      to: new Date(2024, 8, 3, 19, 30),
-      title: "Scrum Meeting",
-      description: "Weekly team sync",
-      companyId: "1",
-      location: "Office",
-      client: null,
-      status: "PENDING"
-    },
-    {
-      id: 2,
-      from: new Date(2024, 8, 5, 17, 30),
-      to: new Date(2024, 8, 5, 18, 30),
-      title: "Client Presentation",
-      description: "Presenting project progress",
-      companyId: "2",
-      location: "Conference Room",
-      client: null,
-      status: "BOOKED"
-    },
-    {
-      id: 3,
-      from: new Date(2024, 8, 6, 21, 30),
-      to: new Date(2024, 8, 6, 22, 30),
-      title: "Client Presentation",
-      description: "Presenting project progress",
-      companyId: "2",
-      location: "Conference Room",
-      client: null,
-      status: "BOOKED"
-    }
-  ]);
+  const appointments = useSelector((state: RootState) => state.collection.appointments);
+
   const [companies, setCompanies] = useState<Company[]>([
     {
       id: "1",
@@ -99,11 +68,9 @@ function Bookings() {
         }
       }
     }
-    // Add more companies as needed
   ]);
 
   useEffect(() => {
-    if (false) setAppointments([]);
     if (false) setCompanies([]);
   }, []);
 
@@ -186,8 +153,8 @@ function Bookings() {
     }
 
     // Find the earliest start time and latest end time
-    const earliestTime = Math.min(...calcAppointments.map((a) => a.from.getHours()));
-    const latestTime = Math.max(...calcAppointments.map((a) => a.to.getHours()));
+    const earliestTime = Math.min(...calcAppointments.map((a) => new Date(a.from).getHours()));
+    const latestTime = Math.max(...calcAppointments.map((a) => new Date(a.to).getHours()));
 
     let startHour: number;
     let endHour: number;

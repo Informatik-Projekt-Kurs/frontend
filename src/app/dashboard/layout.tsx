@@ -66,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div
               className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg"
               style={{ marginTop: companyIndicatorTop }}>
-              <div className="ml-[8px] h-[50%] w-px bg-primary"></div>
+              <div className="ml-[8px] h-1/2 w-px bg-primary"></div>
             </div>
             <div className="mt-12 size-12 rounded-md">
               <Link href={"/dashboard"}>
