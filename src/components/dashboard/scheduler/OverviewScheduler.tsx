@@ -4,6 +4,7 @@ import "./scheduler.scss";
 import "./overviewscheduler.scss";
 import { registerLicense } from "@syncfusion/ej2-base";
 import { type Appointment } from "@/types";
+import { useRouter } from "next/navigation";
 
 type SchedulerProps = {
   data: Appointment[];
@@ -23,11 +24,12 @@ function OverviewScheduler(props: SchedulerProps) {
   const eventSettings = { dataSource: props.data, fields: fieldsData };
 
   const predefinedColors = ["#6EE7B7", "#F87171", "#FACC15"];
+  const router = useRouter();
 
   registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE!);
 
   const onEventClick = (args: { cancel: boolean }) => {
-    console.log("Event clicked", args);
+    router.push("/dashboard/bookings");
     args.cancel = true;
   };
 
@@ -44,8 +46,8 @@ function OverviewScheduler(props: SchedulerProps) {
     }
 
     // Find the earliest start time and latest end time
-    const earliestTime = Math.min(...calcAppointments.map((a) => a.from.getHours()));
-    const latestTime = Math.max(...calcAppointments.map((a) => a.to.getHours()));
+    const earliestTime = Math.min(...calcAppointments.map((a) => new Date(a.from).getHours()));
+    const latestTime = Math.max(...calcAppointments.map((a) => new Date(a.to).getHours()));
 
     let startHour: number;
     let endHour: number;
@@ -99,6 +101,7 @@ function OverviewScheduler(props: SchedulerProps) {
         height={"500px"}
         eventSettings={eventSettings}
         showHeaderBar={false}
+        showTimeIndicator={false}
         eventRendered={onEventRendered}
         key={props.selectedAppointmentId}
         readonly={true}
@@ -111,9 +114,9 @@ function OverviewScheduler(props: SchedulerProps) {
             eventTemplate={(eventProps: Record<string, unknown>) => {
               return (
                 <div
-                  className={`z-10 size-full rounded-[12px] border-primary`}
+                  className={`z-10 size-full cursor-pointer rounded-[12px] border-primary`}
                   style={{
-                    borderWidth: eventProps.id === props.selectedAppointmentId ? "2px" : "0"
+                    borderWidth: eventProps.id === props.selectedAppointmentId ? "4px" : "0"
                   }}></div>
               );
             }}
