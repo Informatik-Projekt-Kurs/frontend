@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2, LuHome } from "react-icons/lu";
+import { LuBookCopy, LuBuilding, LuGauge, LuHome, LuLayoutDashboard, LuSettings, LuUser2 } from "react-icons/lu";
 import React, { Suspense, useEffect, useState } from "react";
 import type { User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/authActions";
@@ -10,19 +10,19 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
 import { DashboardProvider } from "@/components/dashboard/DashboardContext";
+import { FaPlus } from "react-icons/fa6";
+import { Role } from "@/types/role";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>();
-  const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
+  const [isAdmin, setIsAdmin] = useState(user?.role === Role.ADMIN);
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
 
-  const companies = [
-    { id: "29103", name: "Company 1" },
-    { id: "61241", name: "Company 2" },
-    { id: "1241", name: "Company 3" }
-  ];
+  const companies = useSelector((state: RootState) => state.collection.companies);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       try {
         const accessToken = await getAccessToken();
         setUser(await getUser(accessToken));
-        setIsAdmin(user?.role === "ADMIN");
+        setIsAdmin(user?.role === Role.ADMIN);
       } catch (error) {
         setIsAdmin(false);
         console.error("Failed to fetch user", error);
@@ -53,9 +53,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       setActive("dashboard");
     }
 
-    // Derive the top position of the company indicator
-    const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
-    setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
+    if (pathname.includes("/dashboard/browse")) {
+      setCompanyIndicatorTop(companies.length * 72 + 144);
+    } else {
+      // Derive the top position of the company indicator
+      const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
+      setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
+    }
   }, [pathname]);
 
   return (
@@ -76,9 +80,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="mt-14 flex flex-col gap-y-6">
               {companies.map((company) => (
                 <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
-                  <div key={company.id} className="size-12 rounded-md bg-secondary"></div>
+                  <div
+                    title={company.name}
+                    key={company.id}
+                    className="flex size-12 items-center justify-center rounded-lg bg-secondary">
+                    {company.name[0]}
+                  </div>
                 </Link>
               ))}
+              <Link href={"/dashboard/browse"} className={"size-12"}>
+                <div className={`flex size-12 items-center justify-center rounded-lg border-2 border-secondary`}>
+                  <FaPlus />
+                </div>
+              </Link>
             </div>
           </div>
           <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
@@ -92,27 +106,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     active === "dashboard" ? "text-foreground" : "text-muted-foreground"
                   )}
                   variant={active === "dashboard" ? "default" : "ghost"}>
-                  {!pathname.includes("/dashboard/company") ? (
+                  {!pathname.includes("/dashboard/company") && !pathname.includes("/dashboard/browse") ? (
                     <LuLayoutDashboard className="mx-2" size={18} />
                   ) : (
                     <LuHome className={"mx-2"} />
                   )}
-                  {pathname.includes("/dashboard/company") ? "Home" : "Dashboard"}
+                  {pathname.includes("/dashboard/company") || pathname.includes("/dashboard/browse")
+                    ? "Home"
+                    : "Dashboard"}
                 </Button>
               </Link>
-              {!companies.some((company) => pathname.includes(company.id)) && (
-                <Link href={"/dashboard/bookings"}>
-                  <Button
-                    className={cn(
-                      "w-[168px] justify-start",
-                      active === "bookings" ? "text-foreground" : "text-muted-foreground"
-                    )}
-                    variant={active === "bookings" ? "default" : "ghost"}>
-                    <LuBookCopy className="mx-2" size={18} />
-                    Bookings
-                  </Button>
-                </Link>
-              )}
+              {!companies.some((company) => pathname.includes(company.id)) &&
+                !pathname.includes("/dashboard/browse") && (
+                  <Link href={"/dashboard/bookings"}>
+                    <Button
+                      className={cn(
+                        "w-[168px] justify-start",
+                        active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                      )}
+                      variant={active === "bookings" ? "default" : "ghost"}>
+                      <LuBookCopy className="mx-2" size={18} />
+                      Bookings
+                    </Button>
+                  </Link>
+                )}
               <Link href={"/dashboard/settings"}>
                 <Button
                   className={cn(

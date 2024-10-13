@@ -1,39 +1,14 @@
-import { type ReactThreeFiber } from "@react-three/fiber";
-import { type ShaderMaterialParameters } from "three";
-import { type shaderMaterial } from "@react-three/drei";
-
-declare global {
-  namespace JSX {
-    type IntrinsicElements = {
-      customShaderMaterial: ReactThreeFiber.Node<ShaderMaterialParameters, typeof shaderMaterial>;
-    };
-  }
-}
+import type { Role } from "./role";
 
 // ----- AUTH ----- //
 
-// eslint-disable-next-line no-shadow
-export enum Role {
-  CLIENT = "CLIENT",
-  ADMIN = "ADMIN",
-  COMPANY_MEMBER = "COMPANY_MEMBER",
-  COMPANY_ADMIN = "COMPANY_ADMIN"
-}
-
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: keyof typeof Role;
-};
-
-type StoreTokenRequest = {
+export type StoreTokenRequest = {
   access_token: string;
   refresh_token?: string;
   expires_at: string;
 };
 
-type LoginFormState = {
+export type LoginFormState = {
   message: string;
   errors: Record<keyof { email: string; password: string }, string> | undefined;
   fieldValues: { email: string; password: string };
@@ -59,6 +34,27 @@ export type SignupFormState = {
     confirmPassword: string;
   };
 };
+
+// USERS //
+
+type BaseUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: Role;
+};
+
+type CompanyRoles = Role.COMPANY_MEMBER | Role.COMPANY_ADMIN;
+
+export type User<T extends Role = Role> = BaseUser & {
+  role: T;
+} & (T extends Role.CLIENT
+    ? { companies: string[] }
+    : T extends CompanyRoles
+      ? { companyID: string }
+      : NonNullable<unknown>);
+
+// ----- APPOINTMENTS ----- //
 
 export type Appointment = {
   id: number;

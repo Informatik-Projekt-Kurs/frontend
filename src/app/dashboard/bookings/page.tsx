@@ -40,7 +40,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
-import { type Appointment, type Company } from "@/types";
+import { type Appointment } from "@/types";
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store/store";
 
@@ -49,30 +49,7 @@ function Bookings() {
   const [searchQuery, setSearchQuery] = useState("");
   const appointments = useSelector((state: RootState) => state.collection.appointments);
 
-  const [companies, setCompanies] = useState<Company[]>([
-    {
-      id: "1",
-      name: "Github",
-      createdAt: "2024-01-01",
-      description: "Version control platform",
-      owner: user!,
-      members: [],
-      settings: {
-        appointmentDuration: 60,
-        appointmentBuffer: 15,
-        appointmentTypes: ["Code Review", "Project Planning"],
-        appointmentLocations: ["Online", "Office"],
-        openingHours: {
-          from: "09:00",
-          to: "17:00"
-        }
-      }
-    }
-  ]);
-
-  useEffect(() => {
-    if (false) setCompanies([]);
-  }, []);
+  const companies = useSelector((state: RootState) => state.collection.companies);
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
   const router = useRouter();
