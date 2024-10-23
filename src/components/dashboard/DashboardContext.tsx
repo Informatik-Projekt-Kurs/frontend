@@ -1,13 +1,13 @@
 import React, { createContext, useContext } from "react";
-import type { User } from "@/types";
+import type { ClientUser } from "@/types";
 
 type DashboardContextProps = {
-  user: User;
+  user: ClientUser;
 };
 
 const DashboardContext = createContext<DashboardContextProps | undefined>(undefined);
 
-export const DashboardProvider: React.FC<{ user: User; children: React.ReactNode }> = ({ user, children }) => {
+export const DashboardProvider: React.FC<{ user: ClientUser; children: React.ReactNode }> = ({ user, children }) => {
   return <DashboardContext.Provider value={{ user }}>{children}</DashboardContext.Provider>;
 };
 

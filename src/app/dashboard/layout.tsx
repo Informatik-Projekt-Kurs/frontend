@@ -1,46 +1,23 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LuBookCopy, LuBuilding, LuGauge, LuHome, LuLayoutDashboard, LuSettings, LuUser2 } from "react-icons/lu";
+import { LuBookCopy, LuHome, LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import React, { Suspense, useEffect, useState } from "react";
-import type { User } from "@/types";
-import { getAccessToken, getUser } from "@/lib/authActions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
 import { DashboardProvider } from "@/components/dashboard/DashboardContext";
 import { FaPlus } from "react-icons/fa6";
-import { Role } from "@/types/role";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
+import { UserProvider, useUser } from "@/components/dashboard/UserContext";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>();
-  const [isAdmin, setIsAdmin] = useState(user?.role === Role.ADMIN);
+function DashboardContent({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useUser();
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
-
   const companies = useSelector((state: RootState) => state.collection.companies);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      setLoading(true);
-      try {
-        const accessToken = await getAccessToken();
-        setUser(await getUser(accessToken));
-        setIsAdmin(user?.role === Role.ADMIN);
-      } catch (error) {
-        setIsAdmin(false);
-        console.error("Failed to fetch user", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser().catch(console.error);
-  }, []);
-
   const pathname = usePathname();
 
   useEffect(() => {
@@ -60,7 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
       setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
     }
-  }, [pathname]);
+  }, [pathname, companies]);
 
   return (
     <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
@@ -84,7 +61,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     title={company.name}
                     key={company.id}
                     className="flex size-12 items-center justify-center rounded-lg bg-secondary">
-                    {company.name[0]}
+                    {company.name[0] + company.name[1]}
                   </div>
                 </Link>
               ))}
@@ -142,7 +119,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Button>
               </Link>
 
-              {isAdmin && (
+              {/*{isAdmin && (
                 <React.Fragment>
                   <header className="relative left-[-40%] mb-[-6px] mt-6 text-xs text-muted-foreground">Admin</header>
                   <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
@@ -158,7 +135,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     Analytics
                   </Button>
                 </React.Fragment>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -176,5 +153,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </footer>
       </main>
     </div>
+  );
+}
+
+// Wrap the dashboard with the UserProvider
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <UserProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </UserProvider>
   );
 }

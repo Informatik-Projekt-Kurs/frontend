@@ -15,10 +15,11 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import Image from "next/image";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import FollowButton from "@/components/dashboard/FollowButton";
+import { useUser } from "@/components/dashboard/UserContext";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const user = useDashboardData().user;
+  const { user } = useUser();
 
   const router = useRouter();
 
@@ -94,7 +95,7 @@ export default function Page({ params }: { params: { id: string } }) {
               </p>
             </div>
           </div>
-          <Button className={"ml-6 text-foreground"}>Follow</Button>
+          <FollowButton companyId={params.id} />
         </div>
         <p className={"mt-10 text-muted-foreground"}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore

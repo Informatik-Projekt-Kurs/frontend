@@ -86,7 +86,7 @@ export async function getUser(accessToken?: string): Promise<User | null> {
 
   if (response.ok) {
     return (await response.json()) as User;
-  } else if (response.status === 403 || response.status === 500) {
+  } else if (response.status === 403 || response.status === 500 || response.status === 401) {
     return null;
   } else {
     throw new Error("There was a problem fetching the user: " + response.statusText + " " + response.status);

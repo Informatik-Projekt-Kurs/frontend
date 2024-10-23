@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +15,11 @@ import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
+import FollowButton from "@/components/dashboard/FollowButton";
+import { useUser } from "@/components/dashboard/UserContext";
 
 function CompanyBrowse() {
-  const { user } = useDashboardData();
+  const { user } = useUser();
   const router = useRouter();
 
   const { companies } = useSelector((state: RootState) => state.collection);
@@ -81,7 +82,7 @@ function CompanyBrowse() {
             }>
             <h2 className={"text-2xl font-medium text-foreground"}>{company.name}</h2>
             <p className={"text-base font-normal text-muted-foreground"}>{company.description}</p>
-            {/* <Button>{user.companies.includes(company.id) ? "Following" : "Follow"}</Button> */}
+            <FollowButton companyId={company.id} />
           </div>
         ))}
       </div>

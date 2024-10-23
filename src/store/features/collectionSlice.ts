@@ -45,7 +45,7 @@ const initialState: CollectionState = {
   ],
   companies: [
     {
-      id: "1",
+      id: "0",
       name: "GitHub",
       createdAt: new Date(2024, 8, 23).toDateString(),
       description: "GitHub is a web-based platform for version control and collaboration.",
@@ -69,7 +69,7 @@ const initialState: CollectionState = {
       }
     },
     {
-      id: "2",
+      id: "1",
       name: "Vercel",
       createdAt: new Date(2024, 8, 23).toDateString(),
       description: "Vercel is a cloud platform for static sites and Serverless Functions.",
@@ -93,7 +93,7 @@ const initialState: CollectionState = {
       }
     },
     {
-      id: "3",
+      id: "2",
       name: "Google",
       createdAt: new Date(2024, 8, 23).toDateString(),
       description:

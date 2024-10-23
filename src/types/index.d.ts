@@ -37,6 +37,7 @@ export type SignupFormState = {
 
 // USERS //
 
+// Base user properties that all users share
 type BaseUser = {
   id: number;
   name: string;
@@ -44,15 +45,28 @@ type BaseUser = {
   role: Role;
 };
 
-type CompanyRoles = Role.COMPANY_MEMBER | Role.COMPANY_ADMIN;
+// Specific user types
+type ClientUser = BaseUser & {
+  role: Role.CLIENT;
+  subscribedCompanies: number[];
+};
 
-export type User<T extends Role = Role> = BaseUser & {
-  role: T;
-} & (T extends Role.CLIENT
-    ? { companies: string[] }
-    : T extends CompanyRoles
-      ? { companyID: string }
-      : NonNullable<unknown>);
+type CompanyMemberUser = BaseUser & {
+  role: Role.COMPANY_MEMBER;
+  companyID: string;
+};
+
+type CompanyAdminUser = BaseUser & {
+  role: Role.COMPANY_ADMIN;
+  companyID: string;
+};
+
+type AdminUser = BaseUser & {
+  role: Role.ADMIN;
+};
+
+// Union type for all possible user types
+export type User = ClientUser | CompanyMemberUser | CompanyAdminUser | AdminUser;
 
 // ----- APPOINTMENTS ----- //
 
