@@ -14,14 +14,11 @@ import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import FollowButton from "@/components/dashboard/FollowButton";
-import { useUser } from "@/components/dashboard/UserContext";
-import { useCollection } from "@/components/dashboard/CollectionContext";
+import { useDashboardData } from "@/components/dashboard/DashboardContext";
 
 function CompanyBrowse() {
-  const { user } = useUser();
+  const { user, companies } = useDashboardData();
   const router = useRouter();
-
-  const { companies } = useCollection();
 
   const logout = async () => {
     try {
@@ -73,7 +70,7 @@ function CompanyBrowse() {
         className={
           "mt-8 grid w-full gap-6 max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 min-[1900px]:grid-cols-4"
         }>
-        {companies?.map((company) => (
+        {companies?.getCompanies.map((company) => (
           <div
             key={company.id}
             className={

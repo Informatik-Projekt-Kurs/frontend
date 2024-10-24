@@ -2,11 +2,13 @@ import { useFormState } from "react-dom";
 import { subscribeToCompany } from "@/lib/companyActions";
 import { Button } from "@/components/ui/button";
 import { useOptimistic, useEffect, useTransition } from "react";
-import { useUser } from "@/components/dashboard/UserContext";
+import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useRouter } from "next/navigation";
 
 export default function FollowButton({ companyId }: { companyId: string }) {
-  const { user, refreshUser } = useUser();
+  const { user, refreshUser } = useDashboardData();
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const [state, formAction] = useFormState(subscribeToCompany, {
     message: "success"
@@ -27,6 +29,7 @@ export default function FollowButton({ companyId }: { companyId: string }) {
           setOptimisticSubscribed(state.isSubscribed);
         }
         void refreshUser();
+        router.push("/dashboard");
       });
     }
   }, [state.message, state.isSubscribed, refreshUser]);

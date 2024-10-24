@@ -15,13 +15,13 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import FollowButton from "@/components/dashboard/FollowButton";
-import { useUser } from "@/components/dashboard/UserContext";
 import { useQuery } from "@apollo/client";
 import { getCompany } from "@/lib/graphql/queries";
 import Loader from "@/components/layout/Loader";
+import { useDashboardData } from "@/components/dashboard/DashboardContext";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { user } = useUser();
+  const { user } = useDashboardData();
   const router = useRouter();
   const { loading, error, data } = useQuery(getCompany, {
     variables: { id: params.id },

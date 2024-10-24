@@ -1,5 +1,6 @@
 type Query {
-    getCompany: Company
+    getCompany(id: ID!): Company
+    getCompanies: [Company]
 }
 
 type Mutation {
@@ -24,6 +25,6 @@ type Company {
     name: String
     description: String
     businessType: String
-    memberEmails: [String]
+    memberIds: [ID]
     ownerEmail: String
 }

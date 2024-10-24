@@ -13,14 +13,14 @@ export const getCompany = gql`
   }
 `;
 
-export const getCompanies = gql`
-  query {
+export const GET_COMPANIES = gql`
+  query GetCompanies {
     getCompanies {
       id
       name
       description
       businessType
-      memberEmails
+      memberIds
       ownerEmail
     }
   }

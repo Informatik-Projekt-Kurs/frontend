@@ -7,16 +7,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
-import { DashboardProvider } from "@/components/dashboard/DashboardContext";
+import { DashboardProvider, useDashboardData } from "@/components/dashboard/DashboardContext";
 import { FaPlus } from "react-icons/fa6";
-import { UserProvider, useUser } from "@/components/dashboard/UserContext";
-import { CollectionProvider, useCollection } from "@/components/dashboard/CollectionContext";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useUser();
+  const { loading, companies, companiesLoading, user } = useDashboardData();
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
-  const { companies } = useCollection();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -30,10 +27,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     }
 
     if (pathname.includes("/dashboard/browse") && companies !== undefined) {
-      setCompanyIndicatorTop(companies.length * 72 + 144);
+      if (
+        companies?.getCompanies.filter((company) => user?.subscribedCompanies.includes(Number(company.id))).length === 0
+      ) {
+        setCompanyIndicatorTop(144);
+      } else setCompanyIndicatorTop(companies?.getCompanies.length * 72 + 144);
     } else {
       // Derive the top position of the company indicator
-      const companyIndex = companies?.findIndex((company) => pathname.includes(company.id)) ?? 0;
+      const companyIndex = companies?.getCompanies.findIndex((company) => pathname.includes(company.id)) ?? 0;
       setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
     }
   }, [pathname, companies]);
@@ -54,16 +55,18 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
             <div className="mt-14 flex flex-col gap-y-6">
-              {companies?.map((company) => (
-                <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
-                  <div
-                    title={company.name}
-                    key={company.id}
-                    className="flex size-12 items-center justify-center rounded-lg bg-secondary">
-                    {company.name[0] + company.name[1]}
-                  </div>
-                </Link>
-              ))}
+              {companies?.getCompanies
+                ?.filter((company) => user?.subscribedCompanies.includes(Number(company.id)))
+                .map((company) => (
+                  <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
+                    <div
+                      title={company.name}
+                      key={company.id}
+                      className="flex size-12 items-center justify-center rounded-lg bg-secondary">
+                      {company.name[0] + company.name[1]}
+                    </div>
+                  </Link>
+                ))}
               <Link href={"/dashboard/browse"} className={"size-12"}>
                 <div className={`flex size-12 items-center justify-center rounded-lg border-2 border-secondary`}>
                   <FaPlus />
@@ -92,7 +95,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     : "Dashboard"}
                 </Button>
               </Link>
-              {companies?.some((company) => pathname.includes(company.id)) === false &&
+              {companies?.getCompanies.some((company) => pathname.includes(company.id)) === false &&
                 !pathname.includes("/dashboard/browse") && (
                   <Link href={"/dashboard/bookings"}>
                     <Button
@@ -140,13 +143,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {loading ? (
-          <Loader />
-        ) : (
-          <Suspense fallback={<Loader />}>
-            <DashboardProvider user={user!}>{children}</DashboardProvider>
-          </Suspense>
-        )}
+        {loading || companiesLoading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
@@ -158,10 +155,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 // Wrap the dashboard with the UserProvider
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <UserProvider>
-      <CollectionProvider>
-        <DashboardContent>{children}</DashboardContent>
-      </CollectionProvider>
-    </UserProvider>
+    <DashboardProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </DashboardProvider>
   );
 }

@@ -1,17 +1,17 @@
 "use client";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LuBookCopy, LuLayoutDashboard } from "react-icons/lu";
 import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, extractNameInitials } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
 import { CompanyProvider, useCompany } from "@/components/dashboard/CompanyContext";
 import { BriefcaseBusiness, Users } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { companyLoading, loading } = useCompany();
+  const { companyLoading, loading, company } = useCompany();
   const [active, setActive] = useState<"dashboard" | "bookings" | "users" | "members">("dashboard");
   const pathname = usePathname();
 
@@ -38,14 +38,18 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
               style={{ marginTop: 40 }}>
               <div className="ml-[8px] h-1/2 w-px bg-primary"></div>
             </div>
-            <div className="mt-12 size-12 rounded-md">
+            <div className="mt-12 flex size-12 items-center justify-center rounded-md">
               <Link href={"/company/dashboard"}>
-                <Image width={48} height={48} src="/landingLogo.png" alt="logo" />
+                <Avatar className="size-10">
+                  <AvatarFallback className={"bg-primary"}>
+                    {extractNameInitials(company?.getCompany.name)}
+                  </AvatarFallback>
+                </Avatar>
               </Link>
             </div>
           </div>
           <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
-            <h1 className="mt-8 text-xl font-bold">MeetMate</h1>
+            <h1 className="mt-8 text-xl font-bold">{company?.getCompany.name}</h1>
             <div className="mt-[35%] flex flex-col items-center justify-start gap-y-4">
               <header className="relative left-[-40%] mb-[-6px] text-xs text-muted-foreground">Tools</header>
               <Link href={"/company/dashboard"}>
