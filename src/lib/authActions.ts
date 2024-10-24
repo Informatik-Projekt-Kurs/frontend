@@ -93,6 +93,24 @@ export async function getUser(accessToken?: string): Promise<User | null> {
   }
 }
 
+export async function getAllUsers(accessToken?: string): Promise<User[]> {
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/getAll", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: undefined
+  });
+  if (response.ok) {
+    return (await response.json()) as User[];
+  } else if (response.status === 403 || response.status === 500 || response.status === 401) {
+    return [];
+  } else {
+    throw new Error("There was a problem fetching the user: " + response.statusText + " " + response.status);
+  }
+}
+
 export async function getAccessToken() {
   return cookies().get("accessToken")?.value;
 }

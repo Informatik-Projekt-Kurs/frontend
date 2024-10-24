@@ -82,7 +82,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                   )}
                   variant={active === "users" ? "default" : "ghost"}>
                   <Users className="mx-2" size={18} />
-                  Users
+                  Clients
                 </Button>
               </Link>
               <Link href={"/company/dashboard/members"}>

@@ -62,6 +62,7 @@
     "@syncfusion/ej2-react-navigations": "^25.2.3",
     "@syncfusion/ej2-react-schedule": "^25.2.3",
     "@syncfusion/ej2-react-splitbuttons": "^25.2.3",
+    "@tanstack/react-table": "^8.20.5",
     "@tweenjs/tween.js": "23.1.1",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
