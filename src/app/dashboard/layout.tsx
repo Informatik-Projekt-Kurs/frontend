@@ -9,15 +9,14 @@ import { cn } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
 import { DashboardProvider } from "@/components/dashboard/DashboardContext";
 import { FaPlus } from "react-icons/fa6";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
 import { UserProvider, useUser } from "@/components/dashboard/UserContext";
+import { CollectionProvider, useCollection } from "@/components/dashboard/CollectionContext";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
   const { user, loading } = useUser();
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
-  const companies = useSelector((state: RootState) => state.collection.companies);
+  const { companies } = useCollection();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -30,11 +29,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       setActive("dashboard");
     }
 
-    if (pathname.includes("/dashboard/browse")) {
+    if (pathname.includes("/dashboard/browse") && companies !== undefined) {
       setCompanyIndicatorTop(companies.length * 72 + 144);
     } else {
       // Derive the top position of the company indicator
-      const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
+      const companyIndex = companies?.findIndex((company) => pathname.includes(company.id)) ?? 0;
       setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
     }
   }, [pathname, companies]);
@@ -55,7 +54,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
             <div className="mt-14 flex flex-col gap-y-6">
-              {companies.map((company) => (
+              {companies?.map((company) => (
                 <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
                   <div
                     title={company.name}
@@ -93,7 +92,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     : "Dashboard"}
                 </Button>
               </Link>
-              {!companies.some((company) => pathname.includes(company.id)) &&
+              {companies?.some((company) => pathname.includes(company.id)) === false &&
                 !pathname.includes("/dashboard/browse") && (
                   <Link href={"/dashboard/bookings"}>
                     <Button
@@ -160,7 +159,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <UserProvider>
-      <DashboardContent>{children}</DashboardContent>
+      <CollectionProvider>
+        <DashboardContent>{children}</DashboardContent>
+      </CollectionProvider>
     </UserProvider>
   );
 }

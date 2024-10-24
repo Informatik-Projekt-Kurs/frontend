@@ -13,16 +13,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
 import FollowButton from "@/components/dashboard/FollowButton";
 import { useUser } from "@/components/dashboard/UserContext";
+import { useCollection } from "@/components/dashboard/CollectionContext";
 
 function CompanyBrowse() {
   const { user } = useUser();
   const router = useRouter();
 
-  const { companies } = useSelector((state: RootState) => state.collection);
+  const { companies } = useCollection();
 
   const logout = async () => {
     try {
@@ -74,7 +73,7 @@ function CompanyBrowse() {
         className={
           "mt-8 grid w-full gap-6 max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 min-[1900px]:grid-cols-4"
         }>
-        {companies.map((company) => (
+        {companies?.map((company) => (
           <div
             key={company.id}
             className={
