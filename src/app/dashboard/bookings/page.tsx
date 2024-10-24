@@ -43,14 +43,11 @@ import { useDashboardData } from "@/components/dashboard/DashboardContext";
 import { type Appointment } from "@/types";
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store/store";
-import { useCollection } from "@/components/dashboard/CollectionContext";
 
 function Bookings() {
-  const { user } = useDashboardData();
+  const { user, companies } = useDashboardData();
   const [searchQuery, setSearchQuery] = useState("");
   const appointments = useSelector((state: RootState) => state.collection.appointments);
-
-  const { companies } = useCollection();
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
   const router = useRouter();
@@ -224,7 +221,7 @@ function Bookings() {
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
               <SelectContent className={"border-border"}>
-                {companies?.map((company) => (
+                {companies?.getCompanies.map((company) => (
                   <SelectItem key={company.id} value={company.id}>
                     {company.name}
                   </SelectItem>
@@ -269,7 +266,7 @@ function Bookings() {
             <DialogTitle>Confirm Booking</DialogTitle>
             <DialogDescription>Please confirm your appointment details:</DialogDescription>
             <div>
-              <p>Company: {companies?.find((c) => c.id === bookingState.selectedCompany)?.name}</p>
+              <p>Company: {companies?.getCompanies.find((c) => c.id === bookingState.selectedCompany)?.name}</p>
               <p>Date: {bookingState.selectedDate.toDateString()}</p>
               <p>Time: {bookingState.selectedTime}</p>
             </div>
