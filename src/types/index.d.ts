@@ -53,17 +53,19 @@ type ClientUser = BaseUser & {
 
 type CompanyMemberUser = BaseUser & {
   role: Role.COMPANY_MEMBER;
-  companyID: string;
+  associatedCompany: string;
 };
 
 type CompanyAdminUser = BaseUser & {
   role: Role.COMPANY_ADMIN;
-  companyID: string;
+  associatedCompany: string;
 };
 
 type AdminUser = BaseUser & {
   role: Role.ADMIN;
 };
+
+type CompanyUser = BaseUser & (CompanyMemberUser | CompanyAdminUser);
 
 // Union type for all possible user types
 export type User = ClientUser | CompanyMemberUser | CompanyAdminUser | AdminUser;
