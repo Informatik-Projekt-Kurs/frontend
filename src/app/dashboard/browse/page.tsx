@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/components/ui/input";
+import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,48 +11,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
-import React from "react";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import FollowButton from "@/components/dashboard/FollowButton";
-import { useQuery } from "@apollo/client";
-import { getCompany } from "@/lib/graphql/queries";
-import Loader from "@/components/layout/Loader";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { user } = useDashboardData();
+function CompanyBrowse() {
+  const { user, companies } = useDashboardData();
   const router = useRouter();
-  const { loading, error, data } = useQuery(getCompany, {
-    variables: { id: params.id },
-    // Optional: configure caching and refetching
-    fetchPolicy: "cache-and-network",
-    // Optional: refetch every 5 minutes
-    pollInterval: 300000
-  });
 
   const logout = async () => {
     try {
       await deleteToken();
       window.location.reload();
-    } catch (logoutError) {
-      console.error("Logout failed", logoutError);
-      throw logoutError;
+    } catch (error) {
+      console.error("Logout failed", error);
+      throw error;
     }
   };
-
-  if (loading) return <Loader />;
-
-  if (error !== undefined) return <div>Error: {error.message}</div>;
 
   return (
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">
-          {data.getCompany.name} (ID: {params.id})
-        </h1>
+        <h1 className="m-4 font-medium text-foreground md:text-2xl">Browse Companies</h1>
         <div className="flex items-center gap-x-6">
-          <Input className="w-[320px]" placeholder="Search"></Input>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
               <Button variant="ghost" className="relative size-8 rounded-full">
@@ -84,29 +66,24 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <div className="mt-8 flex h-[600px] w-full flex-col rounded-[20px] px-12">
-        <div className={"mt-6 flex h-[200px] w-full items-center justify-between"}>
-          <div className={"flex flex-row items-center justify-center"}>
-            <div
-              className={
-                "flex size-[200px] items-center justify-center rounded-full bg-primary text-6xl font-medium text-foreground"
-              }>
-              {extractNameInitials(data.getCompany.name as string)}
-            </div>
-            <div className={"ml-12 flex flex-col"}>
-              <h1 className={"text-4xl font-semibold"}>{data.getCompany.name}</h1>
-            </div>
+      <div
+        className={
+          "mt-8 grid w-full gap-6 max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 min-[1900px]:grid-cols-4"
+        }>
+        {companies?.getCompanies.map((company) => (
+          <div
+            key={company.id}
+            className={
+              "flex h-[200px] w-full flex-col items-start justify-start gap-y-2 rounded-lg border border-border p-6"
+            }>
+            <h2 className={"text-2xl font-medium text-foreground"}>{company.name}</h2>
+            <p className={"text-base font-normal text-muted-foreground"}>{company.description}</p>
+            <FollowButton companyId={company.id} />
           </div>
-          <FollowButton companyId={params.id} />
-        </div>
-        <p className={"mt-10 text-muted-foreground"}>
-          {data.getCompany.description !== "" ? (
-            data.getCompany.description
-          ) : (
-            <i>This company has not provided a description</i>
-          )}
-        </p>
+        ))}
       </div>
     </div>
   );
 }
+
+export default CompanyBrowse;

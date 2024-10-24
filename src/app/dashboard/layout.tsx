@@ -1,46 +1,19 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LuBookCopy, LuBuilding, LuGauge, LuLayoutDashboard, LuSettings, LuUser2, LuHome } from "react-icons/lu";
+import { LuBookCopy, LuHome, LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import React, { Suspense, useEffect, useState } from "react";
-import type { User } from "@/types";
-import { getAccessToken, getUser } from "@/lib/authActions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
-import { DashboardProvider } from "@/components/dashboard/DashboardContext";
+import { DashboardProvider, useDashboardData } from "@/components/dashboard/DashboardContext";
+import { FaPlus } from "react-icons/fa6";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>();
-  const [isAdmin, setIsAdmin] = useState(user?.role === "ADMIN");
+function DashboardContent({ children }: { children: React.ReactNode }) {
+  const { loading, companies, companiesLoading, user } = useDashboardData();
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
-
-  const companies = [
-    { id: "29103", name: "Company 1" },
-    { id: "61241", name: "Company 2" },
-    { id: "1241", name: "Company 3" }
-  ];
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      setLoading(true);
-      try {
-        const accessToken = await getAccessToken();
-        setUser(await getUser(accessToken));
-        setIsAdmin(user?.role === "ADMIN");
-      } catch (error) {
-        setIsAdmin(false);
-        console.error("Failed to fetch user", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser().catch(console.error);
-  }, []);
-
   const pathname = usePathname();
 
   useEffect(() => {
@@ -53,10 +26,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       setActive("dashboard");
     }
 
-    // Derive the top position of the company indicator
-    const companyIndex = companies.findIndex((company) => pathname.includes(company.id));
-    setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
-  }, [pathname]);
+    if (pathname.includes("/dashboard/browse") && companies !== undefined) {
+      if (
+        companies?.getCompanies.filter((company) => user?.subscribedCompanies.includes(Number(company.id))).length === 0
+      ) {
+        setCompanyIndicatorTop(144);
+      } else setCompanyIndicatorTop(companies?.getCompanies.length * 72 + 144);
+    } else {
+      // Derive the top position of the company indicator
+      const companyIndex = companies?.getCompanies.findIndex((company) => pathname.includes(company.id)) ?? 0;
+      setCompanyIndicatorTop(companyIndex === -1 ? 40 : 144 + 72 * companyIndex);
+    }
+  }, [pathname, companies]);
 
   return (
     <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
@@ -74,11 +55,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
             </div>
             <div className="mt-14 flex flex-col gap-y-6">
-              {companies.map((company) => (
-                <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
-                  <div key={company.id} className="size-12 rounded-md bg-secondary"></div>
-                </Link>
-              ))}
+              {companies?.getCompanies
+                ?.filter((company) => user?.subscribedCompanies.includes(Number(company.id)))
+                .map((company) => (
+                  <Link key={company.id} className={"size-12"} href={`/dashboard/company/${company.id}`}>
+                    <div
+                      title={company.name}
+                      key={company.id}
+                      className="flex size-12 items-center justify-center rounded-lg bg-secondary">
+                      {company.name[0] + company.name[1]}
+                    </div>
+                  </Link>
+                ))}
+              <Link href={"/dashboard/browse"} className={"size-12"}>
+                <div className={`flex size-12 items-center justify-center rounded-lg border-2 border-secondary`}>
+                  <FaPlus />
+                </div>
+              </Link>
             </div>
           </div>
           <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
@@ -92,27 +85,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     active === "dashboard" ? "text-foreground" : "text-muted-foreground"
                   )}
                   variant={active === "dashboard" ? "default" : "ghost"}>
-                  {!pathname.includes("/dashboard/company") ? (
+                  {!pathname.includes("/dashboard/company") && !pathname.includes("/dashboard/browse") ? (
                     <LuLayoutDashboard className="mx-2" size={18} />
                   ) : (
                     <LuHome className={"mx-2"} />
                   )}
-                  {pathname.includes("/dashboard/company") ? "Home" : "Dashboard"}
+                  {pathname.includes("/dashboard/company") || pathname.includes("/dashboard/browse")
+                    ? "Home"
+                    : "Dashboard"}
                 </Button>
               </Link>
-              {!companies.some((company) => pathname.includes(company.id)) && (
-                <Link href={"/dashboard/bookings"}>
-                  <Button
-                    className={cn(
-                      "w-[168px] justify-start",
-                      active === "bookings" ? "text-foreground" : "text-muted-foreground"
-                    )}
-                    variant={active === "bookings" ? "default" : "ghost"}>
-                    <LuBookCopy className="mx-2" size={18} />
-                    Bookings
-                  </Button>
-                </Link>
-              )}
+              {companies?.getCompanies.some((company) => pathname.includes(company.id)) === false &&
+                !pathname.includes("/dashboard/browse") && (
+                  <Link href={"/dashboard/bookings"}>
+                    <Button
+                      className={cn(
+                        "w-[168px] justify-start",
+                        active === "bookings" ? "text-foreground" : "text-muted-foreground"
+                      )}
+                      variant={active === "bookings" ? "default" : "ghost"}>
+                      <LuBookCopy className="mx-2" size={18} />
+                      Bookings
+                    </Button>
+                  </Link>
+                )}
               <Link href={"/dashboard/settings"}>
                 <Button
                   className={cn(
@@ -125,7 +121,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Button>
               </Link>
 
-              {isAdmin && (
+              {/*{isAdmin && (
                 <React.Fragment>
                   <header className="relative left-[-40%] mb-[-6px] mt-6 text-xs text-muted-foreground">Admin</header>
                   <Button className="w-[168px] justify-start text-muted-foreground" variant="ghost">
@@ -141,23 +137,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     Analytics
                   </Button>
                 </React.Fragment>
-              )}
+              )} */}
             </div>
           </div>
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {loading ? (
-          <Loader />
-        ) : (
-          <Suspense fallback={<Loader />}>
-            <DashboardProvider user={user!}>{children}</DashboardProvider>
-          </Suspense>
-        )}
+        {loading || companiesLoading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
       </main>
     </div>
+  );
+}
+
+// Wrap the dashboard with the UserProvider
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <DashboardProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </DashboardProvider>
   );
 }

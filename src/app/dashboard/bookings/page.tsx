@@ -40,39 +40,14 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
-import { type Appointment, type Company } from "@/types";
+import { type Appointment } from "@/types";
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store/store";
 
 function Bookings() {
-  const { user } = useDashboardData();
+  const { user, companies } = useDashboardData();
   const [searchQuery, setSearchQuery] = useState("");
   const appointments = useSelector((state: RootState) => state.collection.appointments);
-
-  const [companies, setCompanies] = useState<Company[]>([
-    {
-      id: "1",
-      name: "Github",
-      createdAt: "2024-01-01",
-      description: "Version control platform",
-      owner: user!,
-      members: [],
-      settings: {
-        appointmentDuration: 60,
-        appointmentBuffer: 15,
-        appointmentTypes: ["Code Review", "Project Planning"],
-        appointmentLocations: ["Online", "Office"],
-        openingHours: {
-          from: "09:00",
-          to: "17:00"
-        }
-      }
-    }
-  ]);
-
-  useEffect(() => {
-    if (false) setCompanies([]);
-  }, []);
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
   const router = useRouter();
@@ -246,7 +221,7 @@ function Bookings() {
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
               <SelectContent className={"border-border"}>
-                {companies.map((company) => (
+                {companies?.getCompanies.map((company) => (
                   <SelectItem key={company.id} value={company.id}>
                     {company.name}
                   </SelectItem>
@@ -291,7 +266,7 @@ function Bookings() {
             <DialogTitle>Confirm Booking</DialogTitle>
             <DialogDescription>Please confirm your appointment details:</DialogDescription>
             <div>
-              <p>Company: {companies.find((c) => c.id === bookingState.selectedCompany)?.name}</p>
+              <p>Company: {companies?.getCompanies.find((c) => c.id === bookingState.selectedCompany)?.name}</p>
               <p>Date: {bookingState.selectedDate.toDateString()}</p>
               <p>Time: {bookingState.selectedTime}</p>
             </div>

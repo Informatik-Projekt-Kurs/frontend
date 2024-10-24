@@ -1,9 +1,8 @@
-import { type Appointment, type Company } from "@/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { type Appointment } from "@/types";
 
 type CollectionState = {
   appointments: Appointment[];
-  companies: Company[];
 };
 
 const initialState: CollectionState = {
@@ -41,8 +40,7 @@ const initialState: CollectionState = {
       client: null,
       status: "BOOKED"
     }
-  ],
-  companies: []
+  ]
 };
 
 export const collectionSlice = createSlice({
@@ -51,13 +49,10 @@ export const collectionSlice = createSlice({
   reducers: {
     setAppointments(state, action: PayloadAction<Appointment[]>) {
       state.appointments = action.payload;
-    },
-    setCompanies(state, action: PayloadAction<Company[]>) {
-      state.companies = action.payload;
     }
   }
 });
 
-export const { setAppointments, setCompanies } = collectionSlice.actions;
+export const { setAppointments } = collectionSlice.actions;
 
 export default collectionSlice.reducer;

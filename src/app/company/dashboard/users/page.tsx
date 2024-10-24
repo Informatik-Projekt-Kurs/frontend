@@ -14,22 +14,12 @@ import { extractNameInitials } from "@/lib/utils";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
-import FollowButton from "@/components/dashboard/FollowButton";
-import { useQuery } from "@apollo/client";
-import { getCompany } from "@/lib/graphql/queries";
 import Loader from "@/components/layout/Loader";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useCompany } from "@/components/dashboard/CompanyContext";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { user } = useDashboardData();
+export default function Page() {
+  const { user, loading, companyLoading, company } = useCompany();
   const router = useRouter();
-  const { loading, error, data } = useQuery(getCompany, {
-    variables: { id: params.id },
-    // Optional: configure caching and refetching
-    fetchPolicy: "cache-and-network",
-    // Optional: refetch every 5 minutes
-    pollInterval: 300000
-  });
 
   const logout = async () => {
     try {
@@ -41,15 +31,13 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   };
 
-  if (loading) return <Loader />;
-
-  if (error !== undefined) return <div>Error: {error.message}</div>;
+  if (loading || companyLoading) return <Loader />;
 
   return (
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">
-          {data.getCompany.name} (ID: {params.id})
+          {company?.getCompany.name} (ID: {company?.getCompany.id})
         </h1>
         <div className="flex items-center gap-x-6">
           <Input className="w-[320px]" placeholder="Search"></Input>
@@ -91,17 +79,16 @@ export default function Page({ params }: { params: { id: string } }) {
               className={
                 "flex size-[200px] items-center justify-center rounded-full bg-primary text-6xl font-medium text-foreground"
               }>
-              {extractNameInitials(data.getCompany.name as string)}
+              {extractNameInitials(company?.getCompany.name)}
             </div>
             <div className={"ml-12 flex flex-col"}>
-              <h1 className={"text-4xl font-semibold"}>{data.getCompany.name}</h1>
+              <h1 className={"text-4xl font-semibold"}>{company?.getCompany.name}</h1>
             </div>
           </div>
-          <FollowButton companyId={params.id} />
         </div>
         <p className={"mt-10 text-muted-foreground"}>
-          {data.getCompany.description !== "" ? (
-            data.getCompany.description
+          {company?.getCompany.description !== "" ? (
+            company?.getCompany.description
           ) : (
             <i>This company has not provided a description</i>
           )}

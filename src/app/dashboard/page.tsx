@@ -109,7 +109,7 @@ function Dashboard() {
         <div className="mt-8 flex h-[200px] w-full flex-col items-start justify-center gap-2 rounded-[20px] bg-primary pl-12">
           <h2 className="text-3xl font-semibold">MeetMate Dashboard</h2>
           <p className="text-sm">Create your appointments in minutes</p>
-          <Link href={"dashboard/bookings"}>
+          <Link href={"/dashboard/bookings"}>
             <Button className="mt-2" variant={"secondary"}>
               Book now
             </Button>
