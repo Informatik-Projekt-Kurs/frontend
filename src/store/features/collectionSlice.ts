@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type Appointment } from "@/types";
+import { Role } from "@/types/role";
 
 type CollectionState = {
   appointments: Appointment[];
@@ -26,7 +27,13 @@ const initialState: CollectionState = {
       description: "Presenting project progress",
       companyId: "2",
       location: "Conference Room",
-      client: null,
+      client: {
+        id: 123,
+        name: "John Doe",
+        email: "johndoe@gmail.com",
+        role: Role.CLIENT,
+        subscribedCompanies: [2]
+      },
       status: "BOOKED"
     },
     {
