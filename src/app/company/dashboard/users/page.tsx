@@ -18,7 +18,7 @@ import { useCompany } from "@/components/dashboard/CompanyContext";
 import { UsersTable } from "@/components/dashboard/company/UsersTable";
 
 export default function Page() {
-  const { user, loading, companyLoading } = useCompany();
+  const { user, loading, companyLoading, members, membersLoading } = useCompany();
   const router = useRouter();
 
   const logout = async () => {
@@ -31,7 +31,7 @@ export default function Page() {
     }
   };
 
-  if (loading || companyLoading) return <Loader />;
+  if (loading || companyLoading || membersLoading) return <Loader />;
 
   return (
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
@@ -70,7 +70,7 @@ export default function Page() {
       </header>
 
       <div className="mt-8 flex h-[600px] w-full flex-col rounded-[20px] px-6">
-        <UsersTable />
+        <UsersTable users={members} />
       </div>
     </div>
   );

@@ -28,7 +28,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { User } from "@/types";
-import { getAccessToken, getAllUsers } from "@/lib/authActions";
 
 const columns: Array<ColumnDef<User>> = [
   {
@@ -113,20 +112,11 @@ const columns: Array<ColumnDef<User>> = [
   }
 ];
 
-export function UsersTable(): React.ReactElement {
-  const [users, setUsers] = React.useState<User[]>([]);
+export function UsersTable({ users }: { users: User[] }): React.ReactElement {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
-  React.useEffect(() => {
-    const fetchUsers = async (): Promise<void> => {
-      const fetchedUsers = await getAllUsers(await getAccessToken());
-      setUsers(fetchedUsers);
-    };
-    void fetchUsers();
-  }, []);
 
   const table = useReactTable({
     data: users,

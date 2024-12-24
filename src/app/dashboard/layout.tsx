@@ -31,7 +31,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         companies?.getCompanies.filter((company) => user?.subscribedCompanies.includes(Number(company.id))).length === 0
       ) {
         setCompanyIndicatorTop(144);
-      } else setCompanyIndicatorTop(companies?.getCompanies.length * 72 + 144);
+      } else setCompanyIndicatorTop(user!.subscribedCompanies.length * 72 + 144);
     } else {
       // Derive the top position of the company indicator
       const companyIndex = companies?.getCompanies.findIndex((company) => pathname.includes(company.id)) ?? 0;

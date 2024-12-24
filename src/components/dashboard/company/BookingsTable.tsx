@@ -50,6 +50,9 @@ import { format, set } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { getAccessToken, getAllUsers } from "@/lib/authActions";
+import { useMutation } from "@apollo/client";
+import { CREATE_APPOINTMENT } from "@/lib/graphql/mutations";
+import { useCompany } from "@/components/dashboard/CompanyContext";
 
 const bookingFormSchema = z
   .object({
@@ -239,6 +242,7 @@ export function BookingsTable(): React.ReactElement {
   const appointments = useSelector((state: RootState) => state.collection.appointments);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const companyId = useCompany().user?.associatedCompany;
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
     id: false,
     description: false,
@@ -246,6 +250,8 @@ export function BookingsTable(): React.ReactElement {
   });
   const [rowSelection, setRowSelection] = React.useState({});
   const [clients, setUsers] = React.useState<User[]>([]);
+
+  const [createAppointment] = useMutation(CREATE_APPOINTMENT);
 
   React.useEffect(() => {
     const fetchUsers = async (): Promise<void> => {
@@ -285,8 +291,31 @@ export function BookingsTable(): React.ReactElement {
     }
   });
 
-  function onSubmit(values: z.infer<typeof bookingFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof bookingFormSchema>) {
+    const appointmentInput = {
+      variables: {
+        from: values.from.toISOString(),
+        to: values.to.toISOString(),
+        companyId,
+        clientId: values.client,
+        description: values.description, // Use empty string if no description
+        location: values.location,
+        status: values.client === null ? "BOOKED" : "PENDING" // Set status based on client selection
+      }
+    };
+
+    console.log("Submitting data", appointmentInput);
+    const response = await createAppointment(appointmentInput);
+
+    if (response.data !== undefined) {
+      // Handle success - you might want to:
+      // 1. Show a success message
+      // 2. Close the dialog
+      // 3. Refresh the appointments list
+      console.log("Appointment created successfully");
+    } else {
+      console.error(response.errors);
+    }
   }
 
   return (
@@ -585,7 +614,11 @@ export function BookingsTable(): React.ReactElement {
                               </Button>
                             </FormControl>
                           </PopoverTrigger>
-                          <PopoverContent align="start" className="w-[200px] p-0" side="bottom" sideOffset={4}>
+                          <PopoverContent
+                            align="start"
+                            className="w-full p-0 max-sm:w-[200px]"
+                            side="bottom"
+                            sideOffset={4}>
                             <Command shouldFilter={false}>
                               <CommandInput
                                 placeholder="Search clients..."
@@ -616,7 +649,7 @@ export function BookingsTable(): React.ReactElement {
                                     .map((client) => (
                                       <CommandItem
                                         key={client.id}
-                                        value={client.name.toLowerCase()}
+                                        value={client.id.toString()}
                                         onSelect={() => {
                                           field.onChange(client.id === field.value ? undefined : client.id);
                                           setSearchValue("");
@@ -628,7 +661,7 @@ export function BookingsTable(): React.ReactElement {
                                             field.value === client.id ? "opacity-100" : "opacity-0"
                                           )}
                                         />
-                                        {client.name}
+                                        {client.name} {` ID:(${client.id})`}
                                       </CommandItem>
                                     ))}
                                 </CommandGroup>

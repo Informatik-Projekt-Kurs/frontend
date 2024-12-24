@@ -1,9 +1,23 @@
+#graphqls for graphql scema
+
 type Query {
+
+    #Company Queries
     getCompany(id: ID!): Company
+
     getCompanies: [Company]
+
+    getMember(memberId: ID!): GetResponse
+
+    getAllMembers: [GetResponse]
+
+    #Appointment Queries
+    getAppointment(id: ID!): Appointment
 }
 
 type Mutation {
+
+    #Company Mutations
     createCompany(
         companyName: String!,
         ownerEmail: String!,
@@ -18,6 +32,45 @@ type Mutation {
     ): String
 
     deleteCompany: String
+
+    addMember(
+        memberEmail: String!
+        memberName: String!
+        memberPassword: String!
+    ): String
+
+    deleteMember(
+        memberId: ID!
+    ): String
+
+    #Appointment Mutations
+    createAppointment(
+        from: String,
+        to: String,
+        companyId: ID!,
+        clientId: ID,
+        assigneeId: ID,
+        #
+        description: String,
+        location: String,
+        status: String
+    ): String
+
+    editAppointment(
+        id: ID!,
+        from: String,
+        to: String,
+        clientId: ID,
+        assigneeId: ID,
+
+        description: String,
+        location: String,
+        status: String
+    ): String
+
+    deleteAppointment(
+        id: ID!
+    ): String
 }
 
 type Company {
@@ -27,4 +80,27 @@ type Company {
     businessType: String
     memberIds: [ID]
     ownerEmail: String
+}
+
+type Appointment {
+    id: ID
+    from: String
+    to: String
+    companyId: ID
+    clientId: ID
+    assigneeId: ID
+    # Select Prompt → f.E. medical industry: Untersuchung, Operation
+    description: String
+    location: String
+    Status: String
+}
+
+type GetResponse {
+    id: ID
+    name: String
+    created_at: String
+    email: String
+    role: String
+    associatedCompany: ID
+    subscribedCompanies: [ID]
 }

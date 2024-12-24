@@ -25,3 +25,17 @@ export const GET_COMPANIES = gql`
     }
   }
 `;
+
+export const GET_MEMBER = gql`
+  query GetMember($memberId: ID!) {
+    getMember(memberId: $memberId) {
+      id
+      name
+      created_at
+      email
+      role
+      associatedCompany
+      subscribedCompanies
+    }
+  }
+`;

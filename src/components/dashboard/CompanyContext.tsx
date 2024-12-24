@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { type Company, type CompanyUser } from "@/types";
+import { type Company, type CompanyUser, type User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/authActions";
-import { type ApolloQueryResult, useQuery } from "@apollo/client";
-import { getCompany } from "@/lib/graphql/queries";
+import { type ApolloQueryResult, useQuery, useApolloClient } from "@apollo/client";
+import { GET_MEMBER, getCompany } from "@/lib/graphql/queries";
 
 type CompanyContextType = {
   user: CompanyUser | undefined;
@@ -12,18 +12,77 @@ type CompanyContextType = {
   company: { getCompany: Company } | undefined;
   companyLoading: boolean;
   refreshCompany: () => Promise<ApolloQueryResult<{ getCompany: Company }>>;
+
+  members: User[];
+  membersLoading: boolean;
+  refreshMembers: () => Promise<void>;
 };
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
 export function CompanyProvider({ children }: { children: React.ReactNode }) {
+  const apolloClient = useApolloClient();
   const [user, setUser] = useState<CompanyUser>();
+  const [members, setMembers] = useState<User[]>([]);
+  const [membersLoading, setMembersLoading] = useState(false);
+
   const {
     loading: companyLoading,
     data: company,
     refetch: refreshCompany
-  } = useQuery(getCompany, { variables: { id: user?.associatedCompany }, pollInterval: 300000 });
+  } = useQuery(getCompany, {
+    variables: { id: user?.associatedCompany },
+    pollInterval: 300000,
+    skip: user?.associatedCompany === null
+  });
+
   const [loading, setLoading] = useState(true);
+
+  const fetchMembers = async () => {
+    if (!Boolean(company?.getCompany?.memberIds?.length)) {
+      setMembers([]);
+      return;
+    }
+
+    setMembersLoading(true);
+    try {
+      // Fetch members sequentially to avoid overwhelming the server
+      const memberData: User[] = [];
+
+      for (const memberId of company.getCompany.memberIds) {
+        try {
+          console.log(`Fetching member with ID: ${memberId}`);
+          const result = await apolloClient.query({
+            query: GET_MEMBER,
+            variables: { memberId },
+            fetchPolicy: "network-only" // Ensure we get fresh data
+          });
+
+          if (Boolean(result.data?.getMember)) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            memberData.push(result.data.getMember);
+          }
+        } catch (error) {
+          console.error(`Error fetching member ${memberId}:`, error);
+          // Continue with other members even if one fails
+          continue;
+        }
+      }
+
+      setMembers(memberData);
+    } catch (error) {
+      console.error("Failed to fetch members", error);
+      setMembers([]);
+    } finally {
+      setMembersLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (Boolean(company?.getCompany?.memberIds)) {
+      void fetchMembers();
+    }
+  }, [company?.getCompany?.memberIds]);
 
   const fetchUser = async () => {
     setLoading(true);
@@ -46,8 +105,23 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     await fetchUser();
   };
 
+  const refreshMembers = async () => {
+    await fetchMembers();
+  };
+
   return (
-    <CompanyContext.Provider value={{ user, loading, refreshUser, company, companyLoading, refreshCompany }}>
+    <CompanyContext.Provider
+      value={{
+        user,
+        loading,
+        refreshUser,
+        company,
+        companyLoading,
+        refreshCompany,
+        members,
+        membersLoading,
+        refreshMembers
+      }}>
       {children}
     </CompanyContext.Provider>
   );
