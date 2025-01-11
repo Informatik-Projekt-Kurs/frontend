@@ -27,20 +27,24 @@ export const CREATE_APPOINTMENT = gql`
   mutation createAppointment(
     $from: String!
     $to: String!
-    $companyId: ID!
-    $clientId: ID
+    $location: String
     $description: String
-    $location: String!
-    $status: String!
+    $title: String
+    $clientId: ID
   ) {
     createAppointment(
       from: $from
       to: $to
-      companyId: $companyId
-      clientId: $clientId
-      description: $description
       location: $location
-      status: $status
+      description: $description
+      title: $title
+      clientId: $clientId
     )
+  }
+`;
+
+export const BOOK_APPOINTMENT = gql`
+  mutation bookAppointment($appointmentId: ID!) {
+    bookAppointment(appointmentId: $appointmentId)
   }
 `;

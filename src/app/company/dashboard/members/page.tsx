@@ -16,12 +16,10 @@ import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
 import { UsersTable } from "@/components/dashboard/company/UsersTable";
-import { type User } from "@/types";
 
 export default function Page() {
-  const { user, loading, companyLoading } = useCompany();
+  const { user, loading, members } = useCompany();
   const router = useRouter();
-  const users = [] as User[];
 
   const logout = async () => {
     try {
@@ -33,7 +31,7 @@ export default function Page() {
     }
   };
 
-  if (loading || companyLoading) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
@@ -72,7 +70,7 @@ export default function Page() {
       </header>
 
       <div className="mt-8 flex h-[600px] w-full flex-col rounded-[20px] px-6">
-        <UsersTable users={users} />
+        <UsersTable users={members} />
       </div>
     </div>
   );

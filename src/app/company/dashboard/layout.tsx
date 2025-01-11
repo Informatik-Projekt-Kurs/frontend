@@ -9,9 +9,10 @@ import Loader from "@/components/layout/Loader";
 import { CompanyProvider, useCompany } from "@/components/dashboard/CompanyContext";
 import { BriefcaseBusiness, Settings, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ToastProvider } from "@/components/ui/toast";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { companyLoading, loading, company } = useCompany();
+  const { loading, company } = useCompany();
   const [active, setActive] = useState<"dashboard" | "bookings" | "users" | "members" | "settings">("dashboard");
   const pathname = usePathname();
 
@@ -114,7 +115,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {loading || companyLoading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
+        {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
@@ -126,8 +127,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 // Wrap the dashboard with the UserProvider
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <CompanyProvider>
-      <DashboardContent>{children}</DashboardContent>
-    </CompanyProvider>
+    <ToastProvider>
+      <CompanyProvider>
+        <DashboardContent>{children}</DashboardContent>
+      </CompanyProvider>
+    </ToastProvider>
   );
 }

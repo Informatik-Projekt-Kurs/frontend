@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } from "@syncfusion/ej2-react-schedule";
 import "./scheduler.scss";
 import { registerLicense } from "@syncfusion/ej2-base";
@@ -7,6 +7,8 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { type Appointment } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@apollo/client";
+import { GET_COMPANY } from "@/lib/graphql/queries";
 
 type SchedulerProps = {
   openingHours: { open: string; close: string };
@@ -27,10 +29,6 @@ function Scheduler(props: SchedulerProps) {
     status: { name: "status" }
   };
   const eventSettings = { dataSource: props.data, fields: fieldsData };
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("Scheduler props", props);
-  }, []);
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -173,16 +171,20 @@ function Scheduler(props: SchedulerProps) {
                       <p>Description: {eventProps.description}</p>
                       <p>Location: {eventProps.location}</p>
                       <p>Status: {eventProps.status}</p>
-                      <p>Company ID: {eventProps.companyId}</p>
-                      {eventProps.client !== null && <p>Client: {eventProps.client.name}</p>}
+                      <p>
+                        Company:{" "}
+                        {useQuery(GET_COMPANY, { variables: { id: eventProps.companyId } }).data?.getCompany.name}
+                      </p>
                     </div>
                     <Button
+                      disabled
                       onClick={() => {
                         props.handleAppointmentChange(eventProps);
                       }}>
                       Request Change
                     </Button>
                     <Button
+                      disabled
                       variant={"destructive"}
                       onClick={() => {
                         handleAppointmentCancel(eventProps);

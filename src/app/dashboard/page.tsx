@@ -18,8 +18,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OverviewScheduler from "@/components/dashboard/scheduler/OverviewScheduler";
 import AppointmentDisplay from "@/components/dashboard/AppointmentDisplay";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import { useDashboardData } from "@/components/dashboard/DashboardContext";
 
 function Dashboard() {
   const [user, setUser] = useState<User | null>();
@@ -27,7 +26,7 @@ function Dashboard() {
 
   const router = useRouter();
 
-  const appointments = useSelector((state: RootState) => state.collection.appointments);
+  const appointments = useDashboardData().relevantAppointments;
 
   useEffect(() => {
     const fetchUser = async () => {

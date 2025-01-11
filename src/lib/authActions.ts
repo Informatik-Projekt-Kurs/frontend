@@ -2,7 +2,13 @@
 
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { type LoginFormState, type SignupFormState, type StoreTokenRequest, type User } from "@/types";
+import {
+  type Appointment,
+  type LoginFormState,
+  type SignupFormState,
+  type StoreTokenRequest,
+  type User
+} from "@/types";
 
 export async function storeToken(request: StoreTokenRequest) {
   cookies().set({
@@ -71,6 +77,40 @@ export async function refreshAccessToken(refreshToken?: string) {
     return undefined;
   } else {
     throw new Error("There was a problem refreshing the access token: " + response.statusText);
+  }
+}
+
+export async function getRelevantAppointments(accessToken?: string): Promise<Appointment[]> {
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/relevantAppointments", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: undefined
+  });
+
+  if (response.ok) {
+    return (await response.json()) as Appointment[];
+  } else {
+    return [];
+  }
+}
+
+export async function getAppointments(accessToken?: string): Promise<Appointment[]> {
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/appointments", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: undefined
+  });
+
+  if (response.ok) {
+    return (await response.json()) as Appointment[];
+  } else {
+    return [];
   }
 }
 

@@ -25,9 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { Appointment, User } from "@/types";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { Appointment } from "@/types";
 import { calculateAppointmentDuration, cn, formatDateString } from "@/lib/utils";
 import { FaPlus } from "react-icons/fa6";
 import {
@@ -49,18 +47,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format, set } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { getAccessToken, getAllUsers } from "@/lib/authActions";
 import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT } from "@/lib/graphql/mutations";
 import { useCompany } from "@/components/dashboard/CompanyContext";
+import { useToast } from "@/components/ui/use-toast";
 
 const bookingFormSchema = z
   .object({
-    title: z.string().min(2).max(30),
+    title: z.string().max(30).optional(),
     description: z.string().optional(),
     from: z.date(),
     to: z.date(),
-    location: z.string(),
+    location: z.string().optional(),
     client: z.number().optional() // client id
   })
   .refine(
@@ -239,27 +237,17 @@ const columns: Array<ColumnDef<Appointment>> = [
 ];
 
 export function BookingsTable(): React.ReactElement {
-  const appointments = useSelector((state: RootState) => state.collection.appointments);
+  const { appointments, clients } = useCompany();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const companyId = useCompany().user?.associatedCompany;
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
     id: false,
     description: false,
     to: false
   });
   const [rowSelection, setRowSelection] = React.useState({});
-  const [clients, setUsers] = React.useState<User[]>([]);
 
   const [createAppointment] = useMutation(CREATE_APPOINTMENT);
-
-  React.useEffect(() => {
-    const fetchUsers = async (): Promise<void> => {
-      const fetchedUsers = await getAllUsers(await getAccessToken());
-      setUsers(fetchedUsers);
-    };
-    void fetchUsers();
-  }, []);
 
   const table = useReactTable({
     data: appointments,
@@ -291,28 +279,29 @@ export function BookingsTable(): React.ReactElement {
     }
   });
 
+  const { toast } = useToast();
+
   async function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     const appointmentInput = {
       variables: {
+        title: values.title,
+        description: values.description,
         from: values.from.toISOString(),
         to: values.to.toISOString(),
-        companyId,
-        clientId: values.client,
-        description: values.description, // Use empty string if no description
         location: values.location,
-        status: values.client === null ? "BOOKED" : "PENDING" // Set status based on client selection
+        clientId: values.client
       }
     };
 
-    console.log("Submitting data", appointmentInput);
     const response = await createAppointment(appointmentInput);
 
     if (response.data !== undefined) {
-      // Handle success - you might want to:
-      // 1. Show a success message
-      // 2. Close the dialog
-      // 3. Refresh the appointments list
-      console.log("Appointment created successfully");
+      toast({
+        title: "Booking created",
+        description: values.from.toDateString(),
+        variant: "default",
+        className: "border-emerald-300"
+      });
     } else {
       console.error(response.errors);
     }
@@ -373,7 +362,7 @@ export function BookingsTable(): React.ReactElement {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title*</FormLabel>
+                      <FormLabel>Title</FormLabel>
                       <FormControl>
                         <Input placeholder="Scrum Meeting" {...field} />
                       </FormControl>
@@ -575,7 +564,7 @@ export function BookingsTable(): React.ReactElement {
                   name="location"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location*</FormLabel>
+                      <FormLabel>Location</FormLabel>
                       <FormControl>
                         <Input placeholder="Meeting Room 1 / Zoom Link" {...field} />
                       </FormControl>
@@ -608,7 +597,7 @@ export function BookingsTable(): React.ReactElement {
                                   setOpen(!open);
                                 }}>
                                 {field.value !== undefined
-                                  ? clients.find((client) => client.id === field.value)?.name
+                                  ? clients.getClients.find((client) => client.id === field.value)?.name
                                   : "Select client..."}
                                 <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                               </Button>
@@ -644,7 +633,7 @@ export function BookingsTable(): React.ReactElement {
                                     />
                                     No client
                                   </CommandItem>
-                                  {clients
+                                  {clients.getClients
                                     .filter((client) => client.name.toLowerCase().includes(searchValue.toLowerCase()))
                                     .map((client) => (
                                       <CommandItem

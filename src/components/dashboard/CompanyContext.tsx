@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { type Company, type CompanyUser, type User } from "@/types";
+import { type Appointment, type Company, type CompanyUser, type User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/authActions";
 import { type ApolloQueryResult, useQuery, useApolloClient } from "@apollo/client";
-import { GET_MEMBER, getCompany } from "@/lib/graphql/queries";
+import { GET_ALL_APPOINTMENTS, GET_CLIENTS, GET_MEMBER, getCompany } from "@/lib/graphql/queries";
 
 type CompanyContextType = {
   user: CompanyUser | undefined;
@@ -10,12 +10,13 @@ type CompanyContextType = {
   refreshUser: () => Promise<void>;
 
   company: { getCompany: Company } | undefined;
-  companyLoading: boolean;
   refreshCompany: () => Promise<ApolloQueryResult<{ getCompany: Company }>>;
 
   members: User[];
-  membersLoading: boolean;
   refreshMembers: () => Promise<void>;
+
+  appointments: Appointment[];
+  clients: { getClients: User[] };
 };
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
@@ -36,7 +37,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     skip: user?.associatedCompany === null
   });
 
-  const [loading, setLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(true);
 
   const fetchMembers = async () => {
     if (!Boolean(company?.getCompany?.memberIds?.length)) {
@@ -85,7 +86,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   }, [company?.getCompany?.memberIds]);
 
   const fetchUser = async () => {
-    setLoading(true);
+    setUserLoading(true);
     try {
       const accessToken = await getAccessToken();
       const userData = await getUser(accessToken);
@@ -93,9 +94,15 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error("Failed to fetch user", error);
     } finally {
-      setLoading(false);
+      setUserLoading(false);
     }
   };
+
+  const { data: appointments = [], loading: appointmentsLoading } = useQuery(GET_ALL_APPOINTMENTS, {
+    variables: { companyId: company?.id }
+  });
+
+  const { data: clients = [], loading: clientsLoading } = useQuery(GET_CLIENTS);
 
   useEffect(() => {
     void fetchUser();
@@ -109,6 +116,8 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     await fetchMembers();
   };
 
+  const loading = userLoading || companyLoading || membersLoading || appointmentsLoading || clientsLoading;
+
   return (
     <CompanyContext.Provider
       value={{
@@ -116,11 +125,11 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
         loading,
         refreshUser,
         company,
-        companyLoading,
         refreshCompany,
         members,
-        membersLoading,
-        refreshMembers
+        refreshMembers,
+        appointments,
+        clients
       }}>
       {children}
     </CompanyContext.Provider>

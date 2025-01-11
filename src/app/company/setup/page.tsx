@@ -37,7 +37,9 @@ function Setup() {
   const placeholders = ["Full Company Name", "CEO Email", "CEO Name", "CEO Password"];
   const input = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
-  const [createCompany, { loading, error: mutationError }] = useMutation(CREATE_COMPANY);
+  const [createCompany, { loading, error: mutationError }] = useMutation(CREATE_COMPANY, {
+    context: { requiresAuth: false }
+  });
 
   const nextStep = () => {
     if (input.current?.value === null) {
