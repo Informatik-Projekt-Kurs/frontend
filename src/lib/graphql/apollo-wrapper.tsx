@@ -45,7 +45,7 @@ function makeClient() {
     if (requiresAuth) {
       try {
         const token = await getAccessToken();
-        if (token !== null) {
+        if ((token ?? "") !== "") {
           return {
             headers: {
               ...headers,

@@ -70,7 +70,7 @@ export default function Page() {
       </header>
 
       <div className="mt-8 flex h-[600px] w-full flex-col rounded-[20px] px-6">
-        <UsersTable users={clients.getClients} />
+        <UsersTable users={clients?.getClients} />
       </div>
     </div>
   );

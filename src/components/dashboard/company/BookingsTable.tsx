@@ -184,7 +184,7 @@ const columns: Array<ColumnDef<Appointment>> = [
     }
   },
   {
-    accessorKey: "status",
+    accessorKey: "Status",
     header: ({ column }) => {
       return (
         <Button
@@ -220,11 +220,10 @@ const columns: Array<ColumnDef<Appointment>> = [
               }}>
               Copy appointment ID
             </DropdownMenuItem>
-            {appointment.status === "BOOKED" && appointment.client !== null && (
+            {appointment.Status === "BOOKED" && appointment.clientId !== "" && (
               <DropdownMenuItem
                 onClick={() => {
-                  if (appointment.client?.id !== undefined)
-                    void navigator.clipboard.writeText(appointment.client?.id.toString());
+                  if (appointment.clientId !== "") void navigator.clipboard.writeText(appointment.clientId.toString());
                 }}>
                 Copy booked user ID
               </DropdownMenuItem>
@@ -237,7 +236,7 @@ const columns: Array<ColumnDef<Appointment>> = [
 ];
 
 export function BookingsTable(): React.ReactElement {
-  const { appointments, clients } = useCompany();
+  const { appointments, clients, refreshAppointments } = useCompany();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -302,6 +301,8 @@ export function BookingsTable(): React.ReactElement {
         variant: "default",
         className: "border-emerald-300"
       });
+      form.reset();
+      await refreshAppointments();
     } else {
       console.error(response.errors);
     }

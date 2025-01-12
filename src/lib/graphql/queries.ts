@@ -77,6 +77,7 @@ export const GET_ALL_APPOINTMENTS = gql`
       description
       location
       Status
+      title
     }
   }
 `;
@@ -86,11 +87,7 @@ export const GET_CLIENTS = gql`
     getClients {
       id
       name
-      created_at
       email
-      role
-      associatedCompany
-      subscribedCompanies
     }
   }
 `;

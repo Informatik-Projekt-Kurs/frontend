@@ -94,6 +94,7 @@ type Company {
 
 type Appointment {
     id: ID
+    title: String
     from: String
     to: String
     companyId: ID

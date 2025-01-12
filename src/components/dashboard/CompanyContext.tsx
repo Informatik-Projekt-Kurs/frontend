@@ -16,6 +16,7 @@ type CompanyContextType = {
   refreshMembers: () => Promise<void>;
 
   appointments: Appointment[];
+  refreshAppointments: () => Promise<ApolloQueryResult<{ getAllAppointments: Appointment[] }>>;
   clients: { getClients: User[] };
 };
 
@@ -34,8 +35,20 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   } = useQuery(getCompany, {
     variables: { id: user?.associatedCompany },
     pollInterval: 300000,
-    skip: user?.associatedCompany === null
+    skip: user?.associatedCompany === undefined
   });
+
+  const {
+    data: appointmentsData,
+    loading: appointmentsLoading,
+    refetch: refreshAppointments
+  } = useQuery(GET_ALL_APPOINTMENTS, {
+    variables: { companyId: company?.getCompany?.id },
+    skip: !Boolean(company?.getCompany?.id), // Skip until we have the company data
+    pollInterval: 300000
+  });
+
+  const { data: clients = { getClients: [] }, loading: clientsLoading } = useQuery(GET_CLIENTS);
 
   const [userLoading, setUserLoading] = useState(true);
 
@@ -98,12 +111,6 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const { data: appointments = [], loading: appointmentsLoading } = useQuery(GET_ALL_APPOINTMENTS, {
-    variables: { companyId: company?.id }
-  });
-
-  const { data: clients = [], loading: clientsLoading } = useQuery(GET_CLIENTS);
-
   useEffect(() => {
     void fetchUser();
   }, []);
@@ -128,7 +135,8 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
         refreshCompany,
         members,
         refreshMembers,
-        appointments,
+        appointments: appointmentsData?.getAllAppointments ?? [],
+        refreshAppointments,
         clients
       }}>
       {children}
