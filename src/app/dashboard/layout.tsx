@@ -11,7 +11,7 @@ import { DashboardProvider, useDashboardData } from "@/components/dashboard/Dash
 import { FaPlus } from "react-icons/fa6";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { loading, companies, companiesLoading, user } = useDashboardData();
+  const { loading, companies, user } = useDashboardData();
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
   const pathname = usePathname();
