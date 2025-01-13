@@ -26,7 +26,7 @@ function Scheduler(props: SchedulerProps) {
     endTime: { name: "to" },
     location: { name: "location" },
     description: { name: "description" },
-    status: { name: "status" }
+    Status: { name: "Status" }
   };
   const eventSettings = { dataSource: props.data, fields: fieldsData };
 
@@ -170,7 +170,7 @@ function Scheduler(props: SchedulerProps) {
                       </p>
                       <p>Description: {eventProps.description}</p>
                       <p>Location: {eventProps.location}</p>
-                      <p>Status: {eventProps.status}</p>
+                      <p>Status: {eventProps.Status}</p>
                       <p>
                         Company:{" "}
                         {useQuery(GET_COMPANY, { variables: { id: eventProps.companyId } }).data?.getCompany.name}

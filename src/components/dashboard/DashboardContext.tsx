@@ -14,6 +14,7 @@ type DashboardContextProps = {
 
   relevantAppointments: Appointment[];
   appointments: Appointment[];
+  refreshAppointments: () => Promise<void>;
 };
 
 const DashboardContext = createContext<DashboardContextProps | undefined>(undefined);
@@ -73,6 +74,10 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     void fetchAppointments();
   }, []);
 
+  const refreshAppointments = async () => {
+    void fetchAppointments();
+  };
+
   const refreshUser = async () => {
     await fetchUser();
   };
@@ -96,7 +101,16 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <DashboardContext.Provider
-      value={{ user, loading, refreshUser, companies, refreshCompanies, relevantAppointments, appointments }}>
+      value={{
+        user,
+        loading,
+        refreshUser,
+        companies,
+        refreshCompanies,
+        relevantAppointments,
+        appointments,
+        refreshAppointments
+      }}>
       {children}
     </DashboardContext.Provider>
   );

@@ -46,11 +46,18 @@ import { useMutation, useQuery } from "@apollo/client";
 import { BOOK_APPOINTMENT } from "@/lib/graphql/mutations";
 
 function Bookings() {
-  const { user, companies, appointments } = useDashboardData();
+  const { user, companies, appointments, refreshAppointments } = useDashboardData();
   const [searchQuery, setSearchQuery] = useState("");
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
   const router = useRouter();
+
+  const formatDateToISOWithoutTime = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}T00:00:00.000Z`;
+  };
 
   const [bookingState, setBookingState] = useState({
     step: 0,
@@ -66,15 +73,17 @@ function Bookings() {
     if (bookingState.step === 2) {
       console.log("Query Variables:", {
         companyId: bookingState.selectedCompany,
-        date: bookingState.selectedDate.toISOString()
+        date: formatDateToISOWithoutTime(bookingState.selectedDate)
       });
     }
+
+    console.log(bookingState.selectedDate.toISOString());
   }, [bookingState.step, bookingState.selectedCompany, bookingState.selectedDate]);
 
   const { data: availableSlots, error: slotsError } = useQuery(GET_AVAILABLE_APPOINTMENTS, {
     variables: {
       companyId: bookingState.selectedCompany,
-      date: bookingState.selectedDate.toISOString()
+      date: formatDateToISOWithoutTime(bookingState.selectedDate)
     },
     skip: bookingState.selectedCompany === "" || bookingState.step !== 2,
     fetchPolicy: "network-only",
@@ -252,7 +261,9 @@ function Bookings() {
         }
       });
 
-      updateBookingStep(4); // Success step
+      updateBookingStep(4);
+      await refreshAppointments();
+      router.refresh();
     } catch (error) {
       setBookingState((prev) => ({
         ...prev,
@@ -292,7 +303,12 @@ function Bookings() {
           <React.Fragment>
             <DialogTitle>Select your Date</DialogTitle>
             <DialogDescription>When would you like to book this appointment?</DialogDescription>
-            <Calendar mode="single" selected={bookingState.selectedDate} onSelect={handleDateChange} />
+            <Calendar
+              mode="single"
+              selected={bookingState.selectedDate}
+              onSelect={handleDateChange}
+              disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+            />
           </React.Fragment>
         );
       case 2:
@@ -314,7 +330,7 @@ function Bookings() {
               </SelectTrigger>
               <SelectContent className={"border-border"}>
                 {availableSlots?.getAvailableAppointments
-                  ?.filter((slot: Appointment) => !Boolean(slot.clientId)) // Only show unbooked slots
+                  ?.filter((slot: Appointment) => slot.Status === "PENDING")
                   .map((slot: Appointment) => {
                     const fromTime = new Date(slot.from).toLocaleTimeString("en-US", {
                       hour: "2-digit",

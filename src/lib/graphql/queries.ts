@@ -62,6 +62,7 @@ export const GET_AVAILABLE_APPOINTMENTS = gql`
       description
       location
       Status
+      title
     }
   }
 `;
