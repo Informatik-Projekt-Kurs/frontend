@@ -143,7 +143,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {loading || companiesLoading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
+        {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
