@@ -17,7 +17,7 @@ import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
 
 export default function Page() {
-  const { user, loading, companyLoading, company } = useCompany();
+  const { user, loading, company } = useCompany();
   const router = useRouter();
 
   const logout = async () => {
@@ -30,7 +30,7 @@ export default function Page() {
     }
   };
 
-  if (loading || companyLoading) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
