@@ -314,7 +314,7 @@ function Bookings() {
               </SelectTrigger>
               <SelectContent className={"border-border"}>
                 {availableSlots?.getAvailableAppointments
-                  ?.filter((slot: Appointment) => !Boolean(slot.client)) // Only show unbooked slots
+                  ?.filter((slot: Appointment) => !Boolean(slot.clientId)) // Only show unbooked slots
                   .map((slot: Appointment) => {
                     const fromTime = new Date(slot.from).toLocaleTimeString("en-US", {
                       hour: "2-digit",
