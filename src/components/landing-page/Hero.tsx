@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 function Hero() {
   const pulseVariants = {
@@ -30,18 +31,20 @@ function Hero() {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}>
-          Your brand, <br className="hidden max-sm:block" /> built <span>better</span>
+          Scheduling made, <br className="hidden max-sm:block" /> truly <span>seamless</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="max-w-[600px] text-center text-base font-light leading-6 text-foreground max-md:max-w-[80vw]">
-          Crafting Your Brands Story into Unforgettable Web, Graphic, and Video Masterpieces that Captivate and Convert.
+          className="max-w-[400px] text-center text-base font-light leading-6 text-foreground max-md:max-w-[80vw]">
+          Book smarter, meet easier - where businesses and clients connect effortlessly.
         </motion.p>
-        <Button className="rounded-full px-6 text-foreground" size={"lg"}>
-          Launch a project
-        </Button>
+        <Link href={"/dashboard"} className={""}>
+          <Button className="rounded-full px-6 text-foreground" size={"lg"}>
+            Start Booking Now
+          </Button>
+        </Link>
       </div>
 
       <motion.div

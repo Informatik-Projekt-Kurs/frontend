@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Features } from "@/components/landing-page/Features";
 import Hero from "@/components/landing-page/Hero";
-import { Experience } from "@/components/landing-page/Experience";
 import LandingNavbar from "@/components/layout/LandingNavbar";
 
 export default function Home() {
@@ -24,12 +22,12 @@ export default function Home() {
                 opacity: 1
               }}
               className="heading_standard text-3xl font-semibold">
-              <span className="span_gradient">Laser-focused</span> on 3 key aspects.
+              {/*<span className="span_gradient">Laser-focused</span> on 3 key aspects.*/}
             </h2>
           </div>
           <div className="home_aspects_grid">
             <Link
-              href={"/services/web-design"}
+              href={"#"}
               className="home_aspects_card w-inline-block"
               style={{
                 transform:
@@ -39,13 +37,12 @@ export default function Home() {
               }}>
               <div className="home_aspects_card_number">01</div>
               <h3 className="home_aspects_card_heading">
-                <span className="span_gradient">Web Design</span>
+                <span className="span_gradient">What is MeetMate?</span>
               </h3>
               <p className="text-color-grey">
-                We create stunning, engaging and high-conversion websites based on a versatile and future-proof
-                platform. Search engine optimisation and cutting-edge user experience design come as standard, along
-                with exceptional reliability, scalability and performance. Plus, friendly support — whenever you need
-                us.
+                MeetMate is an innovative platform that simplifies appointment bookings. With an intuitive interface, it
+                allows businesses and individuals to schedule, manage, and track appointments effortlessly, reducing
+                no-shows and improving time management.
                 <br />
               </p>
               <div className="home_aspects_card_image">
@@ -70,7 +67,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              href={"/services/graphic-design"}
+              href={"#"}
               className="home_aspects_card w-inline-block"
               style={{
                 transform:
@@ -100,16 +97,19 @@ export default function Home() {
               </div>
               <div className="home_aspects_card_number">02</div>
               <h3 className="home_aspects_card_heading">
-                <span className="span_gradient">Graphic Design</span>
+                <span className="span_gradient">
+                  Effortless Scheduling
+                  <br />
+                </span>
+                <span className="span_gradient"> and Management:</span>
               </h3>
               <p className="text-color-grey">
-                Whether you&apos;re building a brand from scratch, or developing new assets for your next campaign, we
-                have a wealth of experience in developing appointment management systems, logos and brand identities.
-                We&apos;ll support you through the whole journey, from concept to deliverable.
+                MeetMate&apos;s user-friendly interface, easy booking process, and real-time updates keep both
+                businesses and clients organized, minimizing double bookings and missed appointments.
               </p>
             </Link>
             <Link
-              href={"/services/software-development"}
+              href={"#"}
               className="home_aspects_card is-grid flex max-w-full flex-col"
               style={{
                 transform:
@@ -122,14 +122,13 @@ export default function Home() {
                 <div className="home_aspects_card_number">03</div>
                 <h3 className="home_aspects_card_heading">
                   <span className="span_gradient">
-                    Custom System <br />
+                    Enhanced Customer <br />
                   </span>
-                  <span className="span_gradient">Development</span>
+                  <span className="span_gradient">Engagement:</span>
                 </h3>
                 <p className="text-color-grey">
-                  Finding an off-the-shelf app that fits your business model can be tricky. At MeetMate we create custom
-                  systems to meet specific needs. We have specific experience in HTML, CSS, REACT, NextJS, Spring,
-                  JQuery, Tailwind, and PostgreSQL.
+                  MeetMate offers a seamless booking experience with instant confirmations and booking pages, allowing
+                  clients to book at their convenience and businesses to save resources managing appointments.
                 </p>
               </div>
               <div className="home_aspects_card_image is-large">
@@ -158,18 +157,16 @@ export default function Home() {
         <div className="background-blur is-bottom-left" />
       </section>
 
-      <Features />
-      <Experience />
       <footer className="footer bg-base-200 w-screen bg-subtle p-10">
         <aside className="flex items-center">
-          <Image alt="MeetMate Logo" src="/landingLogo.png" width={50} height={50} className="mr-2" />
+          <Image alt="MeetMate Logo" src="/landingLogo.png" width={50} height={50} className="mr-4" />
           <div>
             <p className="font-bold">MeetMate</p>
             <p className="text-sm">Enterprise appointment management system</p>
           </div>
         </aside>
 
-        <div className="mt-4 grid max-w-screen-2xl grid-cols-3 gap-4 max-md:grid-cols-1">
+        {/*<div className="mt-4 grid max-w-screen-2xl grid-cols-3 gap-4 max-md:grid-cols-1">
           <nav className="mt-6">
             <header className="footer-title mb-2 text-lg font-semibold">Services</header>
             <a href="#" className="link link-hover mb-1 block">
@@ -212,6 +209,7 @@ export default function Home() {
             </a>
           </nav>
         </div>
+        */}
       </footer>
     </main>
   );
