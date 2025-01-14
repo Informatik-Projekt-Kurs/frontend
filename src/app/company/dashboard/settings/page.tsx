@@ -15,10 +15,35 @@ import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/components/ui/use-toast";
+import { useMutation } from "@apollo/client";
+import { EDIT_COMPANY } from "@/lib/graphql/mutations";
+
+const formSchema = z.object({
+  name: z.string().max(30).optional(),
+  description: z.string().optional()
+});
 
 export default function Page() {
-  const { user, loading, company } = useCompany();
+  const { user, loading, company, refreshCompany } = useCompany();
   const router = useRouter();
+  const { toast } = useToast();
+
+  const [editCompany] = useMutation(EDIT_COMPANY);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: company?.getCompany?.name,
+      description: company?.getCompany?.description
+    }
+  });
 
   const logout = async () => {
     try {
@@ -29,6 +54,23 @@ export default function Page() {
       throw logoutError;
     }
   };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await editCompany({
+      variables: { companyName: values.name, description: values.description },
+      onCompleted: () => {
+        toast({
+          title: "Company Settings updated",
+          variant: "default",
+          className: "border-emerald-300"
+        });
+        void refreshCompany();
+      },
+      onError: (err) => {
+        console.error(err);
+      }
+    });
+  }
 
   if (loading) return <Loader />;
 
@@ -83,11 +125,42 @@ export default function Page() {
           </div>
         </div>
         <p className={"mt-10 text-muted-foreground"}>
-          {company?.getCompany.description !== "" ? (
-            company?.getCompany.description
-          ) : (
-            <i>This company has not provided a description</i>
-          )}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input defaultValue={company?.getCompany?.name} placeholder="Company Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        defaultValue={company?.getCompany?.description}
+                        placeholder="Enter Company Description..."
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type={"submit"}>Submit</Button>
+            </form>
+          </Form>
         </p>
       </div>
     </div>
