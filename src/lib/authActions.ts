@@ -2,7 +2,13 @@
 
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { type LoginFormState, type SignupFormState, type StoreTokenRequest, type User } from "@/types";
+import {
+  type Appointment,
+  type LoginFormState,
+  type SignupFormState,
+  type StoreTokenRequest,
+  type User
+} from "@/types";
 
 export async function storeToken(request: StoreTokenRequest) {
   cookies().set({
@@ -74,6 +80,40 @@ export async function refreshAccessToken(refreshToken?: string) {
   }
 }
 
+export async function getRelevantAppointments(accessToken?: string): Promise<Appointment[]> {
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/relevantAppointments", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: undefined
+  });
+
+  if (response.ok) {
+    return (await response.json()) as Appointment[];
+  } else {
+    return [];
+  }
+}
+
+export async function getAppointments(accessToken?: string): Promise<Appointment[]> {
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/appointments", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: undefined
+  });
+
+  if (response.ok) {
+    return (await response.json()) as Appointment[];
+  } else {
+    return [];
+  }
+}
+
 export async function getUser(accessToken?: string): Promise<User | null> {
   const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/get", {
     method: "GET",
@@ -88,6 +128,46 @@ export async function getUser(accessToken?: string): Promise<User | null> {
     return (await response.json()) as User;
   } else if (response.status === 403 || response.status === 500 || response.status === 401) {
     return null;
+  } else {
+    throw new Error("There was a problem fetching the user: " + response.statusText + " " + response.status);
+  }
+}
+
+export async function editUser(name: string, accessToken?: string): Promise<void> {
+  const encodedData = new URLSearchParams({
+    name,
+    password: ""
+  } as Record<string, string>).toString();
+  console.log(encodedData);
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: encodedData
+  });
+
+  if (response.ok) {
+    return;
+  } else {
+    console.error(response);
+  }
+}
+
+export async function getAllUsers(accessToken?: string): Promise<User[]> {
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/getAll", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: undefined
+  });
+  if (response.ok) {
+    return (await response.json()) as User[];
+  } else if (response.status === 403 || response.status === 500 || response.status === 401) {
+    return [];
   } else {
     throw new Error("There was a problem fetching the user: " + response.statusText + " " + response.status);
   }

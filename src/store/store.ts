@@ -3,12 +3,10 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./features/authSlice";
 import cookieReducer from "./features/cookieSlice";
-import collectionReducer from "./features/collectionSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  cookie: cookieReducer,
-  collection: collectionReducer
+  cookie: cookieReducer
 });
 
 const persistConfig = {

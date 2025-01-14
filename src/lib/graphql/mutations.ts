@@ -22,3 +22,29 @@ export const DELETE_COMPANY = gql`
     deleteCompany
   }
 `;
+
+export const CREATE_APPOINTMENT = gql`
+  mutation createAppointment(
+    $from: String!
+    $to: String!
+    $location: String
+    $description: String
+    $title: String
+    $clientId: ID
+  ) {
+    createAppointment(
+      from: $from
+      to: $to
+      location: $location
+      description: $description
+      title: $title
+      clientId: $clientId
+    )
+  }
+`;
+
+export const BOOK_APPOINTMENT = gql`
+  mutation bookAppointment($appointmentId: ID!) {
+    bookAppointment(appointmentId: $appointmentId)
+  }
+`;

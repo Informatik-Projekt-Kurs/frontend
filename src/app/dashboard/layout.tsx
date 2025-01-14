@@ -11,7 +11,7 @@ import { DashboardProvider, useDashboardData } from "@/components/dashboard/Dash
 import { FaPlus } from "react-icons/fa6";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { loading, companies, companiesLoading, user } = useDashboardData();
+  const { loading, companies, user } = useDashboardData();
   const [active, setActive] = useState<"dashboard" | "bookings" | "settings">("dashboard");
   const [companyIndicatorTop, setCompanyIndicatorTop] = useState(0);
   const pathname = usePathname();
@@ -31,7 +31,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         companies?.getCompanies.filter((company) => user?.subscribedCompanies.includes(Number(company.id))).length === 0
       ) {
         setCompanyIndicatorTop(144);
-      } else setCompanyIndicatorTop(companies?.getCompanies.length * 72 + 144);
+      } else setCompanyIndicatorTop(user!.subscribedCompanies.length * 72 + 144);
     } else {
       // Derive the top position of the company indicator
       const companyIndex = companies?.getCompanies.findIndex((company) => pathname.includes(company.id)) ?? 0;
@@ -143,7 +143,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {loading || companiesLoading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
+        {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>

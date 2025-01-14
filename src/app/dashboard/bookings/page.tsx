@@ -41,25 +41,116 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
 import { type Appointment } from "@/types";
-import { useSelector } from "react-redux";
-import { type RootState } from "@/store/store";
+import { GET_AVAILABLE_APPOINTMENTS } from "@/lib/graphql/queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { BOOK_APPOINTMENT } from "@/lib/graphql/mutations";
 
 function Bookings() {
-  const { user, companies } = useDashboardData();
+  const { user, companies, appointments, refreshAppointments } = useDashboardData();
   const [searchQuery, setSearchQuery] = useState("");
-  const appointments = useSelector((state: RootState) => state.collection.appointments);
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
   const router = useRouter();
+
+  const formatDateToISOWithoutTime = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}T00:00:00.000Z`;
+  };
 
   const [bookingState, setBookingState] = useState({
     step: 0,
     selectedCompany: "",
     selectedDate: new Date(),
     selectedTime: "",
+    selectedAppointmentId: "",
     isLoading: false,
     error: null as string | null
   });
+
+  useEffect(() => {
+    if (bookingState.step === 2) {
+      console.log("Query Variables:", {
+        companyId: bookingState.selectedCompany,
+        date: formatDateToISOWithoutTime(bookingState.selectedDate)
+      });
+    }
+
+    console.log(formatDateToISOWithoutTime(bookingState.selectedDate));
+  }, [bookingState.step, bookingState.selectedCompany, bookingState.selectedDate]);
+
+  const { data: availableSlots, error: slotsError } = useQuery(GET_AVAILABLE_APPOINTMENTS, {
+    variables: {
+      companyId: bookingState.selectedCompany,
+      date: formatDateToISOWithoutTime(bookingState.selectedDate)
+    },
+    skip: bookingState.selectedCompany === "" || bookingState.step !== 2,
+    fetchPolicy: "network-only",
+    onError: (error) => {
+      // Log the error for debugging
+      console.error("Apollo Error Details:", {
+        error,
+        graphQLErrors: error.graphQLErrors,
+        networkError: error.networkError,
+        message: error.message,
+        name: error.name
+      });
+
+      // Check if it's an INTERNAL_ERROR from graphQLErrors
+      const isInternalError = error.graphQLErrors?.some((err) => err.extensions?.classification === "INTERNAL_ERROR");
+
+      if (isInternalError) {
+        setBookingState((prev) => ({
+          ...prev,
+          error: "We're experiencing temporary technical difficulties. Please try selecting another date or time."
+        }));
+        return;
+      }
+
+      // Handle other types of errors
+      if (error.networkError !== null) {
+        setBookingState((prev) => ({
+          ...prev,
+          error: "Unable to connect to the server. Please check your connection."
+        }));
+      } else if (error.graphQLErrors?.length > 0) {
+        const errorMessage = error.graphQLErrors
+          .map((err) => err.message)
+          .filter((msg) => !msg.includes("INTERNAL_ERROR")) // Filter out internal error messages
+          .join(", ");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        setBookingState((prev) => ({
+          ...prev,
+          error: errorMessage !== "" || "Unable to load appointments. Please try again."
+        }));
+      } else {
+        setBookingState((prev) => ({
+          ...prev,
+          error: "Unable to load appointments. Please try again."
+        }));
+      }
+    },
+    onCompleted: (data) => {
+      if (bookingState.error !== null) {
+        setBookingState((prev) => ({ ...prev, error: null }));
+      }
+      if (!Boolean(data?.getAvailableAppointments?.length)) {
+        setBookingState((prev) => ({
+          ...prev,
+          error: "No available appointments found for this date. Please try another date."
+        }));
+      }
+    }
+  });
+
+  // Reset error state when moving between steps
+  useEffect(() => {
+    if (Boolean(slotsError)) {
+      setBookingState((prev) => ({ ...prev, error: null }));
+    }
+  }, [bookingState.step]);
 
   useEffect(() => {
     const filtered =
@@ -155,47 +246,24 @@ function Bookings() {
     };
   };
 
+  const [bookAppointment] = useMutation(BOOK_APPOINTMENT);
+
   // Calculate scheduler hours whenever appointments change
   const schedulerHours = calculateSchedulerHours(appointments);
 
   const handleBookAppointment = async () => {
     setBookingState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-    // Log the appointment data
-    console.log("Booking appointment with the following details:", {
-      company: bookingState.selectedCompany,
-      date: bookingState.selectedDate,
-      time: bookingState.selectedTime
-    });
-
     try {
-      // Simulated API call
-      // const response = await fetch('/api/book-appointment', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     companyId: bookingState.selectedCompany,
-      //     date: bookingState.selectedDate,
-      //     time: bookingState.selectedTime,
-      //   }),
-      // });
+      await bookAppointment({
+        variables: {
+          appointmentId: bookingState.selectedAppointmentId
+        }
+      });
 
-      // if (!response.ok) {
-      //   throw new Error('Failed to book appointment');
-      // }
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Simulate success or failure randomly
-      if (Math.random() > 0.2) {
-        // 80% success rate
-        updateBookingStep(4); // Success step
-      } else {
-        throw new Error("Failed to book appointment");
-      }
+      updateBookingStep(4);
+      await refreshAppointments();
+      router.refresh();
     } catch (error) {
       setBookingState((prev) => ({
         ...prev,
@@ -221,11 +289,13 @@ function Bookings() {
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
               <SelectContent className={"border-border"}>
-                {companies?.getCompanies.map((company) => (
-                  <SelectItem key={company.id} value={company.id}>
-                    {company.name}
-                  </SelectItem>
-                ))}
+                {companies?.getCompanies
+                  .filter((company) => user?.subscribedCompanies.includes(Number(company.id)))
+                  .map((company) => (
+                    <SelectItem key={company.id} value={company.id}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </React.Fragment>
@@ -235,7 +305,11 @@ function Bookings() {
           <React.Fragment>
             <DialogTitle>Select your Date</DialogTitle>
             <DialogDescription>When would you like to book this appointment?</DialogDescription>
-            <Calendar mode="single" selected={bookingState.selectedDate} onSelect={handleDateChange} />
+            <Calendar
+              mode="single"
+              onSelect={handleDateChange}
+              disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+            />
           </React.Fragment>
         );
       case 2:
@@ -245,17 +319,37 @@ function Bookings() {
             <DialogDescription>At what time would you like to book this appointment?</DialogDescription>
             <Select
               onValueChange={(value) => {
-                handleSelectChange(value, "selectedTime");
+                const [time, id] = value.split("|");
+                handleSelectChange(time, "selectedTime");
+                setBookingState((prev) => ({
+                  ...prev,
+                  selectedAppointmentId: id
+                }));
               }}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a time" />
               </SelectTrigger>
               <SelectContent className={"border-border"}>
-                {["13:00 - 14:00", "15:00 - 16:00", "19:00 - 20:30"].map((time) => (
-                  <SelectItem key={time} value={time}>
-                    {time}
-                  </SelectItem>
-                ))}
+                {availableSlots?.getAvailableAppointments
+                  ?.filter((slot: Appointment) => slot.Status === "PENDING")
+                  .map((slot: Appointment) => {
+                    const fromTime = new Date(slot.from).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true
+                    });
+                    const toTime = new Date(slot.to).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true
+                    });
+
+                    return (
+                      <SelectItem key={slot.id} value={`${fromTime} - ${toTime}|${slot.id}`}>
+                        {fromTime} - {toTime} {slot.title !== undefined && `(${slot.title})`}
+                      </SelectItem>
+                    );
+                  })}
               </SelectContent>
             </Select>
           </React.Fragment>
@@ -266,9 +360,15 @@ function Bookings() {
             <DialogTitle>Confirm Booking</DialogTitle>
             <DialogDescription>Please confirm your appointment details:</DialogDescription>
             <div>
-              <p>Company: {companies?.getCompanies.find((c) => c.id === bookingState.selectedCompany)?.name}</p>
-              <p>Date: {bookingState.selectedDate.toDateString()}</p>
-              <p>Time: {bookingState.selectedTime}</p>
+              <p>
+                <b>Company</b>: {companies?.getCompanies.find((c) => c.id === bookingState.selectedCompany)?.name}
+              </p>
+              <p>
+                <b>Date</b>: {bookingState.selectedDate.toDateString()}
+              </p>
+              <p>
+                <b>Time</b>: {bookingState.selectedTime.split("|")[0]}
+              </p>
             </div>
           </React.Fragment>
         );

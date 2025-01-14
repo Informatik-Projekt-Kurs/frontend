@@ -80,8 +80,8 @@ export type Appointment = {
   description: string;
   companyId: string;
   location: string;
-  client: User | null; // null if not booked
-  status: "PENDING" | "BOOKED" | "CANCELLED" | "COMPLETED";
+  clientId: string; // null if not booked
+  Status: "PENDING" | "BOOKED" | "CANCELLED" | "COMPLETED";
 };
 
 export type Company = {

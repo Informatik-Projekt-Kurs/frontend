@@ -7,12 +7,13 @@ import { usePathname } from "next/navigation";
 import { cn, extractNameInitials } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
 import { CompanyProvider, useCompany } from "@/components/dashboard/CompanyContext";
-import { BriefcaseBusiness, Users } from "lucide-react";
+import { BriefcaseBusiness, Settings, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ToastProvider } from "@/components/ui/toast";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { companyLoading, loading, company } = useCompany();
-  const [active, setActive] = useState<"dashboard" | "bookings" | "users" | "members">("dashboard");
+  const { loading, company } = useCompany();
+  const [active, setActive] = useState<"dashboard" | "bookings" | "users" | "members" | "settings">("dashboard");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -23,6 +24,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       setActive("users");
     } else if (pathname.includes("/company/dashboard/members")) {
       setActive("members");
+    } else if (pathname.includes("/company/dashboard/settings")) {
+      setActive("settings");
     } else {
       setActive("dashboard");
     }
@@ -82,7 +85,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                   )}
                   variant={active === "users" ? "default" : "ghost"}>
                   <Users className="mx-2" size={18} />
-                  Users
+                  Clients
                 </Button>
               </Link>
               <Link href={"/company/dashboard/members"}>
@@ -96,12 +99,23 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                   Members
                 </Button>
               </Link>
+              <Link href={"/company/dashboard/settings"}>
+                <Button
+                  className={cn(
+                    "w-[168px] justify-start",
+                    active === "settings" ? "text-foreground" : "text-muted-foreground"
+                  )}
+                  variant={active === "settings" ? "default" : "ghost"}>
+                  <Settings className="mx-2" size={18} />
+                  Settings
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </aside>
       <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
-        {loading || companyLoading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
+        {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
@@ -113,8 +127,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 // Wrap the dashboard with the UserProvider
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <CompanyProvider>
-      <DashboardContent>{children}</DashboardContent>
-    </CompanyProvider>
+    <ToastProvider>
+      <CompanyProvider>
+        <DashboardContent>{children}</DashboardContent>
+      </CompanyProvider>
+    </ToastProvider>
   );
 }
