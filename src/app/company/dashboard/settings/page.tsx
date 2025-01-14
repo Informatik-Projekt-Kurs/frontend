@@ -124,7 +124,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <p className={"mt-10 text-muted-foreground"}>
+        <p className={"mt-10 text-foreground"}>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField

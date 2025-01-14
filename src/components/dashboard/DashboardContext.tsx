@@ -35,6 +35,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       const accessToken = await getAccessToken();
       const userData = await getUser(accessToken);
       setUser(userData as ClientUser);
+      console.log(userData);
     } catch (error) {
       console.error("Failed to fetch user", error);
     } finally {

@@ -44,7 +44,7 @@ const SignupForm = () => {
     if (formState.message === "success") {
       toast({
         title: "Signed Up!",
-        description: "Success! Check your email to verify your account.",
+        description: "Success! You will be redirected any moment to sign into your account",
         variant: "default",
         className: "border-emerald-300"
       });

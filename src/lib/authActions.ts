@@ -133,6 +133,28 @@ export async function getUser(accessToken?: string): Promise<User | null> {
   }
 }
 
+export async function editUser(name: string, accessToken?: string): Promise<void> {
+  const encodedData = new URLSearchParams({
+    name,
+    password: ""
+  } as Record<string, string>).toString();
+  console.log(encodedData);
+  const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+    },
+    body: encodedData
+  });
+
+  if (response.ok) {
+    return;
+  } else {
+    console.error(response);
+  }
+}
+
 export async function getAllUsers(accessToken?: string): Promise<User[]> {
   const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/getAll", {
     method: "GET",

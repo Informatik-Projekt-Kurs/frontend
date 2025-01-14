@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { editUser, getAccessToken } from "@/lib/authActions";
 
 const FormSchema = z.object({
   name: z.string().min(3, {
@@ -17,15 +18,16 @@ const FormSchema = z.object({
 });
 
 function Settings() {
-  const user = useDashboardData().user;
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
+  const { user } = useDashboardData();
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const accessToken = await getAccessToken();
+    await editUser(data.name, accessToken).finally(() => {
+      toast({
+        title: "User Data Updated",
+        variant: "default",
+        className: "border-emerald-300"
+      });
     });
   }
 
@@ -49,41 +51,45 @@ function Settings() {
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Settings</h1>
       </header>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="ml-6 flex flex-col gap-4 text-foreground">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input className="w-[320px]" placeholder="Name" {...field}></Input>
-                </FormControl>
-                <FormDescription>This is your display name.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input className="w-[320px]" placeholder="Email" {...field}></Input>
-                </FormControl>
-                <FormDescription>This is your email address.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className={"w-1/4 self-end"}>
-            Submit
-          </Button>
-        </form>
-      </Form>
+      <div className="flex h-[600px] w-full max-w-[500px] flex-col rounded-[20px] px-6">
+        <p className={"mt-10 text-foreground"}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input defaultValue={user?.name} placeholder="Display Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input defaultValue={user?.email} placeholder="Email Address" disabled={true} {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Your email address cannot be changed currently. Instead, submit a request to
+                      &quot;boeckmannben@gmail.com&quot;
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type={"submit"}>Submit</Button>
+            </form>
+          </Form>
+        </p>
+      </div>
     </div>
   );
 }

@@ -77,7 +77,7 @@ function Bookings() {
       });
     }
 
-    console.log(bookingState.selectedDate.toISOString());
+    console.log(formatDateToISOWithoutTime(bookingState.selectedDate));
   }, [bookingState.step, bookingState.selectedCompany, bookingState.selectedDate]);
 
   const { data: availableSlots, error: slotsError } = useQuery(GET_AVAILABLE_APPOINTMENTS, {
@@ -289,11 +289,13 @@ function Bookings() {
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
               <SelectContent className={"border-border"}>
-                {companies?.getCompanies.map((company) => (
-                  <SelectItem key={company.id} value={company.id}>
-                    {company.name}
-                  </SelectItem>
-                ))}
+                {companies?.getCompanies
+                  .filter((company) => user?.subscribedCompanies.includes(Number(company.id)))
+                  .map((company) => (
+                    <SelectItem key={company.id} value={company.id}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </React.Fragment>
@@ -305,7 +307,6 @@ function Bookings() {
             <DialogDescription>When would you like to book this appointment?</DialogDescription>
             <Calendar
               mode="single"
-              selected={bookingState.selectedDate}
               onSelect={handleDateChange}
               disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
             />
