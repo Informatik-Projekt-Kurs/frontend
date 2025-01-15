@@ -17,7 +17,7 @@ function Hero() {
   };
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background">
-      <div className="flex flex-col items-center justify-center gap-6">
+      <div className="mt-12 flex flex-col items-center justify-center gap-6">
         <div className="landingGradient relative"></div>
         <motion.div
           initial={{ opacity: 0, y: -50 }}
@@ -51,7 +51,7 @@ function Hero() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="home_hero_graphic-wrapper pointer-events-none absolute inset-x-0 bottom-16 top-auto w-full overflow-visible px-10 text-center">
+        className="home_hero_graphic-wrapper pointer-events-none absolute inset-x-0 bottom-16 top-auto w-full overflow-visible px-10 text-center max-sm:px-2">
         <motion.img
           variants={pulseVariants}
           animate="animate"

@@ -21,6 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,7 @@ import { format, set } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useMutation } from "@apollo/client";
-import { CREATE_APPOINTMENT } from "@/lib/graphql/mutations";
+import { CREATE_APPOINTMENT, EDIT_APPOINTMENT } from "@/lib/graphql/mutations";
 import { useCompany } from "@/components/dashboard/CompanyContext";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -203,6 +204,8 @@ const columns: Array<ColumnDef<Appointment>> = [
     enableHiding: false,
     cell: ({ row }) => {
       const appointment = row.original;
+      const [editAppointment] = useMutation(EDIT_APPOINTMENT);
+      const { refreshAppointments } = useCompany();
 
       return (
         <DropdownMenu>
@@ -228,6 +231,31 @@ const columns: Array<ColumnDef<Appointment>> = [
                 Copy booked user ID
               </DropdownMenuItem>
             )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async () => {
+                await editAppointment({
+                  variables: { id: appointment.id, status: "CANCELLED" },
+                  onCompleted: () => {
+                    void refreshAppointments();
+                  }
+                });
+              }}
+              className={"text-red-300"}>
+              Cancel Appointment
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                await editAppointment({
+                  variables: { id: appointment.id, status: "COMPLETED" },
+                  onCompleted: () => {
+                    void refreshAppointments();
+                  }
+                });
+              }}
+              className={"text-emerald-300"}>
+              Mark Appointment as completed
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

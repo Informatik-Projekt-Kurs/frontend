@@ -11,11 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
@@ -32,7 +31,6 @@ const formSchema = z.object({
 
 export default function Page() {
   const { user, loading, company, refreshCompany } = useCompany();
-  const router = useRouter();
   const { toast } = useToast();
 
   const [editCompany] = useMutation(EDIT_COMPANY);
@@ -95,13 +93,6 @@ export default function Page() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/dashboard/settings");
-                }}>
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout} className={"text-red-500"}>
                 Log out
               </DropdownMenuItem>
@@ -154,6 +145,10 @@ export default function Page() {
                         {...field}
                       />
                     </FormControl>
+                    <FormDescription>
+                      It is also recommended to add an email address to the description in case clients want to cancel
+                      an appointment or have any questions.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

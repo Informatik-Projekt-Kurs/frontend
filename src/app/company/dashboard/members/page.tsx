@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
@@ -19,7 +18,6 @@ import { UsersTable } from "@/components/dashboard/company/UsersTable";
 
 export default function Page() {
   const { user, loading, members } = useCompany();
-  const router = useRouter();
 
   const logout = async () => {
     try {
@@ -53,13 +51,6 @@ export default function Page() {
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/dashboard/settings");
-                }}>
-                Settings
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout} className={"text-red-500"}>
                 Log out

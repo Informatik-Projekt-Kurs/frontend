@@ -48,3 +48,25 @@ export const BOOK_APPOINTMENT = gql`
     bookAppointment(appointmentId: $appointmentId)
   }
 `;
+
+export const EDIT_APPOINTMENT = gql`
+  mutation editAppointment(
+    $id: ID!
+    $from: String
+    $to: String
+    $clientId: ID
+    $description: String
+    $location: String
+    $status: String
+  ) {
+    editAppointment(
+      id: $id
+      from: $from
+      to: $to
+      location: $location
+      status: $status
+      description: $description
+      clientId: $clientId
+    )
+  }
+`;

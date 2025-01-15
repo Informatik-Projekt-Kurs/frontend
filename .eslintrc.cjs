@@ -2,6 +2,7 @@ const path = require("path");
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
+  ignorePatterns: ["src/components/ui/*"],
   overrides: [
     {
       files: ["*.js", "*.jsx", "*.cjs"],

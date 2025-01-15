@@ -308,6 +308,7 @@ function Bookings() {
             <Calendar
               mode="single"
               onSelect={handleDateChange}
+              selected={bookingState.selectedDate}
               disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
             />
           </React.Fragment>
@@ -346,7 +347,7 @@ function Bookings() {
 
                     return (
                       <SelectItem key={slot.id} value={`${fromTime} - ${toTime}|${slot.id}`}>
-                        {fromTime} - {toTime} {slot.title !== undefined && `(${slot.title})`}
+                        {fromTime} - {toTime} {slot.title !== undefined && slot.title !== null && `(${slot.title})`}
                       </SelectItem>
                     );
                   })}
