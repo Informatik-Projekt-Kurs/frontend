@@ -103,10 +103,10 @@ const WeeklyAppointmentsChart = ({ appointments }: { appointments: Appointment[]
             }}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
-          <Bar dataKey="booked" stackId="appointments" fill="var(--color-booked)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="cancelled" stackId="appointments" fill="var(--color-cancelled)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="completed" stackId="appointments" fill="var(--color-completed)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="pending" stackId="appointments" fill="var(--color-pending)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="booked" stackId="appointments" fill="var(--color-booked)" radius={[0, 0, 0, 0]} />
+          <Bar dataKey="cancelled" stackId="appointments" fill="var(--color-cancelled)" radius={[0, 0, 0, 0]} />
+          <Bar dataKey="completed" stackId="appointments" fill="var(--color-completed)" radius={[0, 0, 0, 0]} />
+          <Bar dataKey="pending" stackId="appointments" fill="var(--color-pending)" radius={[0, 0, 0, 0]} />
         </BarChart>
       </ChartContainer>
     </div>

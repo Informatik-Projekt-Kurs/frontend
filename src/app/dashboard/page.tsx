@@ -115,10 +115,10 @@ function Dashboard() {
           </Link>
         </div>
 
-        <div className="mt-8 flex h-fit w-full rounded-[20px] bg-subtle py-4">
+        <div className="mt-8 flex h-fit w-full flex-col justify-center rounded-[20px] bg-subtle py-4 lg:flex-row">
           <div className="flex flex-col items-center justify-start gap-4 p-8">
             <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
-            <div className="mt-2 flex max-h-[500px] flex-col items-start justify-start gap-y-6 overflow-y-auto overflow-x-hidden">
+            <div className="mt-2 grid max-h-[500px] flex-col items-center justify-start gap-y-6 overflow-y-auto overflow-x-hidden sm:grid-cols-1 md:grid-cols-2 lg:flex lg:items-start lg:justify-start">
               {appointments.length !== 0 ? (
                 appointments.map((appointment) => (
                   <AppointmentDisplay
@@ -138,8 +138,8 @@ function Dashboard() {
               )}
             </div>
           </div>
-          <div className="items-center-justify-start flex max-w-3xl flex-col gap-4 p-8">
-            <h2 className="text-2xl font-semibold">Timeline</h2>
+          <div className="w-full max-w-5xl flex-col items-start justify-center gap-4 p-8 lg:max-w-3xl">
+            <h2 className="mb-2 text-center text-2xl font-semibold lg:text-start">Timeline</h2>
             <OverviewScheduler data={appointments} selectedAppointmentId={selectedAppointmentId} />
           </div>
         </div>

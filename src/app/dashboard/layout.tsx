@@ -40,7 +40,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   }, [pathname, companies]);
 
   return (
-    <div className="flex w-full flex-col gap-5 pl-8 md:flex-row">
+    <div className="flex w-full flex-col gap-0 pl-0 md:flex-row lg:gap-5 lg:pl-8">
       <aside className="hidden lg:block">
         <div className="sticky top-8 flex h-[calc(100vh-64px)] flex-row">
           <div className="flex h-full w-[80px] flex-col items-center justify-start">
@@ -142,9 +142,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </aside>
-      <main className="mr-8 mt-8 min-h-[calc(100vh-64px)] w-full rounded-[20px] border-2 border-border">
+      <main className="min-h-[calc(100vh-64px)] w-full rounded-none border-0 lg:mr-8 lg:mt-8 lg:rounded-[20px] lg:border-2 lg:border-border">
         {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
-        <footer className="flex h-8 w-full items-center justify-start rounded-b-[20px] bg-primary">
+        <footer className="flex h-8 w-full items-center justify-start rounded-none bg-primary lg:rounded-b-[20px]">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
       </main>

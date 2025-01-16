@@ -47,9 +47,9 @@ function Settings() {
   }, [user]);
 
   return (
-    <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
+    <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-foreground md:text-2xl">Settings</h1>
+        <h1 className="m-4 text-2xl font-medium text-foreground">Settings</h1>
       </header>
       <div className="flex h-[600px] w-full max-w-[500px] flex-col rounded-[20px] px-6">
         <p className={"mt-10 text-foreground"}>

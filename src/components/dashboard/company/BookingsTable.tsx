@@ -60,7 +60,7 @@ const bookingFormSchema = z
     from: z.date(),
     to: z.date(),
     location: z.string().optional(),
-    client: z.number().optional() // client id
+    clientId: z.string().optional()
   })
   .refine(
     (data) => {
@@ -316,7 +316,7 @@ export function BookingsTable(): React.ReactElement {
         from: values.from.toISOString(),
         to: values.to.toISOString(),
         location: values.location,
-        clientId: values.client
+        clientId: values.clientId
       }
     };
 
@@ -603,7 +603,7 @@ export function BookingsTable(): React.ReactElement {
                 />
                 <FormField
                   control={form.control}
-                  name="client"
+                  name="clientId"
                   render={({ field }) => {
                     const [open, setOpen] = React.useState(false);
                     const [searchValue, setSearchValue] = React.useState("");
@@ -625,9 +625,9 @@ export function BookingsTable(): React.ReactElement {
                                 onClick={() => {
                                   setOpen(!open);
                                 }}>
-                                {field.value !== undefined
-                                  ? clients.getClients.find((client) => client.id === field.value)?.name
-                                  : "Select client..."}
+                                {field.value === undefined
+                                  ? "Select client..."
+                                  : clients.getClients.find((client) => client.id.toString() === field.value)?.name}
                                 <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl>
@@ -669,14 +669,14 @@ export function BookingsTable(): React.ReactElement {
                                         key={client.id}
                                         value={client.id.toString()}
                                         onSelect={() => {
-                                          field.onChange(client.id === field.value ? undefined : client.id);
+                                          field.onChange(client.id.toString() === field.value ? undefined : client.id);
                                           setSearchValue("");
                                           setOpen(false);
                                         }}>
                                         <Check
                                           className={cn(
                                             "mr-2 h-4 w-4",
-                                            field.value === client.id ? "opacity-100" : "opacity-0"
+                                            field.value === client.id.toString() ? "opacity-100" : "opacity-0"
                                           )}
                                         />
                                         {client.name} {` ID:(${client.id})`}

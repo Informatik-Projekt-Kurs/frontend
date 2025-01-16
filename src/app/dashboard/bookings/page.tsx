@@ -156,7 +156,7 @@ function Bookings() {
     const filtered =
       searchQuery === ""
         ? appointments
-        : appointments.filter((appointment) => appointment.title.toLowerCase().includes(searchQuery.toLowerCase()));
+        : appointments.filter((appointment) => appointment.title?.toLowerCase().includes(searchQuery.toLowerCase()));
     setFilteredAppointments(filtered);
   }, [searchQuery, appointments]);
 
@@ -386,12 +386,12 @@ function Bookings() {
   };
 
   return (
-    <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
+    <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Bookings</h1>
         <div className="flex items-center gap-x-6">
           <Input
-            className="w-[320px]"
+            className="w-[200px] md:w-[320px]"
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => {
@@ -429,7 +429,7 @@ function Bookings() {
         </div>
       </header>
       <div className={"mt-2 flex w-full items-center justify-between pl-4 text-foreground"}>
-        Your Appointments at a glance. Book a new appointment now!
+        <p className={"hidden md:block"}>Your Appointments at a glance. Book a new appointment now!</p>
         <div className={"flex w-fit items-center justify-center gap-x-4 text-foreground"}>
           <AlertDialog>
             <AlertDialogTrigger>
