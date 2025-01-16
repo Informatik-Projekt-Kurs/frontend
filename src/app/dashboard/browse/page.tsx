@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import FollowButton from "@/components/dashboard/FollowButton";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function CompanyBrowse() {
   const { user, companies } = useDashboardData();
@@ -63,6 +64,7 @@ function CompanyBrowse() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 

@@ -19,6 +19,7 @@ import Link from "next/link";
 import OverviewScheduler from "@/components/dashboard/scheduler/OverviewScheduler";
 import AppointmentDisplay from "@/components/dashboard/AppointmentDisplay";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function Dashboard() {
   const [user, setUser] = useState<User | null>();
@@ -63,7 +64,7 @@ function Dashboard() {
   };
   if (loading)
     return (
-      <div className="flex h-[calc(100%-32px)] flex-col items-center justify-center p-8 px-6">
+      <div className="flex h-[calc(100svh-32px)] flex-col items-center justify-center p-8 px-6">
         <div className="flex size-20 animate-spin items-center justify-center rounded-[50%] border-4 border-x-background border-b-background border-t-primary bg-transparent"></div>
         <Image className={"absolute"} src={"/landingLogo.png"} alt={""} width={40} height={40} />
       </div>
@@ -73,7 +74,7 @@ function Dashboard() {
       <div className="flex flex-col items-center justify-start p-8 px-6">
         <header className="flex w-full flex-row items-center justify-between">
           <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">Welcome back, {user?.name}</h1>
-          <div className="flex items-center gap-x-6">
+          <div className="flex items-center gap-x-2">
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild className={"mr-4"}>
                 <Button variant="ghost" className="relative size-8 rounded-full">
@@ -102,6 +103,7 @@ function Dashboard() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <HamburgerMenu />
           </div>
         </header>
 

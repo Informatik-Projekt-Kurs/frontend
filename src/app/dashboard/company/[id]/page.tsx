@@ -18,6 +18,7 @@ import { useQuery } from "@apollo/client";
 import { getCompany } from "@/lib/graphql/queries";
 import Loader from "@/components/layout/Loader";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { user } = useDashboardData();
@@ -77,6 +78,7 @@ export default function Page({ params }: { params: { id: string } }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 

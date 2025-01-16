@@ -44,6 +44,7 @@ import { type Appointment } from "@/types";
 import { GET_AVAILABLE_APPOINTMENTS } from "@/lib/graphql/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { BOOK_APPOINTMENT } from "@/lib/graphql/mutations";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function Bookings() {
   const { user, companies, appointments, refreshAppointments } = useDashboardData();
@@ -426,6 +427,7 @@ function Bookings() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
       <div className={"mt-2 flex w-full items-center justify-between pl-4 text-foreground"}>
