@@ -117,7 +117,7 @@ function Dashboard() {
           </Link>
         </div>
 
-        <div className="mt-8 flex h-fit w-full flex-col justify-center rounded-[20px] bg-subtle py-4 xl:flex-row">
+        <div className="mt-8 flex h-fit w-full flex-col justify-start rounded-[20px] bg-subtle py-4 xl:flex-row">
           <div className="flex flex-col items-center justify-start gap-4 p-8">
             <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
             <div className="mt-2 grid max-h-[500px] flex-col items-center justify-start gap-y-6 overflow-y-auto overflow-x-hidden sm:grid-cols-1 md:grid-cols-2 xl:flex xl:items-start xl:justify-start">
@@ -131,7 +131,7 @@ function Dashboard() {
                   />
                 ))
               ) : (
-                <p className={"min-w-80 text-center text-muted-foreground"}>
+                <p className={"col-span-2 min-w-80 text-center text-muted-foreground"}>
                   You have no upcoming appointments. <br />
                   <Button variant={"secondary"} className="mt-2">
                     <Link href={"/dashboard/bookings"}>Book now</Link>

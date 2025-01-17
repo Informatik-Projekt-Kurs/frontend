@@ -142,8 +142,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </aside>
-      <main className="min-h-[calc(100svh-64px)] w-full rounded-none border-0 lg:mr-8 lg:mt-8 lg:min-h-svh lg:rounded-[20px] lg:border-2 lg:border-border">
-        {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
+      <main className="flex w-full flex-col items-center justify-between rounded-none border-0 lg:mr-8 lg:mt-8 lg:min-h-svh lg:rounded-[20px] lg:border-2 lg:border-border">
+        <div className={"min-h-[calc(100svh-64px)] w-full"}>
+          {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
+        </div>
+
         <footer className="flex h-8 w-full items-center justify-start rounded-none bg-primary lg:rounded-b-[20px]">
           <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
         </footer>
