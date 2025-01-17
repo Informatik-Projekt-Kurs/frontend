@@ -8,7 +8,7 @@ import { FaPlus } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { LuBookCopy, LuHome, LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import { usePathname } from "next/navigation";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 
 export default function HamburgerMenu() {
   const { companies, user } = useDashboardData();

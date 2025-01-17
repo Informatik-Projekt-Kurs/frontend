@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 import { deleteToken, editUser, getAccessToken } from "@/lib/authActions";
 import {
   DropdownMenu,

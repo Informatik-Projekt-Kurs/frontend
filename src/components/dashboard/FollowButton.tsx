@@ -2,7 +2,7 @@ import { useFormState } from "react-dom";
 import { subscribeToCompany } from "@/lib/companyActions";
 import { Button } from "@/components/ui/button";
 import { useOptimistic, useEffect, useTransition } from "react";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 
 export default function FollowButton({ companyId }: { companyId: string }) {
   const { user, refreshUser } = useDashboardData();

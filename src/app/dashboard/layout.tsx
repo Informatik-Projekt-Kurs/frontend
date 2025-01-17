@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
-import { DashboardProvider, useDashboardData } from "@/components/dashboard/DashboardContext";
+import { DashboardProvider, useDashboardData } from "@/context/DashboardContext";
 import { FaPlus } from "react-icons/fa6";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {

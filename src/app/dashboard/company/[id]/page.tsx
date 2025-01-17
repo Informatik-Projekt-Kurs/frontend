@@ -17,7 +17,7 @@ import FollowButton from "@/components/dashboard/FollowButton";
 import { useQuery } from "@apollo/client";
 import { getCompany } from "@/lib/graphql/queries";
 import Loader from "@/components/layout/Loader";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 export default function Page({ params }: { params: { id: string } }) {

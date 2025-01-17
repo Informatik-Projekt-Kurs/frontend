@@ -14,7 +14,7 @@ import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import FollowButton from "@/components/dashboard/FollowButton";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function CompanyBrowse() {

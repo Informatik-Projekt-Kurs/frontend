@@ -39,7 +39,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 import { type Appointment } from "@/types";
 import { GET_AVAILABLE_APPOINTMENTS } from "@/lib/graphql/queries";
 import { useMutation, useQuery } from "@apollo/client";

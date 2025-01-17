@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OverviewScheduler from "@/components/dashboard/scheduler/OverviewScheduler";
 import AppointmentDisplay from "@/components/dashboard/AppointmentDisplay";
-import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import { useDashboardData } from "@/context/DashboardContext";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function Dashboard() {
