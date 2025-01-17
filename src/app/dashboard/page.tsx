@@ -27,7 +27,7 @@ function Dashboard() {
 
   const router = useRouter();
 
-  const appointments = useDashboardData().relevantAppointments;
+  const { appointments, relevantAppointments } = useDashboardData();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -64,7 +64,7 @@ function Dashboard() {
   };
   if (loading)
     return (
-      <div className="flex h-[calc(100svh-32px)] flex-col items-center justify-center p-8 px-6">
+      <div className="flex min-h-[calc(100svh-32px)] flex-col items-center justify-center p-8 px-6">
         <div className="flex size-20 animate-spin items-center justify-center rounded-[50%] border-4 border-x-background border-b-background border-t-primary bg-transparent"></div>
         <Image className={"absolute"} src={"/landingLogo.png"} alt={""} width={40} height={40} />
       </div>
@@ -107,7 +107,7 @@ function Dashboard() {
           </div>
         </header>
 
-        <div className="mt-8 flex h-[200px] w-full flex-col items-start justify-center gap-2 rounded-[20px] bg-primary pl-12">
+        <div className="mt-8 flex h-[200px] w-full flex-col items-start justify-center gap-2 rounded-[20px] bg-primary pl-4 md:pl-12">
           <h2 className="text-3xl font-semibold">MeetMate Dashboard</h2>
           <p className="text-sm">Create your appointments in minutes</p>
           <Link href={"/dashboard/bookings"}>
@@ -117,12 +117,12 @@ function Dashboard() {
           </Link>
         </div>
 
-        <div className="mt-8 flex h-fit w-full flex-col justify-center rounded-[20px] bg-subtle py-4 lg:flex-row">
+        <div className="mt-8 flex h-fit w-full flex-col justify-center rounded-[20px] bg-subtle py-4 xl:flex-row">
           <div className="flex flex-col items-center justify-start gap-4 p-8">
             <h2 className="text-2xl font-semibold">Upcoming Appointments</h2>
-            <div className="mt-2 grid max-h-[500px] flex-col items-center justify-start gap-y-6 overflow-y-auto overflow-x-hidden sm:grid-cols-1 md:grid-cols-2 lg:flex lg:items-start lg:justify-start">
-              {appointments.length !== 0 ? (
-                appointments.map((appointment) => (
+            <div className="mt-2 grid max-h-[500px] flex-col items-center justify-start gap-y-6 overflow-y-auto overflow-x-hidden sm:grid-cols-1 md:grid-cols-2 xl:flex xl:items-start xl:justify-start">
+              {relevantAppointments.length !== 0 ? (
+                relevantAppointments.map((appointment) => (
                   <AppointmentDisplay
                     onClick={handleAppointmentClick}
                     key={appointment.id}

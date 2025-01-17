@@ -387,12 +387,12 @@ function Bookings() {
   };
 
   return (
-    <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
+    <div className="flex min-h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:min-h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Bookings</h1>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-2">
           <Input
-            className="w-[200px] md:w-[320px]"
+            className="hidden w-[200px] md:block md:w-[320px]"
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => {

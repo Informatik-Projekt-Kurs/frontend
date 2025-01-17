@@ -49,7 +49,7 @@ export default function Page({ params }: { params: { id: string } }) {
     <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">{data.getCompany.name}</h1>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
               <Button variant="ghost" className="relative size-8 rounded-full">
