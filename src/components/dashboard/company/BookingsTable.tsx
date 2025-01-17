@@ -50,7 +50,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT, EDIT_APPOINTMENT } from "@/lib/graphql/mutations";
-import { useCompany } from "@/components/dashboard/CompanyContext";
+import { useCompany } from "@/contexts/CompanyContext";
 import { useToast } from "@/components/ui/use-toast";
 
 const bookingFormSchema = z

@@ -42,7 +42,7 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
    ```
    yarn install
    ```
-4. Add a .env file
+4. Add a `.env.local` file
    ```dotenv
     JWT_SECRET="mysecretvalue"
     JWT_EXPIRATION_MS=60000
@@ -54,15 +54,34 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
     NEXT_PUBLIC_SYNCFUSION_LICENSE="mysecretvalue"
    ```
 
+### Building the Application
+
+- To create a production build of the application run:
+  ```
+  npm run build
+  ```
+  or
+  ```
+  yarn build
+  ```
+
 ### Running the Application
 
-- To run the application in development mode:
+- To run the application in production mode run:
   ```
   npm start
   ```
   or
   ```
   yarn start
+  ```
+- To run the application in development mode run:
+  ```
+  npm run dev
+  ```
+  or
+  ```
+  yarn dev
   ```
 
 ## License
@@ -77,4 +96,4 @@ See `LICENSE` for more information.
 
 ---
 
-MeetMate 2024 - All Rights Reserved
+Ben Böckmann 2024 - All Rights Reserved

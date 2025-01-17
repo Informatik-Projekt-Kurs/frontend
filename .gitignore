@@ -36,8 +36,7 @@ bun.lockb
 
 /.idea
 
-.env.development
-.env.production
 .env.local
+.env.production
 
 sitemap.xml

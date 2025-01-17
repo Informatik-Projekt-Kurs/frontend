@@ -13,7 +13,7 @@ import { extractNameInitials } from "@/lib/utils";
 import React from "react";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
-import { useCompany } from "@/components/dashboard/CompanyContext";
+import { useCompany } from "@/contexts/CompanyContext";
 import { BookingsTable } from "@/components/dashboard/company/BookingsTable";
 import HamburgerMenu from "@/components/dashboard/company/HamburgerMenu";
 

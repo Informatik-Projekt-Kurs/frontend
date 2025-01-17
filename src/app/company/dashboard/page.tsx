@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
-import { useCompany } from "@/components/dashboard/CompanyContext";
+import { useCompany } from "@/contexts/CompanyContext";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import WeeklyAppointmentsChart from "@/components/dashboard/company/WeeklyAppointmentsChart";

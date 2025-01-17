@@ -12,7 +12,6 @@ import { loginUser } from "@/lib/authActions";
 import cx from "classnames";
 import React, { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { TooltipProvider, TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
 
@@ -38,7 +37,6 @@ const LoginForm = () => {
       password: ""
     }
   });
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (formState.message === "success") {
@@ -52,7 +50,7 @@ const LoginForm = () => {
         router.push("/dashboard");
       }, 1500);
     }
-  }, [formState, toast, dispatch]);
+  }, [formState, toast]);
 
   return (
     <React.Fragment>
@@ -81,7 +79,7 @@ const LoginForm = () => {
             <div className="flex items-center justify-center gap-x-4">
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
                       <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                         <FaGoogle className="text-3xl text-foreground transition-colors group-hover:text-primary" />
@@ -93,7 +91,7 @@ const LoginForm = () => {
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
                       <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
                         <FaGithub className="text-3xl text-foreground transition-colors group-hover:text-primary" />
