@@ -6,7 +6,7 @@ import Link from "next/link";
 import { cn, extractNameInitials } from "@/lib/utils";
 import { LuBookCopy, LuLayoutDashboard } from "react-icons/lu";
 import { usePathname } from "next/navigation";
-import { useCompany } from "@/context/CompanyContext";
+import { useCompany } from "@/contexts/CompanyContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function HamburgerMenu() {

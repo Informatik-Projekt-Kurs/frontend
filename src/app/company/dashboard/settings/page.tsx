@@ -13,7 +13,7 @@ import { extractNameInitials } from "@/lib/utils";
 import React from "react";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
-import { useCompany } from "@/context/CompanyContext";
+import { useCompany } from "@/contexts/CompanyContext";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

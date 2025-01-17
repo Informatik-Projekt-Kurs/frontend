@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn, extractNameInitials } from "@/lib/utils";
 import Loader from "@/components/layout/Loader";
-import { CompanyProvider, useCompany } from "@/context/CompanyContext";
+import { CompanyProvider, useCompany } from "@/contexts/CompanyContext";
 import { BriefcaseBusiness, Settings, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ToastProvider } from "@/components/ui/toast";
