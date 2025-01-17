@@ -7,7 +7,9 @@ import LandingNavbar from "@/components/layout/LandingNavbar";
 export default function Home() {
   return (
     <main
-      className={"relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background"}>
+      className={
+        "relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-clip bg-background"
+      }>
       <LandingNavbar />
       <Hero />
       {/* Gallery */}

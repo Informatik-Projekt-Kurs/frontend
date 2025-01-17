@@ -21,6 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,7 @@ import { format, set } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useMutation } from "@apollo/client";
-import { CREATE_APPOINTMENT } from "@/lib/graphql/mutations";
+import { CREATE_APPOINTMENT, EDIT_APPOINTMENT } from "@/lib/graphql/mutations";
 import { useCompany } from "@/components/dashboard/CompanyContext";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -59,7 +60,7 @@ const bookingFormSchema = z
     from: z.date(),
     to: z.date(),
     location: z.string().optional(),
-    client: z.number().optional() // client id
+    clientId: z.string().optional()
   })
   .refine(
     (data) => {
@@ -203,6 +204,8 @@ const columns: Array<ColumnDef<Appointment>> = [
     enableHiding: false,
     cell: ({ row }) => {
       const appointment = row.original;
+      const [editAppointment] = useMutation(EDIT_APPOINTMENT);
+      const { refreshAppointments } = useCompany();
 
       return (
         <DropdownMenu>
@@ -228,6 +231,31 @@ const columns: Array<ColumnDef<Appointment>> = [
                 Copy booked user ID
               </DropdownMenuItem>
             )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async () => {
+                await editAppointment({
+                  variables: { id: appointment.id, status: "CANCELLED" },
+                  onCompleted: () => {
+                    void refreshAppointments();
+                  }
+                });
+              }}
+              className={"text-red-300"}>
+              Cancel Appointment
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                await editAppointment({
+                  variables: { id: appointment.id, status: "COMPLETED" },
+                  onCompleted: () => {
+                    void refreshAppointments();
+                  }
+                });
+              }}
+              className={"text-emerald-300"}>
+              Mark Appointment as completed
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -288,7 +316,7 @@ export function BookingsTable(): React.ReactElement {
         from: values.from.toISOString(),
         to: values.to.toISOString(),
         location: values.location,
-        clientId: values.client
+        clientId: values.clientId
       }
     };
 
@@ -575,7 +603,7 @@ export function BookingsTable(): React.ReactElement {
                 />
                 <FormField
                   control={form.control}
-                  name="client"
+                  name="clientId"
                   render={({ field }) => {
                     const [open, setOpen] = React.useState(false);
                     const [searchValue, setSearchValue] = React.useState("");
@@ -597,9 +625,9 @@ export function BookingsTable(): React.ReactElement {
                                 onClick={() => {
                                   setOpen(!open);
                                 }}>
-                                {field.value !== undefined
-                                  ? clients.getClients.find((client) => client.id === field.value)?.name
-                                  : "Select client..."}
+                                {field.value === undefined
+                                  ? "Select client..."
+                                  : clients.getClients.find((client) => client.id.toString() === field.value)?.name}
                                 <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl>
@@ -641,14 +669,14 @@ export function BookingsTable(): React.ReactElement {
                                         key={client.id}
                                         value={client.id.toString()}
                                         onSelect={() => {
-                                          field.onChange(client.id === field.value ? undefined : client.id);
+                                          field.onChange(client.id.toString() === field.value ? undefined : client.id);
                                           setSearchValue("");
                                           setOpen(false);
                                         }}>
                                         <Check
                                           className={cn(
                                             "mr-2 h-4 w-4",
-                                            field.value === client.id ? "opacity-100" : "opacity-0"
+                                            field.value === client.id.toString() ? "opacity-100" : "opacity-0"
                                           )}
                                         />
                                         {client.name} {` ID:(${client.id})`}

@@ -44,6 +44,7 @@ import { type Appointment } from "@/types";
 import { GET_AVAILABLE_APPOINTMENTS } from "@/lib/graphql/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { BOOK_APPOINTMENT } from "@/lib/graphql/mutations";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function Bookings() {
   const { user, companies, appointments, refreshAppointments } = useDashboardData();
@@ -156,7 +157,7 @@ function Bookings() {
     const filtered =
       searchQuery === ""
         ? appointments
-        : appointments.filter((appointment) => appointment.title.toLowerCase().includes(searchQuery.toLowerCase()));
+        : appointments.filter((appointment) => appointment.title?.toLowerCase().includes(searchQuery.toLowerCase()));
     setFilteredAppointments(filtered);
   }, [searchQuery, appointments]);
 
@@ -308,6 +309,7 @@ function Bookings() {
             <Calendar
               mode="single"
               onSelect={handleDateChange}
+              selected={bookingState.selectedDate}
               disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
             />
           </React.Fragment>
@@ -346,7 +348,7 @@ function Bookings() {
 
                     return (
                       <SelectItem key={slot.id} value={`${fromTime} - ${toTime}|${slot.id}`}>
-                        {fromTime} - {toTime} {slot.title !== undefined && `(${slot.title})`}
+                        {fromTime} - {toTime} {slot.title !== undefined && slot.title !== null && `(${slot.title})`}
                       </SelectItem>
                     );
                   })}
@@ -385,12 +387,12 @@ function Bookings() {
   };
 
   return (
-    <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
+    <div className="flex min-h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:min-h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Bookings</h1>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-2">
           <Input
-            className="w-[320px]"
+            className="hidden w-[200px] md:block md:w-[320px]"
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => {
@@ -425,10 +427,11 @@ function Bookings() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
       <div className={"mt-2 flex w-full items-center justify-between pl-4 text-foreground"}>
-        Your Appointments at a glance. Book a new appointment now!
+        <p className={"hidden md:block"}>Your Appointments at a glance. Book a new appointment now!</p>
         <div className={"flex w-fit items-center justify-center gap-x-4 text-foreground"}>
           <AlertDialog>
             <AlertDialogTrigger>

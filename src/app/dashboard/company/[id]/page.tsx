@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +18,7 @@ import { useQuery } from "@apollo/client";
 import { getCompany } from "@/lib/graphql/queries";
 import Loader from "@/components/layout/Loader";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { user } = useDashboardData();
@@ -46,13 +46,10 @@ export default function Page({ params }: { params: { id: string } }) {
   if (error !== undefined) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
+    <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">
-          {data.getCompany.name} (ID: {params.id})
-        </h1>
-        <div className="flex items-center gap-x-6">
-          <Input className="w-[320px]" placeholder="Search"></Input>
+        <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">{data.getCompany.name}</h1>
+        <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
               <Button variant="ghost" className="relative size-8 rounded-full">
@@ -81,19 +78,20 @@ export default function Page({ params }: { params: { id: string } }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 
-      <div className="mt-8 flex h-[600px] w-full flex-col rounded-[20px] px-12">
-        <div className={"mt-6 flex h-[200px] w-full items-center justify-between"}>
+      <div className="mt-8 flex h-[600px] w-full flex-col rounded-[20px] px-4 md:px-12">
+        <div className={"mt-6 flex h-[100px] w-full flex-col items-center justify-between sm:flex-row lg:h-[200px]"}>
           <div className={"flex flex-row items-center justify-center"}>
             <div
               className={
-                "flex size-[200px] items-center justify-center rounded-full bg-primary text-6xl font-medium text-foreground"
+                "hidden size-[100px] items-center justify-center rounded-full bg-primary text-3xl font-medium text-foreground md:flex lg:size-[200px] lg:text-6xl"
               }>
               {extractNameInitials(data.getCompany.name as string)}
             </div>
-            <div className={"ml-12 flex flex-col"}>
+            <div className={"flex flex-col md:ml-12"}>
               <h1 className={"text-4xl font-semibold"}>{data.getCompany.name}</h1>
             </div>
           </div>

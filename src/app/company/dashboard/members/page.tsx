@@ -11,15 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
 import { UsersTable } from "@/components/dashboard/company/UsersTable";
+import HamburgerMenu from "@/components/dashboard/company/HamburgerMenu";
 
 export default function Page() {
   const { user, loading, members } = useCompany();
-  const router = useRouter();
 
   const logout = async () => {
     try {
@@ -37,7 +36,7 @@ export default function Page() {
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Company Members</h1>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
               <Button variant="ghost" className="relative size-8 rounded-full">
@@ -54,18 +53,12 @@ export default function Page() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/dashboard/settings");
-                }}>
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout} className={"text-red-500"}>
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } from "@syncfusion/ej2-react-schedule";
+import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, Week } from "@syncfusion/ej2-react-schedule";
 import "./scheduler.scss";
 import { registerLicense } from "@syncfusion/ej2-base";
 import { Button } from "@/components/ui/button";
@@ -105,10 +105,11 @@ function Scheduler(props: SchedulerProps) {
         showHeaderBar={false}
         eventRendered={onEventRendered}
         readonly={true}
-        eventClick={onEventClick}>
+        eventClick={onEventClick}
+        showWeekend={false}>
         <ViewsDirective>
           <ViewDirective
-            option="WorkWeek"
+            option="Week"
             startHour={props.openingHours.open}
             endHour={props.openingHours.close}
             timeScale={{ interval: 60, slotCount: 2 }}
@@ -197,7 +198,7 @@ function Scheduler(props: SchedulerProps) {
             )}
           />
         </ViewsDirective>
-        <Inject services={[WorkWeek]} />
+        <Inject services={[Week]} />
       </ScheduleComponent>
     </React.Fragment>
   );

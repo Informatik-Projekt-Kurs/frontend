@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { deleteToken } from "@/lib/authActions";
 import FollowButton from "@/components/dashboard/FollowButton";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function CompanyBrowse() {
   const { user, companies } = useDashboardData();
@@ -31,7 +32,7 @@ function CompanyBrowse() {
   };
 
   return (
-    <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
+    <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Browse Companies</h1>
         <div className="flex items-center gap-x-6">
@@ -63,6 +64,7 @@ function CompanyBrowse() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 

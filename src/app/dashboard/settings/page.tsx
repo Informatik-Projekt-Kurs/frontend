@@ -8,7 +8,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useDashboardData } from "@/components/dashboard/DashboardContext";
-import { editUser, getAccessToken } from "@/lib/authActions";
+import { deleteToken, editUser, getAccessToken } from "@/lib/authActions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { extractNameInitials } from "@/lib/utils";
+import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   name: z.string().min(3, {
@@ -19,6 +31,7 @@ const FormSchema = z.object({
 
 function Settings() {
   const { user } = useDashboardData();
+  const router = useRouter();
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const accessToken = await getAccessToken();
@@ -30,6 +43,16 @@ function Settings() {
       });
     });
   }
+
+  const logout = async () => {
+    try {
+      await deleteToken();
+      window.location.reload();
+    } catch (logoutError) {
+      console.error("Logout failed", logoutError);
+      throw logoutError;
+    }
+  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -47,9 +70,40 @@ function Settings() {
   }, [user]);
 
   return (
-    <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
+    <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-foreground md:text-2xl">Settings</h1>
+        <h1 className="m-4 text-2xl font-medium text-foreground">Settings</h1>
+        <div className="flex items-center gap-x-2">
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild className={"mr-4"}>
+              <Button variant="ghost" className="relative size-8 rounded-full">
+                <Avatar className="size-10">
+                  <AvatarFallback className={"bg-primary"}>{extractNameInitials(user?.name)}</AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">{user?.name}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/dashboard/settings");
+                }}>
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className={"text-red-500"}>
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <HamburgerMenu />
+        </div>
       </header>
       <div className="flex h-[600px] w-full max-w-[500px] flex-col rounded-[20px] px-6">
         <p className={"mt-10 text-foreground"}>
