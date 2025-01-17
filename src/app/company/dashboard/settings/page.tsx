@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@apollo/client";
 import { EDIT_COMPANY } from "@/lib/graphql/mutations";
+import HamburgerMenu from "@/components/dashboard/company/HamburgerMenu";
 
 const formSchema = z.object({
   name: z.string().max(30).optional(),
@@ -76,7 +77,7 @@ export default function Page() {
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Company Settings</h1>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
               <Button variant="ghost" className="relative size-8 rounded-full">
@@ -98,6 +99,7 @@ export default function Page() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 
@@ -106,11 +108,11 @@ export default function Page() {
           <div className={"flex flex-row items-center justify-center"}>
             <div
               className={
-                "flex size-[200px] items-center justify-center rounded-full bg-primary text-6xl font-medium text-foreground"
+                "hidden size-[200px] items-center justify-center rounded-full bg-primary text-6xl font-medium text-foreground md:flex"
               }>
               {extractNameInitials(company?.getCompany.name)}
             </div>
-            <div className={"ml-12 flex flex-col"}>
+            <div className={"flex flex-col md:ml-12"}>
               <h1 className={"text-4xl font-semibold"}>{company?.getCompany.name}</h1>
             </div>
           </div>

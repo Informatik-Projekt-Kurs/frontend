@@ -15,6 +15,7 @@ import { deleteToken } from "@/lib/authActions";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/components/dashboard/CompanyContext";
 import { UsersTable } from "@/components/dashboard/company/UsersTable";
+import HamburgerMenu from "@/components/dashboard/company/HamburgerMenu";
 
 export default function Page() {
   const { user, loading, members } = useCompany();
@@ -35,7 +36,7 @@ export default function Page() {
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
       <header className="flex w-full flex-row items-center justify-between">
         <h1 className="m-4 font-medium text-foreground md:text-2xl">Company Members</h1>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
               <Button variant="ghost" className="relative size-8 rounded-full">
@@ -57,6 +58,7 @@ export default function Page() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HamburgerMenu />
         </div>
       </header>
 

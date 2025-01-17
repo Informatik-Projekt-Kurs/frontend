@@ -1,18 +1,16 @@
-"use client";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { LuBookCopy, LuLayoutDashboard } from "react-icons/lu";
-import React, { Suspense, useEffect, useState } from "react";
+import { BriefcaseBusiness, Menu, Settings, Users } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn, extractNameInitials } from "@/lib/utils";
-import Loader from "@/components/layout/Loader";
-import { CompanyProvider, useCompany } from "@/components/dashboard/CompanyContext";
-import { BriefcaseBusiness, Settings, Users } from "lucide-react";
+import { LuBookCopy, LuLayoutDashboard } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import { useCompany } from "@/components/dashboard/CompanyContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ToastProvider } from "@/components/ui/toast";
 
-function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { loading, company } = useCompany();
+export default function HamburgerMenu() {
+  const { company } = useCompany();
   const [active, setActive] = useState<"dashboard" | "bookings" | "users" | "members" | "settings">("dashboard");
   const pathname = usePathname();
 
@@ -32,8 +30,13 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <div className="flex w-full flex-col gap-0 pl-0 md:flex-row lg:gap-5 lg:pl-8">
-      <aside className="hidden lg:block">
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" className={"block lg:hidden"}>
+          <Menu />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side={"left"} className={"text-foreground"}>
         <div className="sticky top-8 flex h-[calc(100vh-64px)] flex-row">
           <div className="flex h-full w-[80px] flex-col items-center justify-start">
             <div
@@ -113,27 +116,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </div>
-      </aside>
-      <main className="flex w-full flex-col items-center justify-between rounded-none border-0 lg:mr-8 lg:mt-8 lg:min-h-svh lg:rounded-[20px] lg:border-2 lg:border-border">
-        <div className={"min-h-[calc(100svh-64px)] w-full"}>
-          {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
-        </div>
-
-        <footer className="flex h-8 w-full items-center justify-start rounded-none bg-primary lg:rounded-b-[20px]">
-          <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
-        </footer>
-      </main>
-    </div>
-  );
-}
-
-// Wrap the dashboard with the UserProvider
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <ToastProvider>
-      <CompanyProvider>
-        <DashboardContent>{children}</DashboardContent>
-      </CompanyProvider>
-    </ToastProvider>
+      </SheetContent>
+    </Sheet>
   );
 }
