@@ -2,6 +2,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/cacc80b9-c575-409d-a6a2-a8422deb2304/deploy-status)](https://app.netlify.com/sites/ipk-frontend/deploys)
 [![CI](https://github.com/Informatik-Projekt-Kurs/frontend/actions/workflows/main.yml/badge.svg?branch=dev)](https://github.com/Informatik-Projekt-Kurs/frontend/actions/workflows/main.yml)
+[![Lines of Code](https://tokei.rs/b1/github/Informatik-Projekt-Kurs/frontend)](https://github.com/Informatik-Projekt-Kurs/frontend)
 
 ## Overview
 
