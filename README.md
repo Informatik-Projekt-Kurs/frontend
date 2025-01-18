@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MeetMate Frontend
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cacc80b9-c575-409d-a6a2-a8422deb2304/deploy-status)](https://app.netlify.com/sites/ipk-frontend/deploys)
+[![CI](https://github.com/Informatik-Projekt-Kurs/frontend/actions/workflows/main.yml/badge.svg?branch=dev)](https://github.com/Informatik-Projekt-Kurs/frontend/actions/workflows/main.yml)
+
+## Overview
+
+MeetMate is an innovative platform dedicated to small brands wanting to improve their content and appointment management. Our frontend repository focuses on delivering stunning, engaging, and high-conversion websites with a keen emphasis on search engine optimization, user experience design, and performance.
+
+## Technologies
+
+- **HTML/CSS**: For structuring and styling webpages.
+- **REACT**: A JavaScript library for building user interfaces.
+- **NextJS**: A React framework for production.
+- **Tailwind**: A utility-first CSS framework.
+- **ShadCN**: A Component library for react
+- **Redux**: A react state management library
+- **ThreeJS**: A library to create and display 3d art and scenes
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js
+- NPM/Yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```
+   git clone https://github.com/Informatik-Projekt-Kurs/frontend.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd frontend
+   ```
+3. Install dependencies:
+   ```
+   npm install
+   ```
+   or
+   ```
+   yarn install
+   ```
+4. Add a `.env.local` file
+   ```dotenv
+    JWT_SECRET="mysecretvalue"
+    JWT_EXPIRATION_MS=60000
+    JWT_REFRESH_EXPIRATION_MS=1209600000
+    REFRESH_DOMAIN="/refresh"
+    FRONTEND_DOMAIN="http://localhost:3000" // for production use real domain
+    BACKEND_DOMAIN="https://meetmate.bencodes.de"
+    NEXT_PUBLIC_SYNCFUSION_LICENSE="mysecretvalue"
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Building the Application
 
-## Learn More
+- To create a production build of the application run:
+  ```
+  npm run build
+  ```
+  or
+  ```
+  yarn build
+  ```
 
-To learn more about Next.js, take a look at the following resources:
+### Running the Application
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- To run the application in production mode run:
+  ```
+  npm start
+  ```
+  or
+  ```
+  yarn start
+  ```
+- To run the application in development mode run:
+  ```
+  npm run dev
+  ```
+  or
+  ```
+  yarn dev
+  ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+See `LICENSE` for more information.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contact
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Project Link: [https://github.com/Informatik-Projekt-Kurs/frontend](https://github.com/Informatik-Projekt-Kurs/frontend)
+- Company Website: [MeetMate](https://www.meetmate.dev)
+- Contact Us: [boeckmann@gmail.com](mailto:boeckmannben@gmail.com)
+
+---
+
+Ben Böckmann 2024 - All Rights Reserved

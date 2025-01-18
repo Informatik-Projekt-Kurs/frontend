@@ -1,113 +1,218 @@
-import Image from 'next/image'
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import Hero from "@/components/landing-page/Hero";
+import LandingNavbar from "@/components/layout/LandingNavbar";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main
+      className={
+        "relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-clip bg-background"
+      }>
+      <LandingNavbar />
+      <Hero />
+      {/* Gallery */}
+      <section className="home_aspects max-w-screen-xl px-8">
+        <div className="container-medium">
+          <div className="home_aspects_heading">
+            <h2
+              style={{
+                transform:
+                  "translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg)",
+                transformStyle: "preserve-3d",
+                opacity: 1
+              }}
+              className="heading_standard text-3xl font-semibold">
+              {/*<span className="span_gradient">Laser-focused</span> on 3 key aspects.*/}
+            </h2>
+          </div>
+          <div className="home_aspects_grid">
+            <Link
+              href={"#"}
+              className="home_aspects_card w-inline-block"
+              style={{
+                transform:
+                  "translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg)",
+                transformStyle: "preserve-3d",
+                opacity: 1
+              }}>
+              <div className="home_aspects_card_number">01</div>
+              <h3 className="home_aspects_card_heading">
+                <span className="span_gradient">What is MeetMate?</span>
+              </h3>
+              <p className="text-color-grey">
+                MeetMate is an innovative platform that simplifies appointment bookings. With an intuitive interface, it
+                allows businesses and individuals to schedule, manage, and track appointments effortlessly, reducing
+                no-shows and improving time management.
+                <br />
+              </p>
+              <div className="home_aspects_card_image">
+                <Image
+                  src="/webdesign2.jpg"
+                  style={{ filter: "hue-rotate(30deg)" }}
+                  loading="lazy"
+                  width={640.5}
+                  height={100}
+                  alt=""
+                  className="image_cover"
+                />
+                <div className="home_aspects_card_arrow-icon w-embed">
+                  <svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12.5" cy="12.5" r="12.5" fill="currentColor" />
+                    <path
+                      d="M16.9998 12.9999C16.9998 12.7848 16.9158 12.5696 16.7481 12.4058L11.4679 7.24619C11.132 6.91794 10.5874 6.91794 10.2517 7.24619C9.91609 7.57417 9.91609 8.10638 10.2517 8.43464L14.9237 13.0001L10.2517 17.5654C9.91609 17.8936 9.91609 18.4256 10.2517 18.7535C10.5874 19.0818 11.132 19.0818 11.4679 18.7535L16.7481 13.594C16.9158 13.4298 16.9998 13.215 16.9998 12.9999Z"
+                      fill="black"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+            <Link
+              href={"#"}
+              className="home_aspects_card w-inline-block"
+              style={{
+                transform:
+                  "translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg)",
+                transformStyle: "preserve-3d",
+                opacity: 1
+              }}>
+              <div className="home_aspects_card_image">
+                <Image
+                  src="/design2.jpg"
+                  loading="lazy"
+                  width={640.5}
+                  height={100}
+                  alt=""
+                  className="image_cover"
+                  style={{ filter: "hue-rotate(270deg)" }}
+                />
+                <div className="home_aspects_card_arrow-icon w-embed">
+                  <svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12.5" cy="12.5" r="12.5" fill="currentColor" />
+                    <path
+                      d="M16.9998 12.9999C16.9998 12.7848 16.9158 12.5696 16.7481 12.4058L11.4679 7.24619C11.132 6.91794 10.5874 6.91794 10.2517 7.24619C9.91609 7.57417 9.91609 8.10638 10.2517 8.43464L14.9237 13.0001L10.2517 17.5654C9.91609 17.8936 9.91609 18.4256 10.2517 18.7535C10.5874 19.0818 11.132 19.0818 11.4679 18.7535L16.7481 13.594C16.9158 13.4298 16.9998 13.215 16.9998 12.9999Z"
+                      fill="black"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="home_aspects_card_number">02</div>
+              <h3 className="home_aspects_card_heading">
+                <span className="span_gradient">
+                  Effortless Scheduling
+                  <br />
+                </span>
+                <span className="span_gradient"> and Management:</span>
+              </h3>
+              <p className="text-color-grey">
+                MeetMate&apos;s user-friendly interface, easy booking process, and real-time updates keep both
+                businesses and clients organized, minimizing double bookings and missed appointments.
+              </p>
+            </Link>
+            <Link
+              href={"#"}
+              className="home_aspects_card is-grid flex max-w-full flex-col"
+              style={{
+                transform:
+                  "translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg)",
+                transformStyle: "preserve-3d",
+                opacity: 1,
+                gridArea: "span 1/span 2/span 1/span 2"
+              }}>
+              <div className="home_aspects_card_content">
+                <div className="home_aspects_card_number">03</div>
+                <h3 className="home_aspects_card_heading">
+                  <span className="span_gradient">
+                    Enhanced Customer <br />
+                  </span>
+                  <span className="span_gradient">Engagement:</span>
+                </h3>
+                <p className="text-color-grey">
+                  MeetMate offers a seamless booking experience with instant confirmations and booking pages, allowing
+                  clients to book at their convenience and businesses to save resources managing appointments.
+                </p>
+              </div>
+              <div className="home_aspects_card_image is-large">
+                <Image
+                  src="https://assets-global.website-files.com/6501f1891917bde75ab542ee/65425d03ac2dd88a7a91bbc6_Group%20656%20copy.webp"
+                  loading="lazy"
+                  width={854}
+                  height={100}
+                  alt=""
+                  className="image_cover"
+                />
+                <div className="home_aspects_card_arrow-icon w-embed">
+                  <svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12.5" cy="12.5" r="12.5" fill="currentColor" />
+                    <path
+                      d="M16.9998 12.9999C16.9998 12.7848 16.9158 12.5696 16.7481 12.4058L11.4679 7.24619C11.132 6.91794 10.5874 6.91794 10.2517 7.24619C9.91609 7.57417 9.91609 8.10638 10.2517 8.43464L14.9237 13.0001L10.2517 17.5654C9.91609 17.8936 9.91609 18.4256 10.2517 18.7535C10.5874 19.0818 11.132 19.0818 11.4679 18.7535L16.7481 13.594C16.9158 13.4298 16.9998 13.215 16.9998 12.9999Z"
+                      fill="black"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
-      </div>
+        <div className="background-blur is-green is-top-left" />
+        <div className="background-blur is-bottom-left" />
+      </section>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <footer className="footer bg-base-200 w-screen bg-subtle p-10">
+        <aside className="flex items-center">
+          <Image alt="MeetMate Logo" src="/landingLogo.png" width={50} height={50} className="mr-4" />
+          <div>
+            <p className="font-bold">MeetMate</p>
+            <p className="text-sm">Enterprise appointment management system</p>
+          </div>
+        </aside>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        {/*<div className="mt-4 grid max-w-screen-2xl grid-cols-3 gap-4 max-md:grid-cols-1">
+          <nav className="mt-6">
+            <header className="footer-title mb-2 text-lg font-semibold">Services</header>
+            <a href="#" className="link link-hover mb-1 block">
+              Branding
+            </a>
+            <a href="#" className="link link-hover mb-1 block">
+              Design
+            </a>
+            <a href="#" className="link link-hover mb-1 block">
+              Marketing
+            </a>
+            <a href="#" className="link link-hover">
+              Advertisement
+            </a>
+          </nav>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+          <nav className="mt-6">
+            <header className="footer-title mb-2 text-lg font-semibold">Company</header>
+            <a href="#" className="link link-hover mb-1 block">
+              About us
+            </a>
+            <a href="#" className="link link-hover mb-1 block">
+              Why MeetMate
+            </a>
+            <a href="#" className="link link-hover">
+              Contact
+            </a>
+          </nav>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+          <nav className="mt-6">
+            <header className="footer-title mb-2 text-lg font-semibold">Legal</header>
+            <a href="#" className="link link-hover mb-1 block">
+              Terms of use
+            </a>
+            <a href="#" className="link link-hover mb-1 block">
+              Privacy policy
+            </a>
+            <a href="#" className="link link-hover">
+              Cookie policy
+            </a>
+          </nav>
+        </div>
+        */}
+      </footer>
     </main>
-  )
+  );
 }
