@@ -1,40 +1,28 @@
 import { useFormState } from "react-dom";
 import { subscribeToCompany } from "@/lib/companyActions";
 import { Button } from "@/components/ui/button";
-import { useOptimistic, useEffect, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { useDashboardData } from "@/contexts/DashboardContext";
 
 export default function FollowButton({ companyId }: { companyId: string }) {
   const { user, refreshUser } = useDashboardData();
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [state, formAction] = useFormState(subscribeToCompany, {
     message: "success"
   });
 
-  const baseSubscribed = user?.subscribedCompanies?.includes(Number(companyId));
+  const isSubscribed = user?.subscribedCompanies?.includes(Number(companyId));
 
-  const [optimisticSubscribed, setOptimisticSubscribed] = useOptimistic(
-    baseSubscribed,
-    (_, newValue: boolean) => newValue
-  );
-
-  // Update the optimistic state when the actual subscription status changes
   useEffect(() => {
     if (state.message === "success" && state.isSubscribed !== undefined) {
-      startTransition(() => {
-        if (state.isSubscribed === true) {
-          setOptimisticSubscribed(state.isSubscribed);
-        }
-        void refreshUser();
-      });
+      void refreshUser();
+      setIsLoading(false);
     }
   }, [state.message, state.isSubscribed, refreshUser]);
 
   const handleAction = async (formData: FormData) => {
-    startTransition(() => {
-      setOptimisticSubscribed(optimisticSubscribed === false);
-    });
+    setIsLoading(true);
     formAction(formData);
   };
 
@@ -44,9 +32,9 @@ export default function FollowButton({ companyId }: { companyId: string }) {
       <Button
         type="submit"
         className="text-foreground"
-        variant={optimisticSubscribed === true ? "secondary" : "outline"}
-        disabled={state.message === "error" || isPending}>
-        {optimisticSubscribed === true ? "Unsubscribe" : "Subscribe"}
+        variant={isSubscribed === true ? "secondary" : "outline"}
+        disabled={state.message === "error" || isLoading}>
+        {isSubscribed === true ? "Unsubscribe" : "Subscribe"}
       </Button>
       {state.message === "error" && <p className="text-red-500">{state.error}</p>}
     </form>
