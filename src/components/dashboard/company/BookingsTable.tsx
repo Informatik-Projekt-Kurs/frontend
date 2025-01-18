@@ -307,8 +307,10 @@ export function BookingsTable(): React.ReactElement {
   });
 
   const { toast } = useToast();
+  const [createLoading, setCreateLoading] = React.useState(false);
 
   async function onSubmit(values: z.infer<typeof bookingFormSchema>) {
+    setCreateLoading(true);
     const appointmentInput = {
       variables: {
         title: values.title,
@@ -331,8 +333,10 @@ export function BookingsTable(): React.ReactElement {
       });
       form.reset();
       await refreshAppointments();
+      setCreateLoading(false);
     } else {
       console.error(response.errors);
+      setCreateLoading(false);
     }
   }
 
@@ -696,7 +700,9 @@ export function BookingsTable(): React.ReactElement {
                   }}
                 />
                 <DialogFooter>
-                  <Button type="submit">Create</Button>
+                  <Button type="submit" disabled={createLoading}>
+                    Create
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>

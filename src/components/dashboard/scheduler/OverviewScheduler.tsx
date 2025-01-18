@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, Week } from "@syncfusion/ej2-react-schedule";
+import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } from "@syncfusion/ej2-react-schedule";
 import "./scheduler.scss";
 import "./overviewscheduler.scss";
 import { registerLicense } from "@syncfusion/ej2-base";
@@ -98,7 +98,6 @@ function OverviewScheduler(props: SchedulerProps) {
     <div className="overviewScheduler">
       <ScheduleComponent
         selectedDate={new Date()}
-        showWeekend={false}
         height={"500px"}
         eventSettings={eventSettings}
         showHeaderBar={false}
@@ -106,10 +105,11 @@ function OverviewScheduler(props: SchedulerProps) {
         eventRendered={onEventRendered}
         key={props.selectedAppointmentId}
         readonly={true}
+        workDays={[1, 2, 3, 4, 5, 6]}
         eventClick={onEventClick}>
         <ViewsDirective>
           <ViewDirective
-            option={"Week"}
+            option={"WorkWeek"}
             startHour={schedulerHours.open}
             endHour={schedulerHours.close}
             eventTemplate={(eventProps: Record<string, unknown>) => {
@@ -123,7 +123,7 @@ function OverviewScheduler(props: SchedulerProps) {
             }}
           />
         </ViewsDirective>
-        <Inject services={[Week]} />
+        <Inject services={[WorkWeek]} />
       </ScheduleComponent>
     </div>
   );

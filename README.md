@@ -50,7 +50,6 @@ MeetMate is an innovative platform dedicated to small brands wanting to improve 
     REFRESH_DOMAIN="/refresh"
     FRONTEND_DOMAIN="http://localhost:3000" // for production use real domain
     BACKEND_DOMAIN="https://meetmate.bencodes.de"
-    GRAPHQL_URL="http://localhost:8080/graphql"
     NEXT_PUBLIC_SYNCFUSION_LICENSE="mysecretvalue"
    ```
 

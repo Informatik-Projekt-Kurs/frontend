@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, Week } from "@syncfusion/ej2-react-schedule";
+import { ScheduleComponent, ViewsDirective, ViewDirective, Inject, WorkWeek } from "@syncfusion/ej2-react-schedule";
 import "./scheduler.scss";
 import { registerLicense } from "@syncfusion/ej2-base";
 import { Button } from "@/components/ui/button";
@@ -86,6 +86,22 @@ function Scheduler(props: SchedulerProps) {
 
   return (
     <React.Fragment>
+      <style>{`
+        .e-schedule.e-device.e-portrait .e-vertical-view .e-work-cells {
+          min-width: 100px !important;
+        }
+        .e-schedule .e-vertical-view .e-date-header-wrap table col,
+        .e-schedule .e-vertical-view .e-content-wrap table col {
+          min-width: 100px !important;
+        }
+        .e-schedule .e-vertical-view .e-time-cells-wrap table td,
+        .e-schedule .e-vertical-view .e-work-cells {
+          min-width: 100px !important;
+        }
+        .e-schedule .e-vertical-view .e-header-cells {
+          min-width: 100px !important;
+        }
+      `}</style>
       <div className="scheduler absolute z-10 ml-1 mt-3">
         <Button size={"sm"} variant={"outline"} className={"rounded-full text-foreground"} onClick={handlePreviousWeek}>
           <FaArrowLeft size={10} />
@@ -106,10 +122,12 @@ function Scheduler(props: SchedulerProps) {
         eventRendered={onEventRendered}
         readonly={true}
         eventClick={onEventClick}
-        showWeekend={false}>
+        cssClass="schedule-cell-dimension"
+        workDays={[1, 2, 3, 4, 5, 6]}
+        showWeekend={true}>
         <ViewsDirective>
           <ViewDirective
-            option="Week"
+            option="WorkWeek"
             startHour={props.openingHours.open}
             endHour={props.openingHours.close}
             timeScale={{ interval: 60, slotCount: 2 }}
@@ -198,7 +216,7 @@ function Scheduler(props: SchedulerProps) {
             )}
           />
         </ViewsDirective>
-        <Inject services={[Week]} />
+        <Inject services={[WorkWeek]} />
       </ScheduleComponent>
     </React.Fragment>
   );
