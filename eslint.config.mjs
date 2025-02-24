@@ -1,6 +1,4 @@
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import react from "eslint-plugin-react";
-import tsParser from "@typescript-eslint/parser";
+import tseslint from "typescript-eslint";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
@@ -18,44 +16,26 @@ export default [
   {
     ignores: ["src/components/ui/*"]
   },
-  {
-    files: ["**/*.js", "**/*.jsx", "**/*.cjs"],
-
-    languageOptions: {
-      globals: {},
-      ecmaVersion: 2021,
-      sourceType: "module"
-    }
-  },
-  ...compat
-    .extends(
-      "plugin:@next/next/recommended",
-      "plugin:@typescript-eslint/recommended-type-checked",
-      "plugin:@typescript-eslint/stylistic-type-checked",
-      "plugin:react/recommended"
-    )
-    .map((config) => ({
-      ...config,
-      files: ["**/*.ts", "**/*.tsx", "**/*.jsx"]
-    })),
+  ...compat.extends(
+    "plugin:@next/next/recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:react/recommended"
+  ),
   {
     files: ["**/*.ts", "**/*.tsx", "**/*.jsx"],
-
-    plugins: {
-      "@typescript-eslint": typescriptEslint,
-      react
-    },
-
+    // Add the TypeScript parser options
     languageOptions: {
-      parser: tsParser,
-      ecmaVersion: 5,
-      sourceType: "script",
-
+      parser: tseslint.parser,
       parserOptions: {
-        project: "C:\\Users\\boeck\\Desktop\\frontend\\tsconfig.json"
+        project: "./tsconfig.json", // Add this line
+        ecmaVersion: 2021,
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true
+        }
       }
     },
-
     rules: {
       "no-restricted-imports": "off",
 
