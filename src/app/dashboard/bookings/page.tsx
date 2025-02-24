@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { deleteToken } from "@/lib/authActions";
+import { deleteToken } from "@/lib/authActions.server";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -47,7 +47,7 @@ import { BOOK_APPOINTMENT } from "@/lib/graphql/mutations";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
 function Bookings() {
-  const { user, companies, appointments, refreshAppointments } = useDashboardData();
+  const { user, companies, appointments, refreshData } = useDashboardData();
   const [searchQuery, setSearchQuery] = useState("");
 
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>(appointments);
@@ -263,8 +263,7 @@ function Bookings() {
       });
 
       updateBookingStep(4);
-      await refreshAppointments();
-      router.refresh();
+      await refreshData();
     } catch (error) {
       setBookingState((prev) => ({
         ...prev,
@@ -291,7 +290,7 @@ function Bookings() {
               </SelectTrigger>
               <SelectContent className={"border-border"}>
                 {companies?.getCompanies
-                  .filter((company) => user?.subscribedCompanies.includes(Number(company.id)))
+                  .filter((company) => user?.subscribedCompanies?.includes(Number(company.id)) ?? false)
                   .map((company) => (
                     <SelectItem key={company.id} value={company.id}>
                       {company.name}
@@ -389,7 +388,7 @@ function Bookings() {
   return (
     <div className="flex min-h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:min-h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-foreground md:text-2xl">Bookings</h1>
+        <h1 className="text-foreground m-4 font-medium md:text-2xl">Bookings</h1>
         <div className="flex items-center gap-x-2">
           <Input
             className="hidden w-[200px] md:block md:w-[320px]"
@@ -407,11 +406,11 @@ function Bookings() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+            <DropdownMenuContent align={"end"} className={"border-border w-56"}>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm leading-none font-medium">{user?.name}</p>
+                  <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -430,9 +429,9 @@ function Bookings() {
           <HamburgerMenu />
         </div>
       </header>
-      <div className={"mt-2 flex w-full items-center justify-between pl-4 text-foreground"}>
+      <div className={"text-foreground mt-2 flex w-full items-center justify-between pl-4"}>
         <p className={"hidden md:block"}>Your Appointments at a glance. Book a new appointment now!</p>
-        <div className={"flex w-fit items-center justify-center gap-x-4 text-foreground"}>
+        <div className={"text-foreground flex w-fit items-center justify-center gap-x-4"}>
           <AlertDialog>
             <AlertDialogTrigger>
               <Button variant={"secondary"}>
@@ -519,7 +518,7 @@ function Bookings() {
           </Dialog>
         </div>
       </div>
-      <div className="mt-4 flex h-fit w-full rounded-[20px] bg-subtle p-6">
+      <div className="bg-subtle mt-4 flex h-fit w-full rounded-[20px] p-6">
         <Scheduler
           openingHours={schedulerHours}
           data={filteredAppointments}

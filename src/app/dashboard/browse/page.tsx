@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { deleteToken } from "@/lib/authActions";
+import { deleteToken } from "@/lib/authActions.server";
 import FollowButton from "@/components/dashboard/FollowButton";
 import { useDashboardData } from "@/contexts/DashboardContext";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
@@ -34,7 +34,7 @@ function CompanyBrowse() {
   return (
     <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-foreground md:text-2xl">Browse Companies</h1>
+        <h1 className="text-foreground m-4 font-medium md:text-2xl">Browse Companies</h1>
         <div className="flex items-center gap-x-6">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
@@ -44,11 +44,11 @@ function CompanyBrowse() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+            <DropdownMenuContent align={"end"} className={"border-border w-56"}>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm leading-none font-medium">{user?.name}</p>
+                  <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -70,16 +70,16 @@ function CompanyBrowse() {
 
       <div
         className={
-          "mt-8 grid w-full gap-6 max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 min-[1900px]:grid-cols-4"
+          "mt-8 grid w-full gap-6 max-lg:grid-cols-1 min-[1900px]:grid-cols-4 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3"
         }>
         {companies?.getCompanies.map((company) => (
           <div
             key={company.id}
             className={
-              "flex h-[200px] w-full flex-col items-start justify-start gap-y-2 rounded-lg border border-border p-6"
+              "border-border flex h-[200px] w-full flex-col items-start justify-start gap-y-2 rounded-lg border p-6"
             }>
-            <h2 className={"text-2xl font-medium text-foreground"}>{company.name}</h2>
-            <p className={"text-base font-normal text-muted-foreground"}>{company.description}</p>
+            <h2 className={"text-foreground text-2xl font-medium"}>{company.name}</h2>
+            <p className={"text-muted-foreground text-base font-normal"}>{company.description}</p>
             <FollowButton companyId={company.id} />
           </div>
         ))}

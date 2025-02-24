@@ -1,126 +1,123 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { Appointment, ClientUser, Company } from "@/types";
-import { getAccessToken, getAppointments, getRelevantAppointments, getUser } from "@/lib/authActions";
+import { getAccessToken, getAppointments, getRelevantAppointments, getUser } from "@/lib/authActions.server";
 import { useQuery } from "@apollo/client";
 import { GET_COMPANIES } from "@/lib/graphql/queries";
 
 type DashboardContextProps = {
-  user: ClientUser | undefined;
+  user: ClientUser | null;
   loading: boolean;
-  refreshUser: () => Promise<void>;
-
+  refreshData: () => Promise<void>;
   companies: { getCompanies: Company[] } | undefined;
-  refreshCompanies: () => Promise<void>;
-
   relevantAppointments: Appointment[];
   appointments: Appointment[];
-  refreshAppointments: () => Promise<void>;
 };
 
 const DashboardContext = createContext<DashboardContextProps | undefined>(undefined);
 
 export function DashboardProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<ClientUser>();
-  const [userLoading, setUserLoading] = useState(true);
-
+  const [user, setUser] = useState<ClientUser | null>(null);
   const [relevantAppointments, setRelevantAppointments] = useState<Appointment[]>([]);
-  const [relevantAppointmentsLoading, setRelevantAppointmentsLoading] = useState(false);
-
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [appointmentsLoading, setAppointmentsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const fetchUser = async () => {
-    setUserLoading(true);
-    try {
-      const accessToken = await getAccessToken();
-      const userData = await getUser(accessToken);
-      setUser(userData as ClientUser);
-      console.log(userData);
-    } catch (error) {
-      console.error("Failed to fetch user", error);
-    } finally {
-      setUserLoading(false);
+  const { data: companies, loading: companiesLoading } = useQuery(GET_COMPANIES, {
+    onError: (graphQLError) => {
+      console.error("GraphQL Error:", graphQLError);
+      setError(graphQLError);
     }
-  };
+  });
 
-  const fetchRelevantAppointments = async () => {
-    setRelevantAppointmentsLoading(true);
+  const fetchAllData = async () => {
+    console.log("Fetching all dashboard data...");
+    setIsLoading(true);
+
     try {
       const accessToken = await getAccessToken();
-      const relevantAppointmentsData = await getRelevantAppointments(accessToken);
-      setRelevantAppointments(relevantAppointmentsData);
-    } catch (error) {
-      console.error("Failed to fetch relevant appointments", error);
-    } finally {
-      setRelevantAppointmentsLoading(false);
-    }
-  };
+      console.log("Access token retrieved:", accessToken !== null ? "Yes" : "No");
 
-  const fetchAppointments = async () => {
-    setAppointmentsLoading(true);
-    try {
-      const accessToken = await getAccessToken();
-      const appointmentsData = await getAppointments(accessToken);
-      setAppointments(appointmentsData);
-    } catch (error) {
-      console.error("Failed to fetch appointments", error);
+      if (accessToken === null) {
+        console.error("No access token available");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const userData = await getUser(accessToken!);
+        console.log("User data retrieved:", userData !== null ? "Yes" : "No");
+        setUser(userData as ClientUser);
+      } catch (e) {
+        console.error("Error fetching user:", e);
+      }
+
+      try {
+        const relevantAppointmentsData = await getRelevantAppointments(accessToken!);
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        setRelevantAppointments(relevantAppointmentsData || []);
+      } catch (e) {
+        console.error("Error fetching relevant appointments:", e);
+      }
+
+      try {
+        const appointmentsData = await getAppointments(accessToken!);
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        setAppointments(appointmentsData || []);
+      } catch (e) {
+        console.error("Error fetching appointments:", e);
+      }
+    } catch (e) {
+      console.error("Error in fetchAllData:", e);
+      setError(e as Error);
     } finally {
-      setAppointmentsLoading(false);
+      console.log("Finished fetching data, setting loading to false");
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    void fetchUser();
-    void fetchRelevantAppointments();
-    void fetchAppointments();
+    console.log("DashboardProvider mounted, fetching initial data");
+    void fetchAllData();
   }, []);
 
-  const refreshAppointments = async () => {
-    void fetchAppointments();
+  // For debugging
+  useEffect(() => {
+    console.log("Current state:", {
+      user: user !== null ? "loaded" : "null",
+      relevantAppointments: relevantAppointments.length,
+      appointments: appointments.length,
+      isLoading,
+      companiesLoading
+    });
+  }, [user, relevantAppointments, appointments, isLoading, companiesLoading]);
+
+  const contextValue: DashboardContextProps = {
+    user,
+    loading: isLoading || companiesLoading,
+    refreshData: fetchAllData,
+    companies,
+    relevantAppointments,
+    appointments
   };
-
-  const refreshUser = async () => {
-    await fetchUser();
-  };
-
-  const {
-    loading: companiesLoading,
-    data: companies = { getCompanies: [] },
-    refetch
-  } = useQuery(GET_COMPANIES, {
-    pollInterval: 300000,
-    onError: (error) => {
-      console.error("GraphQL Error:", error);
-    }
-  });
-
-  const refreshCompanies = async () => {
-    await refetch();
-  };
-
-  const loading = companiesLoading || userLoading || relevantAppointmentsLoading || appointmentsLoading;
 
   return (
-    <DashboardContext.Provider
-      value={{
-        user,
-        loading,
-        refreshUser,
-        companies,
-        refreshCompanies,
-        relevantAppointments,
-        appointments,
-        refreshAppointments
-      }}>
-      {children}
+    <DashboardContext.Provider value={contextValue}>
+      {error !== null ? (
+        <div className="p-4 text-red-500">
+          Error loading dashboard data. Please try refreshing.
+          <pre className="mt-2 text-xs">{error.message}</pre>
+        </div>
+      ) : (
+        children
+      )}
     </DashboardContext.Provider>
   );
 }
 
 export const useDashboardData = (): DashboardContextProps => {
   const context = useContext(DashboardContext);
-  if (context === null) {
+  if (context === undefined) {
     throw new Error("useDashboardData must be used within a DashboardProvider");
   }
-  return context!;
+  return context;
 };

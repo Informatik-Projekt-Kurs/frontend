@@ -11,7 +11,9 @@ import {
 } from "@/types";
 
 export async function storeToken(request: StoreTokenRequest) {
-  cookies().set({
+  const cookieStore = await cookies();
+
+  cookieStore.set({
     name: "accessToken",
     value: request.access_token,
     httpOnly: true,
@@ -21,7 +23,7 @@ export async function storeToken(request: StoreTokenRequest) {
   });
 
   if (request.refresh_token !== undefined) {
-    cookies().set({
+    cookieStore.set({
       name: "refreshToken",
       value: request.refresh_token,
       httpOnly: true,
@@ -31,7 +33,7 @@ export async function storeToken(request: StoreTokenRequest) {
     });
   }
 
-  cookies().set({
+  cookieStore.set({
     name: "expires_at",
     value: request.expires_at,
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
@@ -42,17 +44,18 @@ export async function storeToken(request: StoreTokenRequest) {
 }
 
 export async function deleteToken() {
-  cookies().delete("accessToken");
-  cookies().delete("refreshToken");
-  cookies().delete("expires_at");
+  const cookieStore = await cookies();
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
+  cookieStore.delete("expires_at");
 }
 
-export async function refreshAccessToken(refreshToken?: string) {
+export async function refreshAccessToken(refreshToken: string) {
   const response: Response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/refresh", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
-      Authorization: "Bearer " + refreshToken ?? cookies().get("refreshToken")?.value
+      Authorization: "Bearer " + refreshToken
     },
     body: null
   });
@@ -66,9 +69,9 @@ export async function refreshAccessToken(refreshToken?: string) {
     if (refreshToken !== undefined) {
       return [res.access_Token, res.expires_at.toString()];
     } else {
-      void storeToken({
+      await storeToken({
         access_token: res.access_Token,
-        refresh_token: cookies().get("refreshToken")?.value,
+        refresh_token: (await cookies()).get("refreshToken")?.value,
         expires_at: res.expires_at.toString()
       });
       return res.access_Token;
@@ -80,12 +83,12 @@ export async function refreshAccessToken(refreshToken?: string) {
   }
 }
 
-export async function getRelevantAppointments(accessToken?: string): Promise<Appointment[]> {
+export async function getRelevantAppointments(accessToken: string): Promise<Appointment[]> {
   const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/relevantAppointments", {
     method: "GET",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
-      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+      Authorization: "Bearer " + accessToken
     },
     body: undefined
   });
@@ -97,12 +100,12 @@ export async function getRelevantAppointments(accessToken?: string): Promise<App
   }
 }
 
-export async function getAppointments(accessToken?: string): Promise<Appointment[]> {
+export async function getAppointments(accessToken: string): Promise<Appointment[]> {
   const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/appointments", {
     method: "GET",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
-      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+      Authorization: "Bearer " + accessToken
     },
     body: undefined
   });
@@ -114,12 +117,12 @@ export async function getAppointments(accessToken?: string): Promise<Appointment
   }
 }
 
-export async function getUser(accessToken?: string): Promise<User | null> {
+export async function getUser(accessToken: string): Promise<User | null> {
   const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/get", {
     method: "GET",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
-      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+      Authorization: "Bearer " + accessToken
     },
     body: undefined
   });
@@ -133,7 +136,7 @@ export async function getUser(accessToken?: string): Promise<User | null> {
   }
 }
 
-export async function editUser(name: string, accessToken?: string): Promise<void> {
+export async function editUser(name: string, accessToken: string): Promise<void> {
   const encodedData = new URLSearchParams({
     name,
     password: ""
@@ -143,7 +146,7 @@ export async function editUser(name: string, accessToken?: string): Promise<void
     method: "PUT",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
-      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+      Authorization: "Bearer " + accessToken
     },
     body: encodedData
   });
@@ -155,12 +158,12 @@ export async function editUser(name: string, accessToken?: string): Promise<void
   }
 }
 
-export async function getAllUsers(accessToken?: string): Promise<User[]> {
+export async function getAllUsers(accessToken: string): Promise<User[]> {
   const response = await fetch(process.env.FRONTEND_DOMAIN + "/api/user/getAll", {
     method: "GET",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
-      Authorization: "Bearer " + accessToken ?? cookies().get("accessToken")?.value
+      Authorization: "Bearer " + accessToken
     },
     body: undefined
   });
@@ -174,7 +177,7 @@ export async function getAllUsers(accessToken?: string): Promise<User[]> {
 }
 
 export async function getAccessToken() {
-  return cookies().get("accessToken")?.value;
+  return (await cookies()).get("accessToken")?.value;
 }
 
 export async function loginUser(prevState: LoginFormState, formData: FormData): Promise<LoginFormState> {
@@ -220,7 +223,7 @@ export async function loginUser(prevState: LoginFormState, formData: FormData): 
       expires_at: number;
       refresh_Token: string;
     };
-    void storeToken({
+    await storeToken({
       access_token: res.access_Token,
       refresh_token: res.refresh_Token,
       expires_at: res.expires_at.toString()

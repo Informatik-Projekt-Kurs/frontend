@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 
 @layer base {
   :root {
@@ -215,7 +214,7 @@ canvas {
   top: auto;
   bottom: -5%;
   left: -5%;
-  right: 0%;
+  right: 0;
   overflow: hidden;
 }
 
@@ -225,14 +224,14 @@ canvas {
   object-fit: contain;
   position: absolute;
   top: auto;
-  bottom: 0%;
+  bottom: 0;
   left: auto;
-  right: 0%;
+  right: 0;
 }
 
 .home_hero_pattern.is-left {
   transform-style: preserve-3d;
-  left: 0% !important;
+  left: 0 !important;
   right: auto !important;
   transform: rotateX(0) rotateY(90deg) rotate(0);
 }
@@ -256,8 +255,8 @@ canvas {
   position: absolute;
   top: 25%;
   bottom: auto;
-  left: 0%;
-  right: 0%;
+  left: 0;
+  right: 0;
 }
 
 .graphic_circle_large {
@@ -301,9 +300,9 @@ canvas {
   flex: none;
   margin: auto;
   position: absolute;
-  top: 0%;
+  top: 0;
   bottom: 0;
-  left: 0%;
+  left: 0;
   right: 0;
 }
 
@@ -315,10 +314,10 @@ canvas {
   flex: none;
   margin: auto;
   position: absolute;
-  top: 0%;
-  bottom: 0%;
-  left: 0%;
-  right: 0%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .graphic_circle_tiny {
@@ -329,10 +328,10 @@ canvas {
   flex: none;
   margin: auto;
   position: absolute;
-  top: 0%;
-  bottom: 0%;
-  left: 0%;
-  right: 0%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .home_hero_graphic {
@@ -473,7 +472,6 @@ canvas {
   z-index: 2;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.2s;
   display: flex;
   position: absolute;
   top: auto;
@@ -540,4 +538,15 @@ canvas {
 
 .z-50.overflow-hidden.border.bg-background.px-3.py-1\.5.text-sm.text-foreground.shadow-md.animate-in.fade-in-0.zoom-in-95.data-\[state\=closed\]\:animate-out.data-\[state\=closed\]\:fade-out-0.data-\[state\=closed\]\:zoom-out-95.data-\[side\=bottom\]\:slide-in-from-top-2.data-\[side\=left\]\:slide-in-from-right-2.data-\[side\=right\]\:slide-in-from-left-2.data-\[side\=top\]\:slide-in-from-bottom-2.rounded-full.border-border {
   background: $background !important;
+}
+
+/* ---break---   */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

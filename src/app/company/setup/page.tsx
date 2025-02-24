@@ -8,7 +8,7 @@ import { type FetchResult, useMutation } from "@apollo/client";
 import { CREATE_COMPANY } from "@/lib/graphql/mutations";
 import Loader from "@/components/layout/Loader";
 import { useRouter } from "next/navigation";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 type DisplayInputs = {
   "Full Company Name": string;
@@ -83,11 +83,8 @@ function Setup() {
     try {
       const res: FetchResult<{ createCompany: string }> = await createCompany({ variables: mutationInputs });
       if (res.data?.createCompany.includes("200") === true) {
-        toast({
-          title: "Company created!",
-          description: "You can now login to your account",
-          variant: "default",
-          className: "border-emerald-300"
+        toast.success("Company created!", {
+          description: "You can now login to your account"
         });
         setTimeout(() => {
           router.push("/login");
@@ -136,10 +133,10 @@ function Setup() {
             setInputs((prev) => ({ ...prev, [placeholders[step]]: e.target.value }));
           }}
           placeholder={placeholders[step]}
-          className="border-0 text-lg font-medium text-foreground focus-visible:ring-0"
+          className="text-foreground border-0 text-lg font-medium focus-visible:ring-0"
         />
         <Progress
-          className="h-1 drop-shadow-glow max-sm:w-[350px] sm:w-[450px] md:w-[600px] lg:w-[960px]"
+          className="drop-shadow-glow h-1 max-sm:w-[350px] sm:w-[450px] md:w-[600px] lg:w-[960px]"
           value={(step / 3) * 100}
         />
 

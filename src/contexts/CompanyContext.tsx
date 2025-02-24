@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { type Appointment, type Company, type CompanyUser, type User } from "@/types";
-import { getAccessToken, getUser } from "@/lib/authActions";
+import { getAccessToken, getUser } from "@/lib/authActions.server";
 import { type ApolloQueryResult, useQuery, useApolloClient } from "@apollo/client";
 import { GET_ALL_APPOINTMENTS, GET_CLIENTS, GET_MEMBER, getCompany } from "@/lib/graphql/queries";
 
@@ -78,8 +78,6 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
           }
         } catch (error) {
           console.error(`Error fetching member ${memberId}:`, error);
-          // Continue with other members even if one fails
-          continue;
         }
       }
 
@@ -102,7 +100,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     setUserLoading(true);
     try {
       const accessToken = await getAccessToken();
-      const userData = await getUser(accessToken);
+      const userData = await getUser(accessToken!);
       setUser(userData as CompanyUser);
     } catch (error) {
       console.error("Failed to fetch user", error);

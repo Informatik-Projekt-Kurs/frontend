@@ -1,14 +1,13 @@
-import { useFormState } from "react-dom";
 import { subscribeToCompany } from "@/lib/companyActions";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useActionState } from "react";
 import { useDashboardData } from "@/contexts/DashboardContext";
 
 export default function FollowButton({ companyId }: { companyId: string }) {
-  const { user, refreshUser } = useDashboardData();
+  const { user, refreshData } = useDashboardData();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [state, formAction] = useFormState(subscribeToCompany, {
+  const [state, formAction] = useActionState(subscribeToCompany, {
     message: "success"
   });
 
@@ -16,10 +15,10 @@ export default function FollowButton({ companyId }: { companyId: string }) {
 
   useEffect(() => {
     if (state.message === "success" && state.isSubscribed !== undefined) {
-      void refreshUser();
+      void refreshData();
       setIsLoading(false);
     }
-  }, [state.message, state.isSubscribed, refreshUser]);
+  }, [state.message, state.isSubscribed, refreshData]);
 
   const handleAction = async (formData: FormData) => {
     setIsLoading(true);

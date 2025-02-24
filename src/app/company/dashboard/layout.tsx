@@ -9,7 +9,6 @@ import Loader from "@/components/layout/Loader";
 import { CompanyProvider, useCompany } from "@/contexts/CompanyContext";
 import { BriefcaseBusiness, Settings, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ToastProvider } from "@/components/ui/toast";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
   const { loading, company } = useCompany();
@@ -37,9 +36,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         <div className="sticky top-8 flex h-[calc(100vh-64px)] flex-row">
           <div className="flex h-full w-[80px] flex-col items-center justify-start">
             <div
-              className="absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md bg-subtle shadow-lg"
+              className="bg-subtle absolute mt-10 flex h-16 w-[80px] items-center justify-start rounded-l-md shadow-lg"
               style={{ marginTop: 40 }}>
-              <div className="ml-[8px] h-1/2 w-px bg-primary"></div>
+              <div className="bg-primary ml-[8px] h-1/2 w-px"></div>
             </div>
             <div className="mt-12 flex size-12 items-center justify-center rounded-md">
               <Link href={"/company/dashboard"}>
@@ -51,10 +50,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
           </div>
-          <div className="flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2 border-primary">
+          <div className="border-primary flex h-full w-[230px] flex-col items-center justify-start rounded-[20px] border-2">
             <h1 className="mt-8 text-xl font-bold">{company?.getCompany.name}</h1>
             <div className="mt-[35%] flex flex-col items-center justify-start gap-y-4">
-              <header className="relative left-[-40%] mb-[-6px] text-xs text-muted-foreground">Tools</header>
+              <header className="text-muted-foreground relative left-[-40%] mb-[-6px] text-xs">Tools</header>
               <Link href={"/company/dashboard"}>
                 <Button
                   className={cn(
@@ -114,13 +113,13 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </aside>
-      <main className="flex w-full flex-col items-center justify-between rounded-none border-0 lg:mr-8 lg:mt-8 lg:min-h-svh lg:rounded-[20px] lg:border-2 lg:border-border">
+      <main className="lg:border-border flex w-full flex-col items-center justify-between rounded-none border-0 lg:mt-8 lg:mr-8 lg:min-h-svh lg:rounded-[20px] lg:border-2">
         <div className={"min-h-[calc(100svh-64px)] w-full"}>
           {loading ? <Loader /> : <Suspense fallback={<Loader />}>{children}</Suspense>}
         </div>
 
-        <footer className="flex h-8 w-full items-center justify-start rounded-none bg-primary lg:rounded-b-[20px]">
-          <p className="pl-4 text-sm font-medium text-background">MeetMate</p>
+        <footer className="bg-primary flex h-8 w-full items-center justify-start rounded-none lg:rounded-b-[20px]">
+          <p className="text-background pl-4 text-sm font-medium">MeetMate</p>
         </footer>
       </main>
     </div>
@@ -130,10 +129,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 // Wrap the dashboard with the UserProvider
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ToastProvider>
-      <CompanyProvider>
-        <DashboardContent>{children}</DashboardContent>
-      </CompanyProvider>
-    </ToastProvider>
+    <CompanyProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </CompanyProvider>
   );
 }
