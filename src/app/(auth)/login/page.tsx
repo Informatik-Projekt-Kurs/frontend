@@ -19,7 +19,7 @@ const SubmitButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" className="text-background w-full gap-2" disabled={pending}>
+    <Button type="submit" className="text-background w-full cursor-pointer gap-2" disabled={pending}>
       <IoLogInOutline className="text-lg font-bold" />
       Log In
     </Button>
@@ -70,30 +70,22 @@ const LoginForm = () => {
               </Link>
             </p>
             <Separator className="bg-foreground my-2 w-full" />
-            <div className="flex items-center justify-center gap-x-4">
-              <TooltipProvider delayDuration={0}>
+            <div className="flex items-center justify-center gap-x-16">
+              <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
-                      <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                        <FaGoogle className="text-foreground group-hover:text-primary text-3xl transition-colors" />
-                      </Button>
-                    </Link>
+                  <TooltipTrigger asChild>
+                    <FaGoogle className="text-muted-foreground group-hover:text-primary text-3xl transition-colors" />
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="border-border bg-background rounded-full">
-                    <p>Not available yet</p>
+                  <TooltipContent side={"bottom"} className={"rounded-full"}>
+                    Not available yet
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
-                      <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                        <FaGithub className="text-foreground group-hover:text-primary text-3xl transition-colors" />
-                      </Button>
-                    </Link>
+                  <TooltipTrigger asChild>
+                    <FaGithub className="text-muted-foreground group-hover:text-primary text-3xl transition-colors" />
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="border-border rounded-full">
-                    <p>Not available yet</p>
+                  <TooltipContent side={"bottom"} className="border-border rounded-full">
+                    Not available yet
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

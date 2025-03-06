@@ -13,12 +13,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import { useCompany } from "@/contexts/CompanyContext";
 import { deleteToken } from "@/lib/authActions.server";
-import Loader from "@/components/layout/Loader";
 import WeeklyAppointmentsChart from "@/components/dashboard/company/WeeklyAppointmentsChart";
 import HamburgerMenu from "@/components/dashboard/company/HamburgerMenu";
 
 function Page() {
-  const { user, loading, company, appointments, clients } = useCompany();
+  const { user, company, appointments, clients } = useCompany();
 
   const logout = async () => {
     try {
@@ -29,8 +28,6 @@ function Page() {
       throw logoutError;
     }
   };
-
-  if (loading) return <Loader />;
 
   return (
     <div className="flex min-h-[calc(100%-32px)] flex-col items-start justify-start p-4 md:p-8">

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import "../assets/tailwind.css";
+
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import "../assets/globals.scss";
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import "../assets/tailwind.css";
 
 import React from "react";
 import { cn } from "@/lib/utils";

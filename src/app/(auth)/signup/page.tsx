@@ -75,32 +75,26 @@ const SignupForm = () => {
             </p>
             <Separator className="bg-foreground my-2 w-full" />
             <div className="flex items-center justify-center gap-x-4">
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
-                      <Button name="Google Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                        <FaGoogle className="text-foreground group-hover:text-primary text-3xl transition-colors" />
-                      </Button>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent className="border-border rounded-full">
-                    <p>Not available yet</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link href="#" className="group pointer-events-none opacity-70" aria-label="Google Login">
-                      <Button name="Github Login" variant="ghost" className="px-20 max-sm:px-8" size={"sm"}>
-                        <FaGithub className="text-foreground group-hover:text-primary text-3xl transition-colors" />
-                      </Button>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent className="border-border rounded-full">
-                    <p>Not available yet</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="flex items-center justify-center gap-x-16">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FaGoogle className="text-muted-foreground group-hover:text-primary text-3xl transition-colors" />
+                    </TooltipTrigger>
+                    <TooltipContent side={"bottom"} className={"rounded-full"}>
+                      Not available yet
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FaGithub className="text-muted-foreground group-hover:text-primary text-3xl transition-colors" />
+                    </TooltipTrigger>
+                    <TooltipContent side={"bottom"} className="border-border rounded-full">
+                      Not available yet
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
 
             <div className="text-foreground mb-4 flex h-1 w-full flex-row items-center justify-between">
@@ -166,11 +160,11 @@ const SignupForm = () => {
                       htmlFor="terms"
                       className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                       I agree to the{" "}
-                      <Link href="#" className="text-primary text-sm hover:underline">
+                      <Link href="#" className="text-primary cursor-not-allowed text-sm hover:underline">
                         Terms of Service
                       </Link>{" "}
                       and{" "}
-                      <Link href="#" className="text-primary text-sm hover:underline">
+                      <Link href="#" className="text-primary cursor-not-allowed text-sm hover:underline">
                         Privacy Policy
                       </Link>
                     </label>

@@ -1,64 +1,78 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { type Appointment, type Company, type CompanyUser, type User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/authActions.server";
-import { type ApolloQueryResult, useQuery, useApolloClient } from "@apollo/client";
+import { useQuery, useApolloClient } from "@apollo/client";
 import { GET_ALL_APPOINTMENTS, GET_CLIENTS, GET_MEMBER, getCompany } from "@/lib/graphql/queries";
 
 type CompanyContextType = {
-  user: CompanyUser | undefined;
+  user: CompanyUser | null;
   loading: boolean;
-  refreshUser: () => Promise<void>;
-
+  refreshData: () => Promise<void>;
   company: { getCompany: Company } | undefined;
-  refreshCompany: () => Promise<ApolloQueryResult<{ getCompany: Company }>>;
-
   members: User[];
-  refreshMembers: () => Promise<void>;
-
   appointments: Appointment[];
-  refreshAppointments: () => Promise<ApolloQueryResult<{ getAllAppointments: Appointment[] }>>;
   clients: { getClients: User[] };
+  error: Error | null;
 };
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
 export function CompanyProvider({ children }: { children: React.ReactNode }) {
   const apolloClient = useApolloClient();
-  const [user, setUser] = useState<CompanyUser>();
+  const [user, setUser] = useState<CompanyUser | null>(null);
   const [members, setMembers] = useState<User[]>([]);
-  const [membersLoading, setMembersLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
+  // Company query that depends on user
   const {
     loading: companyLoading,
     data: company,
-    refetch: refreshCompany
+    refetch: refetchCompany
   } = useQuery(getCompany, {
     variables: { id: user?.associatedCompany },
-    pollInterval: 300000,
-    skip: user?.associatedCompany === undefined
+    skip: user?.associatedCompany === undefined,
+    onError: (graphQLError) => {
+      console.error("GraphQL Error fetching company:", graphQLError);
+      setError(graphQLError);
+    }
   });
 
+  // Appointments query that depends on company
   const {
     data: appointmentsData,
     loading: appointmentsLoading,
-    refetch: refreshAppointments
+    refetch: refetchAppointments
   } = useQuery(GET_ALL_APPOINTMENTS, {
     variables: { companyId: company?.getCompany?.id },
-    skip: !Boolean(company?.getCompany?.id), // Skip until we have the company data
-    pollInterval: 300000
+    skip: company?.getCompany?.id === undefined,
+    onError: (graphQLError) => {
+      console.error("GraphQL Error fetching appointments:", graphQLError);
+      setError(graphQLError);
+    }
   });
 
-  const { data: clients = { getClients: [] }, loading: clientsLoading } = useQuery(GET_CLIENTS);
-
-  const [userLoading, setUserLoading] = useState(true);
+  // Clients query
+  const {
+    data: clients,
+    loading: clientsLoading,
+    refetch: refetchClients
+  } = useQuery(GET_CLIENTS, {
+    onError: (graphQLError) => {
+      console.error("GraphQL Error fetching clients:", graphQLError);
+      setError(graphQLError);
+    }
+  });
 
   const fetchMembers = async () => {
-    if (!Boolean(company?.getCompany?.memberIds?.length)) {
+    if (company?.getCompany?.memberIds === undefined || company.getCompany.memberIds.length === 0) {
       setMembers([]);
       return;
     }
 
-    setMembersLoading(true);
+    console.log("Fetching company members...");
+    // We don't set isLoading to true here as it's managed by fetchAllData
+
     try {
       // Fetch members sequentially to avoid overwhelming the server
       const memberData: User[] = [];
@@ -72,80 +86,132 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
             fetchPolicy: "network-only" // Ensure we get fresh data
           });
 
-          if (Boolean(result.data?.getMember)) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            memberData.push(result.data.getMember);
+          if (result.data?.getMember !== undefined && result.data?.getMember !== null) {
+            memberData.push(result.data.getMember as User);
           }
-        } catch (error) {
-          console.error(`Error fetching member ${memberId}:`, error);
+        } catch (fetchError) {
+          console.error(`Error fetching member ${memberId}:`, fetchError);
         }
       }
 
+      console.log(`Successfully fetched ${memberData.length} members`);
       setMembers(memberData);
-    } catch (error) {
-      console.error("Failed to fetch members", error);
+    } catch (memberError) {
+      console.error("Failed to fetch members", memberError);
+      setError(memberError instanceof Error ? memberError : new Error(String(memberError)));
       setMembers([]);
-    } finally {
-      setMembersLoading(false);
     }
   };
 
+  const fetchUser = async () => {
+    console.log("Fetching company user data...");
+    setIsLoading(true);
+
+    try {
+      const accessToken = await getAccessToken();
+
+      if (accessToken === null) {
+        console.error("No access token available");
+        setIsLoading(false);
+        return;
+      }
+
+      const userData = await getUser(accessToken!);
+      console.log("User data retrieved:", userData !== null ? "Yes" : "No");
+
+      setUser(userData as CompanyUser);
+    } catch (userError) {
+      console.error("Failed to fetch user", userError);
+      setError(userError instanceof Error ? userError : new Error(String(userError)));
+    } finally {
+      // We don't set loading to false here as it will be handled by fetchAllData
+    }
+  };
+
+  // Main data fetching function
+  const fetchAllData = async () => {
+    console.log("Fetching all company data...");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await fetchUser();
+
+      if (user?.associatedCompany !== undefined) {
+        await refetchCompany();
+      }
+
+      if (company?.getCompany?.id !== undefined) {
+        await refetchAppointments();
+      }
+
+      await refetchClients();
+      await fetchMembers();
+    } catch (fetchError) {
+      console.error("Error in fetchAllData:", fetchError);
+      setError(fetchError instanceof Error ? fetchError : new Error(String(fetchError)));
+    } finally {
+      console.log("Finished fetching all company data, setting loading to false");
+      setIsLoading(false);
+    }
+  };
+
+  // Load members when company data changes
   useEffect(() => {
-    if (Boolean(company?.getCompany?.memberIds)) {
+    if (company?.getCompany?.memberIds !== undefined) {
       void fetchMembers();
     }
   }, [company?.getCompany?.memberIds]);
 
-  const fetchUser = async () => {
-    setUserLoading(true);
-    try {
-      const accessToken = await getAccessToken();
-      const userData = await getUser(accessToken!);
-      setUser(userData as CompanyUser);
-    } catch (error) {
-      console.error("Failed to fetch user", error);
-    } finally {
-      setUserLoading(false);
-    }
-  };
-
+  // Initial data fetch
   useEffect(() => {
-    void fetchUser();
+    console.log("CompanyProvider mounted, fetching initial data");
+    void fetchAllData();
   }, []);
 
-  const refreshUser = async () => {
-    await fetchUser();
-  };
+  // For debugging
+  useEffect(() => {
+    console.log("Company context state:", {
+      user: user !== null ? "loaded" : "null",
+      company: company?.getCompany?.id !== undefined ? `ID: ${company.getCompany.id}` : "not loaded",
+      members: members.length,
+      appointments: appointmentsData?.getAllAppointments?.length ?? 0,
+      isLoading,
+      companyLoading,
+      appointmentsLoading,
+      clientsLoading
+    });
+  }, [user, company, members, appointmentsData, isLoading, companyLoading, appointmentsLoading, clientsLoading]);
 
-  const refreshMembers = async () => {
-    await fetchMembers();
+  const contextValue: CompanyContextType = {
+    user,
+    loading: isLoading || companyLoading || appointmentsLoading || clientsLoading,
+    refreshData: fetchAllData,
+    company,
+    members,
+    appointments: appointmentsData?.getAllAppointments ?? [],
+    clients,
+    error
   };
-
-  const loading = userLoading || companyLoading || membersLoading || appointmentsLoading || clientsLoading;
 
   return (
-    <CompanyContext.Provider
-      value={{
-        user,
-        loading,
-        refreshUser,
-        company,
-        refreshCompany,
-        members,
-        refreshMembers,
-        appointments: appointmentsData?.getAllAppointments ?? [],
-        refreshAppointments,
-        clients
-      }}>
-      {children}
+    <CompanyContext.Provider value={contextValue}>
+      {error !== null ? (
+        <div className="p-4 text-red-500">
+          Error loading company data. Please try refreshing.
+          <pre className="mt-2 text-xs">{error.message}</pre>
+        </div>
+      ) : (
+        children
+      )}
     </CompanyContext.Provider>
   );
 }
 
-export function useCompany() {
+export const useCompany = (): CompanyContextType => {
   const context = useContext(CompanyContext);
   if (context === undefined) {
     throw new Error("useCompany must be used within a CompanyProvider");
   }
   return context;
-}
+};

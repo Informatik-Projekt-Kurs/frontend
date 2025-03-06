@@ -23,4 +23,54 @@
     --color-input: hsl(217.2, 32.6%, 17.5%);
     --color-ring: hsl(224.3, 76.3%, 48%);
     --spacing-radius: 0.75rem;
+
+    --animate-tooltip-fade-in: fade-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-tooltip-fade-out: fade-out 150ms cubic-bezier(0.7, 0, 0.84, 0) forwards;
+    --animate-tooltip-zoom-in: zoom-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-tooltip-zoom-out: zoom-out 150ms cubic-bezier(0.7, 0, 0.84, 0) forwards;
+    --animate-tooltip-slide-top: slide-from-top 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-tooltip-slide-right: slide-from-right 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-tooltip-slide-bottom: slide-from-bottom 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-tooltip-slide-left: slide-from-left 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    /* Define keyframes */
+    @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    @keyframes zoom-in {
+        from { transform: scale(0.95); }
+        to { transform: scale(1); }
+    }
+
+    @keyframes zoom-out {
+        from { transform: scale(1); }
+        to { transform: scale(0.95); }
+    }
+
+    @keyframes slide-from-top {
+        from { transform: translateY(-0.5rem); }
+        to { transform: translateY(0); }
+    }
+
+    @keyframes slide-from-right {
+        from { transform: translateX(0.5rem); }
+        to { transform: translateX(0); }
+    }
+
+    @keyframes slide-from-bottom {
+        from { transform: translateY(0.5rem); }
+        to { transform: translateY(0); }
+    }
+
+    @keyframes slide-from-left {
+        from { transform: translateX(-0.5rem); }
+        to { transform: translateX(0); }
+    }
 }
