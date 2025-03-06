@@ -31,7 +31,7 @@ const formSchema = z.object({
 });
 
 export default function Page() {
-  const { user, loading, company, refreshCompany } = useCompany();
+  const { user, loading, company, refreshData } = useCompany();
 
   const [editCompany] = useMutation(EDIT_COMPANY);
 
@@ -58,7 +58,7 @@ export default function Page() {
       variables: { companyName: values.name, description: values.description },
       onCompleted: () => {
         toast.success("Company Settings updated");
-        void refreshCompany();
+        void refreshData();
       },
       onError: (err) => {
         console.error(err);
