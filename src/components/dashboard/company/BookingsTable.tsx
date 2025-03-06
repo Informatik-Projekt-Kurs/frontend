@@ -205,7 +205,7 @@ const columns: Array<ColumnDef<Appointment>> = [
     cell: ({ row }) => {
       const appointment = row.original;
       const [editAppointment] = useMutation(EDIT_APPOINTMENT);
-      const { refreshAppointments } = useCompany();
+      const { refreshData } = useCompany();
 
       return (
         <DropdownMenu>
@@ -237,7 +237,7 @@ const columns: Array<ColumnDef<Appointment>> = [
                 await editAppointment({
                   variables: { id: appointment.id, status: "CANCELLED" },
                   onCompleted: () => {
-                    void refreshAppointments();
+                    void refreshData();
                   }
                 });
               }}
@@ -249,7 +249,7 @@ const columns: Array<ColumnDef<Appointment>> = [
                 await editAppointment({
                   variables: { id: appointment.id, status: "COMPLETED" },
                   onCompleted: () => {
-                    void refreshAppointments();
+                    void refreshData();
                   }
                 });
               }}
@@ -264,7 +264,7 @@ const columns: Array<ColumnDef<Appointment>> = [
 ];
 
 export function BookingsTable(): React.ReactElement {
-  const { appointments, clients, refreshAppointments } = useCompany();
+  const { appointments, clients, refreshData } = useCompany();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -328,7 +328,7 @@ export function BookingsTable(): React.ReactElement {
         description: values.from.toDateString()
       });
       form.reset();
-      await refreshAppointments();
+      await refreshData();
       setCreateLoading(false);
     } else {
       console.error(response.errors);
