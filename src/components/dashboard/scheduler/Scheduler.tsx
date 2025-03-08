@@ -9,6 +9,7 @@ import { type Appointment } from "@/types";
 import { useQuery } from "@apollo/client";
 import { GET_COMPANY } from "@/lib/graphql/queries";
 import { toast } from "sonner";
+import { Building2, MapPin } from "lucide-react";
 
 type SchedulerProps = {
   openingHours: { open: string; close: string };
@@ -151,40 +152,40 @@ function Scheduler(props: SchedulerProps) {
                 <DialogContent className={"border-border text-foreground"}>
                   <div className="grid gap-4">
                     <div className="space-y-2">
-                      <DialogTitle className="text-lg leading-none font-medium">Appointment Information</DialogTitle>
-                      <p className="text-muted-foreground">
-                        Do you need to request a change to this appointment or cancel it?
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className={"text-foreground font-medium"}>{eventProps.title}</h4>
-                      <p>
-                        Date:{" "}
+                      <DialogTitle className="text-lg leading-none font-medium">
+                        {eventProps.title} (
                         {new Intl.DateTimeFormat("en-US", {
                           year: "numeric",
                           month: "long",
                           day: "numeric"
                         }).format(eventProps.from)}
-                      </p>
-                      <p>
-                        From:{" "}
+                        )
+                      </DialogTitle>
+                      <p className="text-muted-foreground">{eventProps.description}</p>
+                    </div>
+                    <div>
+                      <div className={"text-muted-foreground flex gap-x-4"}>
                         {new Intl.DateTimeFormat("en-US", {
                           hour: "numeric",
                           minute: "numeric"
                         }).format(eventProps.from)}
-                      </p>
-                      <p>
-                        To:{" "}
+                        <FaArrowRight className={"mt-1"} />
                         {new Intl.DateTimeFormat("en-US", {
                           hour: "numeric",
                           minute: "numeric"
                         }).format(eventProps.to)}
-                      </p>
-                      <p>Description: {eventProps.description}</p>
-                      <p>Location: {eventProps.location}</p>
-                      <p>Status: {eventProps.Status}</p>
-                      <p>
-                        Company:{" "}
+                      </div>
+
+                      <br />
+
+                      {eventProps.location !== "" && eventProps.location !== null && (
+                        <p className={"flex gap-x-1"}>
+                          <MapPin size={16} className={"mt-1"} /> {eventProps.location} test
+                        </p>
+                      )}
+
+                      <p className={"flex gap-x-1"}>
+                        <Building2 size={16} className={"mt-1"} />{" "}
                         {useQuery(GET_COMPANY, { variables: { id: eventProps.companyId } }).data?.getCompany.name}
                       </p>
                     </div>

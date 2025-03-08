@@ -399,7 +399,7 @@ function Bookings() {
             }}
           />
           <DropdownMenu modal={false}>
-            <DropdownMenuTrigger className={"mr-4"}>
+            <DropdownMenuTrigger className={"mr-4"} asChild>
               <Button variant="ghost" className="relative size-8 rounded-full">
                 <Avatar className="size-10">
                   <AvatarFallback className={"bg-primary"}>{extractNameInitials(user?.name)}</AvatarFallback>
@@ -433,7 +433,7 @@ function Bookings() {
         <p className={"hidden md:block"}>Your Appointments at a glance. Book a new appointment now!</p>
         <div className={"text-foreground flex w-fit items-center justify-center gap-x-4"}>
           <AlertDialog>
-            <AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
               <Button variant={"secondary"}>
                 <FaRegCircleQuestion className={"mr-1 font-bold"} />
                 Help
