@@ -52,6 +52,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   });
 
   // Clients query
+  /* Due to an error in the backend, this code has to be commented out
   const {
     data: clients,
     loading: clientsLoading,
@@ -61,7 +62,13 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
       console.error("GraphQL Error fetching clients:", graphQLError);
       setError(graphQLError);
     }
-  });
+  }); */
+
+  const clients = [];
+  const clientsLoading = false;
+  const refetchClients = () = {
+    console.log("Dummy refetch clients");
+  }
 
   const fetchMembers = async () => {
     if (company?.getCompany?.memberIds === undefined || company.getCompany.memberIds.length === 0) {
