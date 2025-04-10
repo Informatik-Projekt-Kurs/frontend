@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { type Appointment, type Company, type CompanyUser, type User } from "@/types";
 import { getAccessToken, getUser } from "@/lib/authActions.server";
 import { useQuery, useApolloClient } from "@apollo/client";
-import { GET_ALL_APPOINTMENTS, GET_CLIENTS, GET_MEMBER, getCompany } from "@/lib/graphql/queries";
+import { GET_ALL_APPOINTMENTS, GET_MEMBER, getCompany } from "@/lib/graphql/queries";
 
 type CompanyContextType = {
   user: CompanyUser | null;
@@ -151,7 +151,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
         await refetchAppointments();
       }
 
-      await refetchClients();
+      /* await */ refetchClients();
       await fetchMembers();
     } catch (fetchError) {
       console.error("Error in fetchAllData:", fetchError);
