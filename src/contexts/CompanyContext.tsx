@@ -64,7 +64,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     }
   }); */
 
-  const clients = {} as { getClients: User[] };
+  const clients = { getClients: [] } as { getClients: User[] };
   const clientsLoading = false;
   function refetchClients() {
     console.log("dummy refech clients");
