@@ -48,7 +48,6 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     skip: company?.getCompany?.id === undefined,
     onError: (graphQLError) => {
       console.error("GraphQL Error fetching appointments:", graphQLError);
-      setError(graphQLError);
     }
   });
 
