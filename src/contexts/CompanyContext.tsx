@@ -66,8 +66,8 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
 
   const clients = [];
   const clientsLoading = false;
-  const refetchClients = () = {
-    console.log("Dummy refetch clients");
+  function refetchClients() {
+    console.log("dummy refech clients");
   }
 
   const fetchMembers = async () => {
