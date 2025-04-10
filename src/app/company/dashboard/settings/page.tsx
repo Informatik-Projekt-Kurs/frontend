@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import React from "react";
-import { deleteToken } from "@/lib/authActions";
+import { deleteToken } from "@/lib/authActions.server";
 import Loader from "@/components/layout/Loader";
 import { useCompany } from "@/contexts/CompanyContext";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -20,10 +20,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@apollo/client";
 import { EDIT_COMPANY } from "@/lib/graphql/mutations";
 import HamburgerMenu from "@/components/dashboard/company/HamburgerMenu";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().max(30).optional(),
@@ -31,8 +31,7 @@ const formSchema = z.object({
 });
 
 export default function Page() {
-  const { user, loading, company, refreshCompany } = useCompany();
-  const { toast } = useToast();
+  const { user, loading, company, refreshData } = useCompany();
 
   const [editCompany] = useMutation(EDIT_COMPANY);
 
@@ -58,12 +57,8 @@ export default function Page() {
     await editCompany({
       variables: { companyName: values.name, description: values.description },
       onCompleted: () => {
-        toast({
-          title: "Company Settings updated",
-          variant: "default",
-          className: "border-emerald-300"
-        });
-        void refreshCompany();
+        toast.success("Company Settings updated");
+        void refreshData();
       },
       onError: (err) => {
         console.error(err);
@@ -76,7 +71,7 @@ export default function Page() {
   return (
     <div className="flex h-[calc(100%-32px)] flex-col items-start justify-start p-8 px-6">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-foreground md:text-2xl">Company Settings</h1>
+        <h1 className="text-foreground m-4 font-medium md:text-2xl">Company Settings</h1>
         <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
@@ -86,11 +81,11 @@ export default function Page() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+            <DropdownMenuContent align={"end"} className={"border-border w-56"}>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm leading-none font-medium">{user?.name}</p>
+                  <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -108,7 +103,7 @@ export default function Page() {
           <div className={"flex flex-row items-center justify-center"}>
             <div
               className={
-                "hidden size-[200px] items-center justify-center rounded-full bg-primary text-6xl font-medium text-foreground md:flex"
+                "bg-primary text-foreground hidden size-[200px] items-center justify-center rounded-full text-6xl font-medium md:flex"
               }>
               {extractNameInitials(company?.getCompany.name)}
             </div>
@@ -117,7 +112,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <p className={"mt-10 text-foreground"}>
+        <p className={"text-foreground mt-10"}>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField

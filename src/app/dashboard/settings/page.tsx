@@ -2,13 +2,12 @@
 import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useDashboardData } from "@/contexts/DashboardContext";
-import { deleteToken, editUser, getAccessToken } from "@/lib/authActions";
+import { deleteToken, editUser, getAccessToken } from "@/lib/authActions.server";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +20,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   name: z.string().min(3, {
@@ -35,12 +35,8 @@ function Settings() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const accessToken = await getAccessToken();
-    await editUser(data.name, accessToken).finally(() => {
-      toast({
-        title: "User Data Updated",
-        variant: "default",
-        className: "border-emerald-300"
-      });
+    await editUser(data.name, accessToken!).finally(() => {
+      toast.success("User Data Updated");
     });
   }
 
@@ -72,7 +68,7 @@ function Settings() {
   return (
     <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 text-2xl font-medium text-foreground">Settings</h1>
+        <h1 className="text-foreground m-4 text-2xl font-medium">Settings</h1>
         <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
@@ -82,11 +78,11 @@ function Settings() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+            <DropdownMenuContent align={"end"} className={"border-border w-56"}>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm leading-none font-medium">{user?.name}</p>
+                  <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -106,7 +102,7 @@ function Settings() {
         </div>
       </header>
       <div className="flex h-[600px] w-full max-w-[500px] flex-col rounded-[20px] px-6">
-        <p className={"mt-10 text-foreground"}>
+        <p className={"text-foreground mt-10"}>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField

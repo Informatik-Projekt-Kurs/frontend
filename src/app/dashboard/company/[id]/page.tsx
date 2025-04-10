@@ -1,4 +1,5 @@
 "use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +11,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { extractNameInitials } from "@/lib/utils";
-import React from "react";
+import React, { use } from "react";
 import { useRouter } from "next/navigation";
-import { deleteToken } from "@/lib/authActions";
+import { deleteToken } from "@/lib/authActions.server";
 import FollowButton from "@/components/dashboard/FollowButton";
 import { useQuery } from "@apollo/client";
 import { getCompany } from "@/lib/graphql/queries";
@@ -20,14 +21,17 @@ import Loader from "@/components/layout/Loader";
 import { useDashboardData } from "@/contexts/DashboardContext";
 import HamburgerMenu from "@/components/dashboard/HamburgerMenu";
 
-export default function Page({ params }: { params: { id: string } }) {
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default function Page(props: PageProps) {
+  const params = use(props.params);
   const { user } = useDashboardData();
   const router = useRouter();
   const { loading, error, data } = useQuery(getCompany, {
     variables: { id: params.id },
-    // Optional: configure caching and refetching
     fetchPolicy: "cache-and-network",
-    // Optional: refetch every 5 minutes
     pollInterval: 300000
   });
 
@@ -48,7 +52,7 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <div className="flex h-[calc(100svh-32px)] flex-col items-start justify-start p-8 px-6 lg:h-[calc(100svh-96px)]">
       <header className="flex w-full flex-row items-center justify-between">
-        <h1 className="m-4 font-medium text-muted-foreground md:text-2xl">{data.getCompany.name}</h1>
+        <h1 className="text-muted-foreground m-4 font-medium md:text-2xl">{data.getCompany.name}</h1>
         <div className="flex items-center gap-x-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className={"mr-4"}>
@@ -58,11 +62,11 @@ export default function Page({ params }: { params: { id: string } }) {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={"end"} className={"w-56 border-border"}>
+            <DropdownMenuContent align={"end"} className={"border-border w-56"}>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm leading-none font-medium">{user?.name}</p>
+                  <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -87,7 +91,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className={"flex flex-row items-center justify-center"}>
             <div
               className={
-                "hidden size-[100px] items-center justify-center rounded-full bg-primary text-3xl font-medium text-foreground md:flex lg:size-[200px] lg:text-6xl"
+                "bg-primary text-foreground hidden size-[100px] items-center justify-center rounded-full text-3xl font-medium md:flex lg:size-[200px] lg:text-6xl"
               }>
               {extractNameInitials(data.getCompany.name as string)}
             </div>
@@ -97,7 +101,7 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
           <FollowButton companyId={params.id} />
         </div>
-        <p className={"mt-10 text-muted-foreground"}>
+        <p className={"text-muted-foreground mt-10"}>
           {data.getCompany.description !== "" ? (
             data.getCompany.description
           ) : (

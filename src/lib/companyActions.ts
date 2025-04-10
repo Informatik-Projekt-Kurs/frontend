@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { getAccessToken, getUser } from "@/lib/authActions";
+import { getAccessToken, getUser } from "@/lib/authActions.server";
 import { isClientUser } from "@/types/role";
 
 type SubscriptionState = {

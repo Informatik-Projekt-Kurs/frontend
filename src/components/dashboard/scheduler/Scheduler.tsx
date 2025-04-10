@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { type Appointment } from "@/types";
-import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@apollo/client";
 import { GET_COMPANY } from "@/lib/graphql/queries";
+import { toast } from "sonner";
+import { Building2, MapPin } from "lucide-react";
 
 type SchedulerProps = {
   openingHours: { open: string; close: string };
@@ -18,7 +19,6 @@ type SchedulerProps = {
 };
 
 function Scheduler(props: SchedulerProps) {
-  const { toast } = useToast();
   const fieldsData = {
     id: "id",
     subject: { name: "title" },
@@ -63,20 +63,14 @@ function Scheduler(props: SchedulerProps) {
     const timeDifference = (event.from.getTime() - now.getTime()) / (1000 * 60 * 60); // Difference in hours
 
     if (timeDifference < 24) {
-      toast({
-        title: "Cancellation Failed",
-        description: "You cannot cancel an appointment less than 24 hours before the appointment time.",
-        variant: "default",
-        className: "border-red-700"
+      toast.error("Cancellation Failed", {
+        description: "You cannot cancel an appointment less than 24 hours before the appointment time."
       });
     } else {
       const result = props.handleAppointmentCancel(event);
       if (result === "success") {
-        toast({
-          title: "Appointment Cancelled",
-          description: "The appointment has been successfully cancelled.",
-          variant: "default",
-          className: "border-emerald-300"
+        toast.success("Appointment Cancelled", {
+          description: "The appointment has been successfully cancelled."
         });
       } else {
         alert("Failed to cancel the appointment. Please try again.");
@@ -102,14 +96,14 @@ function Scheduler(props: SchedulerProps) {
           min-width: 100px !important;
         }
       `}</style>
-      <div className="scheduler absolute z-10 ml-1 mt-3">
-        <Button size={"sm"} variant={"outline"} className={"rounded-full text-foreground"} onClick={handlePreviousWeek}>
+      <div className="scheduler absolute z-10 mt-3 ml-1">
+        <Button size={"sm"} variant={"outline"} className={"text-foreground rounded-full"} onClick={handlePreviousWeek}>
           <FaArrowLeft size={10} />
         </Button>
         <Button
           size={"sm"}
           variant={"outline"}
-          className={"ml-1 rounded-full text-foreground"}
+          className={"text-foreground ml-1 rounded-full"}
           onClick={handleNextWeek}>
           <FaArrowRight size={10} />
         </Button>
@@ -141,8 +135,8 @@ function Scheduler(props: SchedulerProps) {
                     style={{
                       borderColor: predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
                     }}>
-                    <h2 className={"overflow-hidden text-ellipsis font-bold"}>{eventProps.title}</h2>
-                    <div className={"mt-1 flex items-center gap-x-2 text-xs text-muted-foreground"}>
+                    <h2 className={"overflow-hidden font-bold text-ellipsis"}>{eventProps.title}</h2>
+                    <div className={"text-muted-foreground mt-1 flex items-center gap-x-2 text-xs"}>
                       {new Intl.DateTimeFormat("en-US", {
                         hour: "numeric",
                         minute: "numeric"
@@ -158,40 +152,40 @@ function Scheduler(props: SchedulerProps) {
                 <DialogContent className={"border-border text-foreground"}>
                   <div className="grid gap-4">
                     <div className="space-y-2">
-                      <DialogTitle className="text-lg font-medium leading-none">Appointment Information</DialogTitle>
-                      <p className="text-muted-foreground">
-                        Do you need to request a change to this appointment or cancel it?
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className={"font-medium text-foreground"}>{eventProps.title}</h4>
-                      <p>
-                        Date:{" "}
+                      <DialogTitle className="text-lg leading-none font-medium">
+                        {eventProps.title} (
                         {new Intl.DateTimeFormat("en-US", {
                           year: "numeric",
                           month: "long",
                           day: "numeric"
                         }).format(eventProps.from)}
-                      </p>
-                      <p>
-                        From:{" "}
+                        )
+                      </DialogTitle>
+                      <p className="text-muted-foreground">{eventProps.description}</p>
+                    </div>
+                    <div>
+                      <div className={"text-muted-foreground flex gap-x-4"}>
                         {new Intl.DateTimeFormat("en-US", {
                           hour: "numeric",
                           minute: "numeric"
                         }).format(eventProps.from)}
-                      </p>
-                      <p>
-                        To:{" "}
+                        <FaArrowRight className={"mt-1"} />
                         {new Intl.DateTimeFormat("en-US", {
                           hour: "numeric",
                           minute: "numeric"
                         }).format(eventProps.to)}
-                      </p>
-                      <p>Description: {eventProps.description}</p>
-                      <p>Location: {eventProps.location}</p>
-                      <p>Status: {eventProps.Status}</p>
-                      <p>
-                        Company:{" "}
+                      </div>
+
+                      <br />
+
+                      {eventProps.location !== "" && eventProps.location !== null && (
+                        <p className={"flex gap-x-1"}>
+                          <MapPin size={16} className={"mt-1"} /> {eventProps.location} test
+                        </p>
+                      )}
+
+                      <p className={"flex gap-x-1"}>
+                        <Building2 size={16} className={"mt-1"} />{" "}
                         {useQuery(GET_COMPANY, { variables: { id: eventProps.companyId } }).data?.getCompany.name}
                       </p>
                     </div>

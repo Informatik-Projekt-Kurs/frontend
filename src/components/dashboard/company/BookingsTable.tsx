@@ -51,7 +51,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { useMutation } from "@apollo/client";
 import { CREATE_APPOINTMENT, EDIT_APPOINTMENT } from "@/lib/graphql/mutations";
 import { useCompany } from "@/contexts/CompanyContext";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const bookingFormSchema = z
   .object({
@@ -83,8 +83,8 @@ const columns: Array<ColumnDef<Appointment>> = [
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => {
-          table.toggleAllPageRowsSelected(value as boolean);
+        onCheckedChange={(value: boolean) => {
+          table.toggleAllPageRowsSelected(value);
         }}
         aria-label="Select all"
       />
@@ -92,8 +92,8 @@ const columns: Array<ColumnDef<Appointment>> = [
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => {
-          row.toggleSelected(value as boolean);
+        onCheckedChange={(value: boolean) => {
+          row.toggleSelected(value);
         }}
         aria-label="Select row"
       />
@@ -205,7 +205,7 @@ const columns: Array<ColumnDef<Appointment>> = [
     cell: ({ row }) => {
       const appointment = row.original;
       const [editAppointment] = useMutation(EDIT_APPOINTMENT);
-      const { refreshAppointments } = useCompany();
+      const { refreshData } = useCompany();
 
       return (
         <DropdownMenu>
@@ -237,7 +237,7 @@ const columns: Array<ColumnDef<Appointment>> = [
                 await editAppointment({
                   variables: { id: appointment.id, status: "CANCELLED" },
                   onCompleted: () => {
-                    void refreshAppointments();
+                    void refreshData();
                   }
                 });
               }}
@@ -249,7 +249,7 @@ const columns: Array<ColumnDef<Appointment>> = [
                 await editAppointment({
                   variables: { id: appointment.id, status: "COMPLETED" },
                   onCompleted: () => {
-                    void refreshAppointments();
+                    void refreshData();
                   }
                 });
               }}
@@ -264,7 +264,7 @@ const columns: Array<ColumnDef<Appointment>> = [
 ];
 
 export function BookingsTable(): React.ReactElement {
-  const { appointments, clients, refreshAppointments } = useCompany();
+  const { appointments, clients, refreshData } = useCompany();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -306,7 +306,6 @@ export function BookingsTable(): React.ReactElement {
     }
   });
 
-  const { toast } = useToast();
   const [createLoading, setCreateLoading] = React.useState(false);
 
   async function onSubmit(values: z.infer<typeof bookingFormSchema>) {
@@ -325,14 +324,11 @@ export function BookingsTable(): React.ReactElement {
     const response = await createAppointment(appointmentInput);
 
     if (response.data !== undefined) {
-      toast({
-        title: "Booking created",
-        description: values.from.toDateString(),
-        variant: "default",
-        className: "border-emerald-300"
+      toast.success("Appointment created", {
+        description: values.from.toDateString()
       });
       form.reset();
-      await refreshAppointments();
+      await refreshData();
       setCreateLoading(false);
     } else {
       console.error(response.errors);
@@ -341,7 +337,7 @@ export function BookingsTable(): React.ReactElement {
   }
 
   return (
-    <div className="w-full text-foreground">
+    <div className="text-foreground w-full">
       <div className="flex items-center gap-x-2 py-4">
         <Input
           placeholder="Filter by title..."
@@ -383,7 +379,7 @@ export function BookingsTable(): React.ReactElement {
               Create Booking
             </Button>
           </DialogTrigger>
-          <DialogContent className="min-w-[450px] text-foreground">
+          <DialogContent className="text-foreground min-w-[450px]">
             <DialogHeader>
               <DialogTitle>Create Booking</DialogTitle>
               <DialogDescription>Create a new Appointment-Slot for clients to book</DialogDescription>
@@ -709,7 +705,7 @@ export function BookingsTable(): React.ReactElement {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="rounded-md border border-border">
+      <div className="border-border rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -744,7 +740,7 @@ export function BookingsTable(): React.ReactElement {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
           selected.
         </div>
